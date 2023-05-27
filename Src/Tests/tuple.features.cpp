@@ -86,7 +86,7 @@ SCENARIO("Adding two tuples", "[tuple]")
 
 		THEN("a1 + a2 == tuple(1, 1, 6, 1)")
 		{
-			REQUIRE(a + b == tuple(1, 1, 6, 1));
+			REQUIRE(a + b == tuple(1.0f, 1.0f, 6.0f, 1.0f));
 		}
 	}
 }

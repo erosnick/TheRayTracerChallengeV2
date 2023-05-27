@@ -31,7 +31,8 @@ project "TheRayTracerChallenge"
     kind "ConsoleApp"                       --项目类型，控制台程序
     language "C++"                          --工程采用的语言，Premake5.0当前支持C、C++、C#
     location "Project"
-
+    openmp "On"
+    
     files 
     { 
         "src/**.h", 
@@ -109,22 +110,24 @@ project "TheRayTracerChallenge"
             'Catch2Main.lib'
         }
 
-        --project: 对应VS中的项目
+--project: 对应VS中的项目
 project "TestCases"
     kind "ConsoleApp"                       --项目类型，控制台程序
     language "C++"                          --工程采用的语言，Premake5.0当前支持C、C++、C#
     location "Project"
+    openmp "On"
 
     files 
     { 
         "src/Tests/**.h", 
         "src/Tests/**.cpp",
+        "src/canvas.cpp"
     }                                       --指定加载哪些文件或哪些类型的文件
 
-    -- -- Exclude template files
-    -- filter { "files:**features.cpp" }
-    --     -- buildaction("None")
-    --     flags {"ExcludeFromBuild"}
+    -- Exclude template files
+    filter { "files:**.features.cpp" }
+        -- buildaction("None")
+        flags {"ExcludeFromBuild"}
 
     -- vpaths 
     -- {
@@ -140,6 +143,7 @@ project "TestCases"
         defines { "DEBUG", "ARIA_DEBUG", "ARIA_PLATFORM_WINDOWS" }                 --定义Debug宏(这可以算是默认配置)
         symbols "On"                                           --开启调试符号
         debugdir "%{wks.location}"
+        debugargs "--reporter compact --success"
 
         includedirs 
         { 
@@ -163,6 +167,7 @@ project "TestCases"
         defines { "NDEBUG", "ARIA_RELEASE", "ARIA_PLATFORM_WINDOWS" }                 --定义NDebug宏(这可以算是默认配置)
         optimize "On"                                           --开启优化参数
         debugdir "%{wks.location}"
+        debugargs "--reporter compact --success"
 
         includedirs 
         { 

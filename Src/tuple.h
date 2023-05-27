@@ -1,22 +1,15 @@
-#include <cmath>
+#pragma once
 
-#define ToString(a) #a
-
-constexpr float EPSILON = 0.00001f;
-
-inline bool equal(float a, float b)
-{
-	return std::fabsf(a - b) < EPSILON;
-}
+#include "utils.h"
 
 struct tuple
 {
 	tuple()
-		: x(0.0f), y(0.0f), z(0.0f), w(0.0f), data{ 0 }
+		: data{ 0.0f }, x(0.0f), y(0.0f), z(0.0f), w(0.0f), red(0.0f), green(0.0f), blue(0.0f), alpha(0.0f)
 	{}
 
 	tuple(float inX, float inY, float inZ, float inW)
-		: x(inX), y(inY), z(inZ), w(inW), data{ x, y, z, w }
+		: data{ inX, inY, inZ, inW }, x(inX), y(inY), z(inZ), w(inW), red(x), green(y), blue(z), alpha(w)
 	{}
 
 	bool isPoint() { return equal(w, 1.0f); }
@@ -35,6 +28,14 @@ struct tuple
 			float y;
 			float z;
 			float w;
+		};
+
+		struct
+		{
+			float red;
+			float green;
+			float blue;
+			float alpha;
 		};
 	};
 };
@@ -78,6 +79,20 @@ inline tuple operator*(const tuple& a, float b)
 inline tuple operator*(float a, const tuple& b)
 {
 	return b * a;
+}
+
+inline tuple operator*(const tuple a, const tuple& b)
+{
+	return tuple(a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w);
+}
+
+inline tuple operator*=(tuple& a, float b)
+{
+	a.x *= b;
+	a.y *= b;
+	a.z *= b;
+
+	return a;
 }
 
 inline tuple operator/(const tuple& a, float b)
