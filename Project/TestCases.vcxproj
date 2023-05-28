@@ -190,13 +190,14 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Tests\canvas.cpp" />
+    <ClCompile Include="..\src\Tests\canvas.features.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\Tests\matrix.cpp" />
     <ClCompile Include="..\src\Tests\tuple.features.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\src\canvas.cpp">
-      <ObjectFileName>$(IntDir)\canvas1.obj</ObjectFileName>
-    </ClCompile>
+    <ClCompile Include="..\src\canvas.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

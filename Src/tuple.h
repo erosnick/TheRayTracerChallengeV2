@@ -2,6 +2,8 @@
 
 #include "utils.h"
 
+#include <cstdint>
+
 struct tuple
 {
 	tuple()
@@ -11,6 +13,16 @@ struct tuple
 	tuple(float inX, float inY, float inZ, float inW)
 		: data{ inX, inY, inZ, inW }, x(inX), y(inY), z(inZ), w(inW), red(x), green(y), blue(z), alpha(w)
 	{}
+
+	float operator[](int32_t index) const
+	{
+		return data[index];
+	}
+
+	float& operator[](int32_t index)
+	{
+		return data[index];
+	}
 
 	bool isPoint() { return equal(w, 1.0f); }
 	bool isVector() { return equal(w, 0.0f); }
