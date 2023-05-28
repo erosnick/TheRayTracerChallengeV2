@@ -191,7 +191,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\src\canvas.h" />
+    <ClInclude Include="..\src\colors.h" />
     <ClInclude Include="..\src\matrix.h" />
+    <ClInclude Include="..\src\transforms.h" />
     <ClInclude Include="..\src\tuple.h" />
     <ClInclude Include="..\src\utils.h" />
   </ItemGroup>

@@ -12,6 +12,9 @@
     <ClCompile Include="..\src\Tests\matrix.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Tests\matrix.features.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Tests\tuple.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>

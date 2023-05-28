@@ -194,6 +194,9 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\src\Tests\matrix.cpp" />
+    <ClCompile Include="..\src\Tests\matrix.features.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\src\Tests\tuple.features.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
