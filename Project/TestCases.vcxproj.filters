@@ -9,10 +9,13 @@
     <ClCompile Include="..\src\Tests\canvas.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Tests\matrix.cpp">
+    <ClCompile Include="..\src\Tests\matrix.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Tests\matrix.features.cpp">
+    <ClCompile Include="..\src\Tests\ray.features.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Tests\scene.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Tests\tuple.features.cpp">
