@@ -30,23 +30,7 @@ SCENARIO("The default material", "[material]")
 	}
 }
 
-SCENARIO("A sphere has a default material", "[material]")
-{
-	GIVEN("s = Sphere()")
-	{
-		auto s = Sphere();
-		WHEN("m = s.material")
-		{
-			auto m = s.material;
-			THEN("m == Material()")
-			{
-				REQUIRE(m == Material());
-			}
-		}
-	}
-}
-
-SCENARIO("Lighting with the eye between the light and the surface", "[matrix]")
+SCENARIO("Lighting with the eye between the light and the surface", "[material]")
 {
 	auto m = Material();
 	auto position = point(0.0f, 0.0f, 0.0f);
@@ -69,7 +53,7 @@ SCENARIO("Lighting with the eye between the light and the surface", "[matrix]")
 	}
 }
 
-SCENARIO(" Lighting with the eye between light and surface, eye offset 45бу", "[matrix]")
+SCENARIO(" Lighting with the eye between light and surface, eye offset 45бу", "[material]")
 {
 	auto m = Material();
 	auto position = point(0.0f, 0.0f, 0.0f);
@@ -92,7 +76,7 @@ SCENARIO(" Lighting with the eye between light and surface, eye offset 45бу", "[
 	}
 }
 
-SCENARIO("Lighting with eye opposite surface, light offset 45бу", "[matrix]")
+SCENARIO("Lighting with eye opposite surface, light offset 45бу", "[material]")
 {
 	auto m = Material();
 	auto position = point(0.0f, 0.0f, 0.0f);
@@ -115,7 +99,7 @@ SCENARIO("Lighting with eye opposite surface, light offset 45бу", "[matrix]")
 	}
 }
 
-SCENARIO("Lighting with eye in the path of the reflection vector", "[matrix]")
+SCENARIO("Lighting with eye in the path of the reflection vector", "[material]")
 {
 	auto m = Material();
 	auto position = point(0.0f, 0.0f, 0.0f);
@@ -138,7 +122,7 @@ SCENARIO("Lighting with eye in the path of the reflection vector", "[matrix]")
 	}
 }
 
-SCENARIO("Lighting with the light behind the surface", "[matrix]")
+SCENARIO("Lighting with the light behind the surface", "[material]")
 {
 	auto m = Material();
 	auto position = point(0.0f, 0.0f, 0.0f);

@@ -9,6 +9,9 @@
     <ClCompile Include="..\src\Tests\canvas.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Tests\intersections.features.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Tests\lights.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
@@ -27,7 +30,10 @@
     <ClCompile Include="..\src\Tests\shading.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Tests\spheres.cpp">
+    <ClCompile Include="..\src\Tests\spheres.features.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Tests\transformations.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Tests\tuple.features.cpp">
