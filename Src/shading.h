@@ -8,7 +8,15 @@
 #include "camera.h"
 #include "canvas.h"
 
-tuple lighting(const Material& material, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal)
+#include <omp.h>
+
+tuple lighting(const Material& material, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow = false);
+tuple shadeHit(const World& world, const HitResult& hitResult);
+tuple colorAt(const World& world, const Ray& ray);
+Canvas render(const Camera& camera, const World& world);
+std::vector<bool> isShadowed(const World& world, const tuple& position);
+
+tuple lighting(const Material& material, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow)
 {
 	// Combine the surface color with the light's color/intensity
 	auto effectiveColor = material.color * light.intensity;
@@ -18,6 +26,11 @@ tuple lighting(const Material& material, const PointLight& light, const tuple& p
 
 	// Compute the ambient contribution
 	auto ambient = effectiveColor * material.ambient;
+
+	if (inShadow)
+	{
+		return ambient;
+	}
 
 	// lightDotNormal represents the cosine of the angle between the
 	// light vector and the normal vector.A negative number means the
@@ -59,9 +72,18 @@ tuple lighting(const Material& material, const PointLight& light, const tuple& p
 	return ambient + diffuse + specular;
 }
 
-inline tuple shadeHit(const World& world, const HitResult& hitResult)
+tuple shadeHit(const World& world, const HitResult& hitResult)
 {
-	return lighting(hitResult.object->material, world.getLights()[0], hitResult.position, hitResult.viewDirection, hitResult.normal);
+	tuple finalColor;
+
+	auto shadowResult = isShadowed(world, hitResult.overPosition);
+
+	for (int32_t i = 0; i < world.lightCount(); i++)
+	{
+		finalColor += lighting(hitResult.object->material, world.getLights()[i], hitResult.position, hitResult.viewDirection, hitResult.normal, shadowResult[i]);
+	}
+
+	return finalColor;
 }
 
 tuple colorAt(const World& world, const Ray& ray)
@@ -77,17 +99,19 @@ tuple colorAt(const World& world, const Ray& ray)
 		return shadeHit(world, hitResult);
 	}
 
-	auto t = 0.5f * (ray.direction.y + 1.0f);
-	return (1.0f - t) * color(1.0f, 1.0f, 1.0f) + t * color(0.5f, 0.7f, 1.0f);
+	//auto t = 0.5f * (ray.direction.y + 1.0f);
+	//return (1.0f - t) * color(1.0f, 1.0f, 1.0f) + t * color(0.5f, 0.7f, 1.0f);
+	return Color::Black;
 }
 
 Canvas render(const Camera& camera, const World& world)
 {
 	auto image = Canvas(camera.imageWidth, camera.imageHeight);
 
+#pragma omp parallel for
 	for (int32_t y = 0; y < camera.imageHeight; y++)
 	{
-		std::cerr << "\rScanlines remaining: " << camera.imageHeight - y << ' ' << std::flush;
+		printf("\rScanlines remaining: %d\033[0K\r ", camera.imageHeight - y);
 		for (int32_t x = 0; x < camera.imageWidth; x++)
 		{
 			auto ray = camera.rayForPixel(x, y);
@@ -97,4 +121,28 @@ Canvas render(const Camera& camera, const World& world)
 	}
 
 	return image;
+}
+
+inline std::vector<bool> isShadowed(const World & world, const tuple & position)
+{
+	std::vector<bool> shadowResult(world.lightCount(), false);
+
+	for (int32_t i = 0; i < world.lightCount(); i++)
+	{
+		auto toLight = world.getLight(i).position - position;
+
+		auto distance = length(toLight);
+		auto direction = normalize(toLight);
+
+		auto ray = Ray(position, direction);
+		auto intersections = intersectWorld(world, ray);
+		auto intersection = hit(intersections);
+
+		if (intersection.t > 0.0f && intersection.t < distance)
+		{
+			shadowResult[i] = true;
+		}
+	}
+
+	return shadowResult;
 }

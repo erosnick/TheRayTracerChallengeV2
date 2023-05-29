@@ -220,3 +220,28 @@ SCENARIO("The hit, when an intersection occurs on the inside", "[intersections]"
 		}
 	}
 }
+
+// Chapter 8 Shadows
+
+SCENARIO("The hit should offset the point", "[intersections]")
+{
+	GIVEN("r = Ray(point(0.0f, 0.0f, -5.0f), vector(0.0f, 0.0f, 1.0f))"
+		"And shape = Sphere() with:"
+		"| transform | translation(0.0f, 0.0f, 1.0f) |"
+		"And i = intersection(5.0f, shape)")
+	{
+		auto r = Ray(point(0.0f, 0.0f, -5.0f), vector(0.0f, 0.0f, 1.0f));
+		auto shape = createSphere();
+		shape->setTransform(translate(0.0f, 0.0f, 1.0f));
+		auto i = Intersection{ 5.0f, shape };
+		WHEN("comps = prepareComputations(i, r)")
+		{
+			auto comps = prepareComputations(i, r);
+			THEN("comps.overPoint.z < -EPSILON / 2.0f"
+				"And comps.position.z > comps.overPosition.z")
+			{
+				REQUIRE(comps.overPosition.z < -EPSILON / 2.0f);
+			}
+		}
+	}
+}

@@ -20,6 +20,7 @@ struct HitResult
 	tuple viewDirection;
 	tuple normal;
 	bool inside = false;
+	tuple overPosition;
 };
 
 bool operator==(const Intersection& a, const Intersection& b)
@@ -146,6 +147,9 @@ HitResult prepareComputations(const Intersection& intersection, const Ray& ray)
 	{
 		hitResult.inside = false;
 	}
+
+	// After computing and (if appropriate) negating the normal vector...
+	hitResult.overPosition = hitResult.position + hitResult.normal * EPSILON;
 
 	return hitResult;
 }

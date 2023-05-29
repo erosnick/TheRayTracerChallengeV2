@@ -3,18 +3,23 @@
 #include "utils.h"
 
 #include <fstream>
+#include <sstream>
+#include <vector>
 
-#include <omp.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
 
 void Canvas::writeToPPM(const std::string& path)
 {
 	std::ofstream file(path);
 
-	file << "P3\n";
-	file << width << " " << height << std::endl;
-	file << 255 << std::endl;
+	auto ppm = std::string();
+	ppm.append("P3\n");
+	ppm.append(std::to_string(width) + " " + std::to_string(height) + "\n");
+	ppm.append(std::to_string(255) + "\n");
 
-	char buffer[32];
+	std::stringstream ss;
+	ss << ppm;
 
 	for (int32_t y = 0; y < height; y++)
 	{
@@ -24,15 +29,36 @@ void Canvas::writeToPPM(const std::string& path)
 
 			pixel *= 255.0f;
 
-			sprintf_s(buffer, "%d %d %d", static_cast<uint32_t>(pixel.red), 
-														  static_cast<uint32_t>(pixel.green), 
-														  static_cast<uint32_t>(pixel.blue));
-
-			file << buffer << std::endl;
+			ss << static_cast<int32_t>(pixel.red) << " "
+			   << static_cast<int32_t>(pixel.green) << " "
+			   << static_cast<int32_t>(pixel.blue) << "\n";
 		}
 	}
 
+	file.write(ss.str().c_str(), ss.str().size());
+
 	file.close();
+}
+
+void Canvas::writeToPNG(const std::string& path)
+{
+	std::vector<uint8_t> data;
+
+	for (int32_t y = 0; y < height; y++)
+	{
+		for (int32_t x = 0; x < width; x++)
+		{
+			auto pixel = pixelAt(x, y);
+
+			pixel *= 255.0f;
+
+			data.push_back(static_cast<uint8_t>(pixel.red));
+			data.push_back(static_cast<uint8_t>(pixel.green));
+			data.push_back(static_cast<uint8_t>(pixel.blue));
+		}
+	}
+
+	stbi_write_png(path.c_str(), width, height, 3, data.data(), width * 3);
 }
 
 bool Canvas::black()

@@ -8,6 +8,8 @@
 
 #include "intersection.h"
 
+#include "timer.h"
+
 int main(int argc, char* argv[])
 {
 	auto floor = createSphere();
@@ -80,9 +82,11 @@ int main(int argc, char* argv[])
 
 	camera.transform = viewTransform(point(0.0f, 1.5f, -5.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
 
+	AriaCore::ScopedTimer timer("Rendering");
 	auto canvas = render(camera, world);
 
 	canvas.writeToPPM("scene.ppm");
+	canvas.writeToPNG("scene.png");
 
 	return 0;
 }

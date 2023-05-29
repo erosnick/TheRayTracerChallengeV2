@@ -187,3 +187,96 @@ SCENARIO("Shading an intersection from the inside", "[world]")
 		}
 	}
 }
+
+// Chapter 8 Shadows
+
+SCENARIO("There is no shadow when nothing is collinear with point and light", "[world]")
+{
+	GIVEN("w = defaultWorld()"
+		"And p = point(0, 10, 0)")
+	{
+		auto w = defaultWorld();
+		auto p = point(0.0f, 10.0f, 0.0f);
+		THEN("isShadowed(w, p) is false")
+		{
+			REQUIRE(isShadowed(w, p)[0] == false);
+		}
+	}
+}
+
+SCENARIO("The shadow when an object is between the point and the light", "[world]")
+{
+	GIVEN("w = defaultWorld()"
+		"And p = point(10.0f, -10.0f, 10.0f)")
+	{
+		auto w = defaultWorld();
+		auto p = point(10.0f, -10.0f, 10.0f);
+		THEN("isShadowed(w, p) is false")
+		{
+			REQUIRE(isShadowed(w, p)[0] == true);
+		}
+	}
+}
+
+SCENARIO("There is no shadow when an object is behind the light", "[world]")
+{
+	GIVEN("w = defaultWorld()"
+		"And p = point(-20.0f, 20.0f, -20.0f)")
+	{
+		auto w = defaultWorld();
+		auto p = point(-20.0f, 20.0f, -20.0f);
+		THEN("isShadowed(w, p) is false")
+		{
+			REQUIRE(isShadowed(w, p)[0] == false);
+		}
+	}
+}
+
+SCENARIO("There is no shadow when an object is behind the point", "[world]")
+{
+	GIVEN("w = defaultWorld()"
+		"And p = point(0, 10, 0)")
+	{
+		auto w = defaultWorld();
+		auto p = point(-2.0f, 2.0f, -2.0f);
+		THEN("isShadowed(w, p) is false")
+		{
+			REQUIRE(isShadowed(w, p)[0] == false);
+		}
+	}
+}
+
+SCENARIO("shadeHit() is given an intersection in shad", "[world.features]")
+{
+	GIVEN("w = World()"
+		"And w.light = pointLight(point(0.0f, 0.0f, -10.0f), color(1.0f, 1.0f, 1.0f))"
+		"And s1 = Sphere()"
+		"And s1 is added to w"
+		"And s2 = Sphere() with:"
+		"| transform | translation(0.0f, 0.0f, 10.0f) |"
+		"And s2 is added to w"
+		"And r = Ray(point(0.0f, 0.0f, 5.0f), vector(0.0f, 0.0f, 1.0f))"
+		"And i = intersection(4.0f, s2)")
+	{
+		auto w = World();
+		auto light = pointLight(point(0.0f, 0.0f, -10.0f), color(1.0f, 1.0f, 1.0f));
+		w.addLight(light);
+		auto s1 = createSphere();
+		w.addObject(s1);
+		auto s2 = createSphere();
+		s2->setTransform(translate(0.0f, 0.0f, 10.0f));
+		w.addObject(s2);
+		auto r = Ray(point(0.0f, 0.0f, 5.0f), vector(0.0f, 0.0f, 1.0f));
+		auto i = Intersection{ 4.0f, s2 };
+		WHEN("comps = prepareComputations(i, r)"
+			"And c = shadeHit(w, comps)")
+		{
+			auto comps = prepareComputations(i, r);
+			auto c = shadeHit(w, comps);
+			THEN("c == color(0.1f, 0.1f, 0.1f)")
+			{
+				REQUIRE(c == color(0.1f, 0.1f, 0.1f));
+			}
+		}
+	}
+}

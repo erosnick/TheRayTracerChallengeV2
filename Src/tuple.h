@@ -70,6 +70,15 @@ inline tuple operator+(const tuple& a, const tuple& b)
 		a.w + b.w);
 }
 
+inline tuple operator+=(tuple& a, const tuple& b)
+{
+	a.x += b.x;
+	a.y += b.y;
+	a.z += b.z;
+
+	return a;
+}
+
 inline tuple operator-(const tuple& a, const tuple& b)
 {
 	return tuple(a.x - b.x,

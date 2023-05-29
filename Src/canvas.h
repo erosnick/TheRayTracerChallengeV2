@@ -37,6 +37,7 @@ public:
 	}
 
 	void writeToPPM(const std::string& path);
+	void writeToPNG(const std::string& path);
 
 	bool black();
 public:

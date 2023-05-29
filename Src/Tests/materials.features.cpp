@@ -145,3 +145,29 @@ SCENARIO("Lighting with the light behind the surface", "[material]")
 	}
 }
 
+// Chapter 8 Shadows
+
+SCENARIO("Lighting with the surface in shadow", "[materials]")
+{
+	auto m = Material();
+	auto position = point(0.0f, 0.0f, 0.0f);
+
+	GIVEN("viewDirection = vector(0.0f, 0.0f, -1.0f)"
+		"And normal = vector(0.0f, 0.0f, -1.0f)"
+		"And light = point_light(point(0.0f, 0.0f, -10.0f), color(1.0f, 1.0f, 1.0f))"
+		"And in_shadow = true")
+	{
+		auto normal = vector(0.0f, 0.0f, -1.0f);
+		auto light = pointLight(point(0.0f, 0.0f, -10.0f), color(1.0f, 1.0f, 1.0f));
+		auto inShadow = true;
+		auto viewDirection = vector(0.0f, 0.0f, -1.0f);
+		WHEN("result = lighting(m, light, position, eyev, normalv, in_shadow)")
+		{
+			auto result = lighting(m, light, position, viewDirection, normal, inShadow);
+			THEN("result == color(0.1f, 0.1f, 0.1f)")
+			{
+				REQUIRE(result == color(0.1f, 0.1f, 0.1f));
+			}
+		}
+	}
+}
