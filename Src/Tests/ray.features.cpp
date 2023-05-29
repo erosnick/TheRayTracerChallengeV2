@@ -30,7 +30,7 @@ SCENARIO("Creating and querying a ray", "[matrix]")
 	}
 }
 
-SCENARIO("Computing a point from a distance", "[matrix]")
+SCENARIO("Computing a point from a distance", "[ray]")
 {
 	GIVEN("r = Ray(point(2.0f, 3.0f, 4.0f), vector(1.0f, 0.0f, 0.0f))")
 	{

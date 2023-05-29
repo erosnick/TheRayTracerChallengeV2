@@ -708,9 +708,7 @@ SCENARIO("Rotating a point around the x axis", "[matrix].0f")
 		THEN("halfQuarter * p == point(0.0f, ¡Ì2/2, ¡Ì2/2)"
 		 "And fullQuarter * p == point(0.0f, 0.0f, 1.0f)")
 		{
-			auto sqrt2 = std::sqrtf(2.0f);
-
-			REQUIRE(halfQuarter * p == point(0.0f, sqrt2 / 2.0f, sqrt2 / 2.0f));
+			REQUIRE(halfQuarter * p == point(0.0f, SQRT2 / 2.0f, SQRT2 / 2.0f));
 			REQUIRE(fullQuarter * p == point(0.0f, 0.0f, 1.0f));
 		}
 	}
@@ -728,9 +726,7 @@ SCENARIO("The inverse of an x-rotation rotates in the opposite direction", "[mat
 
 		THEN("inv * p = point(0, ¡Ì2/2, -¡Ì2/2)")
 		{
-			auto sqrt2 = std::sqrtf(2.0f);
-
-			REQUIRE(inv * p == point(0.0f, sqrt2 / 2.0f, -sqrt2 / 2.0f));
+			REQUIRE(inv * p == point(0.0f, SQRT2 / 2.0f, -SQRT2 / 2.0f));
 		}
 	}
 }
@@ -748,9 +744,7 @@ SCENARIO("Rotating a point around the y axis", "[matrix].0f")
 		THEN("halfQuarter * p == point(¡Ì2/2, 0.0f, ¡Ì2/2)"
 			"And fullQuarter * p == point(1.0f, 0.0f, 0.0f)")
 		{
-			auto sqrt2 = std::sqrtf(2.0f);
-
-			REQUIRE(halfQuarter * p == point(sqrt2 / 2.0f, 0.0f, sqrt2 / 2.0f));
+			REQUIRE(halfQuarter * p == point(SQRT2 / 2.0f, 0.0f, SQRT2 / 2.0f));
 			REQUIRE(fullQuarter * p == point(1.0f, 0.0f, 0.0f));
 		}
 	}
@@ -769,9 +763,7 @@ SCENARIO("Rotating a point around the z axis", "[matrix].0f")
 		THEN("halfQuarter * p == point(¡Ì2/2, 0.0f, ¡Ì2/2)"
 			"And fullQuarter * p == point(1.0f, 0.0f, 0.0f)")
 		{
-			auto sqrt2 = std::sqrtf(2.0f);
-
-			REQUIRE(halfQuarter * p == point(-sqrt2 / 2.0f, sqrt2 / 2.0f, 0.0f));
+			REQUIRE(halfQuarter * p == point(-SQRT2 / 2.0f, SQRT2 / 2.0f, 0.0f));
 			REQUIRE(fullQuarter * p == point(-1.0f, 0.0f, 0.0f));
 		}
 	}

@@ -7,11 +7,6 @@
 
 #include "utils.h"
 
-inline tuple color(float red, float green, float blue)
-{
-	return vector(red, green, blue);
-}
-
 SCENARIO("Colors are (red, green, blue) tuples", "[canvas]")
 {
 	GIVEN(ToString(c = color(-0.5f, 0.4f, 1.7f)))

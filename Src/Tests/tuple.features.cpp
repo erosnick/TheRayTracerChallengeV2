@@ -317,3 +317,42 @@ SCENARIO("The cross product of two vectors")
 		}
 	}
 }
+
+SCENARIO("Reflecting a vector approaching at 45¡ã", "[tuple]")
+{
+	GIVEN("v = vector(1.0f, -1.0f, 0.0f)"
+		"And n = vector(0.0f, 1.0f, 0.0f)")
+	{
+		auto v = vector(1.0f, -1.0f, 0.0f);
+		auto n = vector(0.0f, 1.0f, 0.0f);
+
+		WHEN("r = reflect(v, n)")
+		{
+			auto r = reflect(v, n);
+			THEN("r == vector(1.0f, 1.0f, 0.0f)")
+			{
+				REQUIRE(r == vector(1.0f, 1.0f, 0.0f));
+			}
+		}
+	}
+}
+
+SCENARIO("Reflecting a vector off a slanted surface", "[tuple]")
+{
+	GIVEN("v = vector(1.0f, -1.0f, 0.0f)"
+		"And n = vector(¡Ì2/2, ¡Ì2/2, 0)")
+	{
+		auto sqrt2 = std::sqrtf(2.0f);
+		auto v = vector(0.0f, -1.0f, 0.0f);
+		auto n = vector(sqrt2 / 2.0f, sqrt2 / 2.0f, 0.0f);
+
+		WHEN("r = reflect(v, n)")
+		{
+			auto r = reflect(v, n);
+			THEN("r == vector(1.0f, 0.0f, 0.0f)")
+			{
+				REQUIRE(r == vector(1.0f, 0.0f, 0.0f));
+			}
+		}
+	}
+}

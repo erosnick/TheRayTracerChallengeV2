@@ -146,3 +146,13 @@ inline tuple normalize(const tuple& v)
 {
 	return v / length(v);
 }
+
+inline tuple reflect(const tuple& in, const tuple& normal)
+{
+	return in - normal * 2.0f * dot(in, normal);
+}
+
+inline tuple color(float red, float green, float blue)
+{
+	return tuple(red, green, blue, 0.0f);
+}

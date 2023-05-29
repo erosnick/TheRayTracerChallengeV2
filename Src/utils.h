@@ -4,9 +4,7 @@
 
 #define ToString(a) #a
 
-constexpr float PI = 3.1415926f;
-
-constexpr float EPSILON = 0.00001f;
+#include "constants.h"
 
 inline bool equal(float a, float b)
 {
