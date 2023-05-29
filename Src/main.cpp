@@ -10,56 +10,79 @@
 
 int main(int argc, char* argv[])
 {
-	auto canvas = Canvas(400, 400);
+	auto floor = createSphere();
 
-	auto sphere = std::make_shared<Sphere>();
+	floor->setTransform(scale(10.0f, 0.01f, 10.0f));
+	floor->material = Material();
 
-	sphere->setTransform(scale(1.0f, 0.5f, 1.0f));
+	floor->material = Material();
+	floor->material.color = color(1.0f, 0.9f, 0.9f);
+	floor->material.specular = 0.0f;
 
-	sphere->material = Material();
-	sphere->material.color = color(1.0f, 0.2f, 1.0f);
+		auto leftWall = createSphere();
+
+	leftWall->setTransform(translate(0.0f, 0.0f, 5.0f) * 
+									 rotateY(-PI / 4.0f) * 
+									 rotateX(PI / 2.0f) * 
+									 scale(10.0f, 0.05f, 10.0f));
+
+	leftWall->material = floor->material;
+
+	auto rightWall = createSphere();
+	rightWall->setTransform(translate(0.0f, 0.0f, 5.0f) *
+									  rotateY(PI / 4.0f) * rotateX(PI / 2.0f) * 
+									  scale(10.0f, 0.05f, 10.0f));
+
+	rightWall->material = floor->material;
+
+	auto left = createSphere();
+	left->setTransform(translate(-1.5f, 0.33f, -0.75f) * scale(0.33f));
+	left->material = Material();
+	left->material.color = color(1.0f, 0.8f, 0.1f);
+	left->material.diffuse = 0.7f;
+	left->material.specular = 0.3f;
+
+	auto middle = createSphere();
+	auto transform = translate(-0.5f, 1.0f, 0.5f);
+	middle->setTransform(transform);
+	middle->material = Material();
+	middle->material.color = color(0.1f, 1.0f, 0.5f);
+	middle->material.diffuse = 0.7f;
+	middle->material.specular = 0.3f;
+
+	auto right = createSphere();
+	right->setTransform(translate(1.5f, 0.5f, -0.5f) * scale(0.5f));
+	right->material = Material();
+	right->material.color = color(0.5f, 1.0f, 0.1f);
+	right->material.diffuse = 0.7f;
+	right->material.specular = 0.3f;
+
+	auto topRight = createSphere();
+	topRight->setTransform(translate(1.5f, 1.5f, -0.5f) * rotateX(PI / 4.0F) * rotateZ(PI / 4.0F) * scale(0.5, 0.25f, 0.5f));
+	topRight->material = Material();
+	topRight->material.color = color(1.0f, 0.0f, 0.0f);
+	topRight->material.diffuse = 0.7f;
+	topRight->material.specular = 0.3f;
 
 	auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Color::White);
 
-	auto origin = point(0.0f, 0.0f, -5.0f);
+	auto world = World();
+	world.addLight(light);
+	world.addObject(floor);
+	world.addObject(leftWall);
+	world.addObject(rightWall);
+	world.addObject(left);
+	world.addObject(middle);
+	world.addObject(right);
+	world.addObject(topRight);
 
-	auto imageWidth = 7.0f;
-	auto imageHeight = 7.0f;
+	auto camera = Camera(800, 400, radians(60.0f));
 
-	auto imageDistance = 7.0f;
+	camera.transform = viewTransform(point(0.0f, 1.5f, -5.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
 
-	auto halfWidth = imageWidth * 0.5f;
-	auto halfHeight = imageHeight * 0.5f;
+	auto canvas = render(camera, world);
 
-	auto u = imageWidth / canvas.width;
-	auto v = imageHeight / canvas.height;
-
-	for (int32_t y = 0; y < canvas.height; y++)
-	{
-		std::cout << "\rScanlines remaining: " << canvas.height - y << ' ' << std::flush;
-		for (int32_t x = 0; x < canvas.width; x++)
-		{
-			auto direction = point(-halfWidth + x * u, halfHeight - y * v, imageDistance) - origin;
-			auto ray = Ray(origin, normalize(direction));
-
-			auto intersection = intersect(sphere, ray);
-
-			auto result = hit(intersection);
-
-			if (result.t > 0.0)
-			{
-				auto position = ray.at(result.t);
-				auto normal = normalAt(result.object, position);
-				auto viewDirection = -ray.direction;
-
-				auto color = lighting(result.object->material, light, position, viewDirection, normal);
-
-				canvas.writePixel(x, y, color);
-			}
-		}
-	}
-
-	canvas.writeToPPM("sphere.ppm");
+	canvas.writeToPPM("scene.ppm");
 
 	return 0;
 }

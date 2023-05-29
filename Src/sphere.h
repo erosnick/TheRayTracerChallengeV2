@@ -24,3 +24,20 @@ struct Sphere
 };
 
 int32_t Sphere::id = 0;
+
+bool operator==(const Sphere& a, const Sphere& b)
+{
+	return (a.center == b.center) &&
+		   (a.radius == b.radius) &&
+		   (a.transform == b.transform) &&
+		   (a.material == b.material);
+}
+
+inline auto createSphere(const matrix4& transform = matrix4(1.0f))
+{
+	auto sphere = std::make_shared<Sphere>();
+
+	sphere->setTransform(transform);
+
+	return sphere;
+}

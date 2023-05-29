@@ -280,6 +280,11 @@ inline matrix4 scale(float x, float y, float z)
 	return result;
 }
 
+inline matrix4 scale(float value)
+{
+	return scale(value, value, value);
+}
+
 inline matrix4 rotateX(float radian)
 {
 	auto result = matrix4(1.0f);
@@ -328,4 +333,22 @@ inline matrix4 shearing(float xy, float xz, float yx, float yz, float zx, float 
 	result(2, 1) = zy;
 
 	return result;
+}
+
+inline matrix4 viewTransform(const tuple& from, const tuple& to, const tuple& up)
+{
+	auto forward = normalize(to - from);
+	auto left = cross(forward, normalize(up));
+	auto trueUp = cross(left, forward);
+
+	auto orientation = matrix4(left.x,     left.y,     left.z,     0.0f,
+									  trueUp.x,   trueUp.y,   trueUp.z,   0.0f,
+								     -forward.x, -forward.y, -forward.z,  0.0f,
+									  0.0f,		  0.0f,       0.0f,       1.0f);
+
+	//orientation(0, 3) = -dot(left, from);
+	//orientation(1, 3) = -dot(trueUp, from);
+	//orientation(2, 3) =  dot(forward, from);
+
+	return orientation * translate(-from.x, -from.y, -from.z);
 }

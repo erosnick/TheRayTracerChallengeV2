@@ -8,6 +8,8 @@
 #include "colors.h"
 #include <iostream>
 
+#include <intersection.h>
+
 SCENARIO("Render test", "[matrix]")
 {
 	auto canvas = Canvas(400, 400);

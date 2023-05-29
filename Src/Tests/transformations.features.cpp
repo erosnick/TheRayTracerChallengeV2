@@ -321,3 +321,94 @@ SCENARIO("Chained transformations must be applied in reverse order", "[matrix]")
 		}
 	}
 }
+
+// Chapter 7 Making a Scene
+
+SCENARIO("The transformation matrix for the default orientation", "[transformations]")
+{
+	GIVEN("from = point(0.0f, 0.0f, 0.0f)"
+		"And to = point(0.0f, 0.0f, -1.0f)"
+		"And up = vector(0.0f, 1.0f, 0.0f)")
+	{
+		auto from = point(0.0f, 0.0f, 0.0f);
+		auto to = point(0.0f, 0.0f, -1.0f);
+		auto up = vector(0.0f, 1.0f, 0.0f);
+		WHEN("t = viewTransform(from, to, up)")
+		{
+			auto t = viewTransform(from, to, up);
+			THEN("t == viewTransform(from, to, up)")
+			{
+				REQUIRE(t == matrix4(1.0f));
+			}
+		}
+	}
+}
+
+SCENARIO("A view transformation matrix looking in positive z direction", "[transformations]")
+{
+	GIVEN("from = point(0.0f, 0.0f, 0.0f)"
+		"And to = point(0.0f, 0.0f, 1.0f)"
+		"And up = vector(0.0f, 1.0f, 0.0f)")
+	{
+		auto from = point(0.0f, 0.0f, 0.0f);
+		auto to = point(0.0f, 0.0f, 1.0f);
+		auto up = vector(0.0f, 1.0f, 0.0f);
+		WHEN("t = viewTransform(from, to, up)")
+		{
+			auto t = viewTransform(from, to, up);
+			THEN("t == scale(-1.0f, 1.0f, -1.0f)")
+			{
+				REQUIRE(t == scale(-1.0f, 1.0f, -1.0f));
+			}
+		}
+	}
+}
+
+SCENARIO("The view transformation moves the world", "[transformations]")
+{
+	GIVEN("from = point(0.0f, 0.0f, 8.0f)"
+		"And to = point(0.0f, 0.0f, 0.0f)"
+		"And up = vector(0.0f, 1.0f, 0.0f)")
+	{
+		auto from = point(0.0f, 0.0f, 8.0f);
+		auto to = point(0.0f, 0.0f, 0.0f);
+		auto up = vector(0.0f, 1.0f, 0.0f);
+		WHEN("t = viewTransform(from, to, up)")
+		{
+			auto t = viewTransform(from, to, up);
+			THEN("t == translate(0.0f, 0.0f, -8.0f)")
+			{
+				REQUIRE(t == translate(0.0f, 0.0f, -8.0f));
+			}
+		}
+	}
+}
+
+SCENARIO("An arbitrary view transformation", "[transformations]")
+{
+	GIVEN("from = point(1.0f, 3.0f, 2.0f)"
+		"And to = point(4.0f, -2.0f, 8.0f)"
+		"And up = vector(1.0f, 1.0f, 0.0f)")
+	{
+		auto from = point(1.0f, 3.0f, 2.0f);
+		auto to = point(4.0f, -2.0f, 8.0f);
+		auto up = vector(1.0f, 1.0f, 0.0f);
+		WHEN("t = viewTransform(from, to, up)")
+		{
+			auto t = viewTransform(from, to, up);
+			THEN("t is the following 4x4 matrix:"
+				"| -0.50709 | 0.50709 |  0.67612 | -2.36643 |"
+				"|  0.76772 | 0.60609 |  0.12122 | -2.82843 |"
+				"| -0.35857 | 0.59761 | -0.71714 |  0.00000 |"
+				"|  0.00000 | 0.00000 |  0.00000 |  1.00000 |")
+			{
+				auto m = matrix4(
+					-0.50709f, 0.50709f,  0.67612f, -2.36643f,
+					 0.76772f, 0.60609f,  0.12122f, -2.82843f,
+					-0.35857f, 0.59761f, -0.71714f,  0.00000f,
+					 0.00000f, 0.00000f,  0.00000f,  1.00000f);
+				REQUIRE(t == m);
+			}
+		}
+	}
+}

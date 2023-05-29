@@ -147,3 +147,76 @@ SCENARIO("The hit is always the lowest nonnegative intersection", "[intersection
 		}
 	}
 }
+
+// Chapter 7 Making a Scene
+
+SCENARIO("Precomputing the state of an intersection", "[intersections]")
+{
+	GIVEN("r = Ray(point(0.0f, 0.0f, -5.0f), vector(0.0f, 0.0f, 1.0f))"
+		"And shape = Sphere()"
+		"And i = intersection(4.0f, shape)")
+	{
+		auto r = Ray(point(0.0f, 0.0f, -5.0f), vector(0.0f, 0.0f, 1.0f));
+		auto shape = createSphere();
+		auto i = Intersection{ 4.0f, shape };
+		WHEN("comps = prepareComputations(i, r)")
+		{
+			auto comps = prepareComputations(i, r);
+			THEN("comps.t == i.t"
+				"And comps.object == i.object"
+				"And comps.point == point(0¡£0f, 0.0f, -1.0f)"
+				"And comps.eyev == vector(0.0f, 0.0f, -1.0f)"
+				"And comps.normalv == vector(0.0f, 0.0f, -1.0f)")
+			{
+				REQUIRE(comps.t == i.t);
+				REQUIRE(comps.position == point(0.0f, 0.0f, -1.0f));
+				REQUIRE(comps.viewDirection == vector(0.0f, 0.0f, -1.0f));
+				REQUIRE(comps.normal == vector(0.0f, 0.0f, -1.0f));
+			}
+		}
+	}
+}
+
+SCENARIO("The hit, when an intersection occurs on the outside", "[intersections]")
+{
+	GIVEN("r = Ray(point(0.0f, 0.0f, -5.0f), vector(0.0f, 0.0f, 1.0f))"
+		"And shape = Sphere()"
+		"And i = intersection(4.0f, shape)")
+	{
+		auto r = Ray(point(0.0f, 0.0f, -5.0f), vector(0.0f, 0.0f, 1.0f));
+		auto shape = createSphere();
+		auto i = Intersection{ 4.0f, shape };
+		WHEN("comps = prepareComputations(i, r)")
+		{
+			auto comps = prepareComputations(i, r);
+			THEN("comps.inside == false")
+			{
+				REQUIRE(comps.inside == false);
+			}
+		}
+	}
+}
+
+SCENARIO("The hit, when an intersection occurs on the inside", "[intersections]")
+{
+	GIVEN("r = Ray(point(0.0f, 0.0f, 0.0f), vector(0.0f, 0.0f, 1.0f))"
+		"And shape = Sphere()"
+		"And i = intersection(1.0f, shape)")
+	{
+		auto r = Ray(point(0.0f, 0.0f, 0.0f), vector(0.0f, 0.0f, 1.0f));
+		auto shape = createSphere();
+		auto i = Intersection{ 1.0f, shape };
+		WHEN("comps = prepareComputations(i, r)")
+		{
+			auto comps = prepareComputations(i, r);
+			THEN("comps.inside == false")
+			{
+				REQUIRE(comps.position == point(0.0f, 0.0f, 1.0f));
+				REQUIRE(comps.viewDirection == vector(0.0f, 0.0f, -1.0f));
+				REQUIRE(comps.inside == true);
+				// Normal would have been (0, 0, 1), but is inverted!
+				REQUIRE(comps.normal == vector(0.0f, 0.0f, -1.0f));
+			}
+		}
+	}
+}

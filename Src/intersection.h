@@ -4,11 +4,22 @@
 #include <algorithm>
 
 #include "sphere.h"
+#include "world.h"
 
 struct Intersection
 {
 	float t = 0.0f;
 	std::shared_ptr<Sphere> object;
+};
+
+struct HitResult
+{
+	float t = 0.0f;
+	std::shared_ptr<Sphere> object;
+	tuple position;
+	tuple viewDirection;
+	tuple normal;
+	bool inside = false;
 };
 
 bool operator==(const Intersection& a, const Intersection& b)
@@ -20,7 +31,7 @@ inline std::vector<Intersection> intersect(const std::shared_ptr<Sphere>& sphere
 {
 	// The vector from the sphere's center, to the ray origin
 	// Remember: the sphere is centered at the world origin
-	auto transformedRay = transform(ray, inverse(sphere->transform));
+	auto transformedRay = transformRay(ray, inverse(sphere->transform));
 
 	auto sphereToRay = transformedRay.origin - sphere->center;
 
@@ -41,7 +52,7 @@ inline std::vector<Intersection> intersect(const std::shared_ptr<Sphere>& sphere
 	return { { t1, sphere }, { t2, sphere } };
 }
 
-tuple normalAt(const std::shared_ptr<Sphere>& sphere, const tuple& worldPoint)
+inline tuple normalAt(const std::shared_ptr<Sphere>& sphere, const tuple& worldPoint)
 {
 	auto objectPoint = inverse(sphere->transform) * worldPoint;
 	auto objectNormal = objectPoint - sphere->center;
@@ -57,7 +68,7 @@ bool compare(const Intersection& a, const Intersection& b)
 	return a.t < b.t;
 }
 
-inline std::vector<Intersection> intersections(const std::initializer_list<Intersection>& intersectionList)
+inline auto intersections(const std::initializer_list<Intersection>& intersectionList)
 {
 	std::vector<Intersection> result;
 
@@ -71,7 +82,21 @@ inline std::vector<Intersection> intersections(const std::initializer_list<Inter
 	return result;
 }
 
-Intersection hit(const std::vector<Intersection>& intersections)
+inline auto intersections(const std::vector<Intersection>& intersectionList)
+{
+	std::vector<Intersection> result;
+
+	std::for_each(intersectionList.begin(), intersectionList.end(), [&](const Intersection& intersection)
+		{
+			result.emplace_back(intersection);
+		});
+
+	std::sort(result.begin(), result.end(), compare);
+
+	return result;
+}
+
+inline Intersection hit(const std::vector<Intersection>& intersections)
 {
 	for (size_t i = 0; i < intersections.size(); i++)
 	{
@@ -82,4 +107,45 @@ Intersection hit(const std::vector<Intersection>& intersections)
 	}
 
 	return {};
+}
+
+inline auto intersectWorld(const World& world, const Ray& ray)
+{
+	std::vector<Intersection> result;
+
+	for (const auto& object : world.getObjects())
+	{
+		auto intersection = intersect(object, ray);
+
+		result.insert(result.end(), intersection.begin(), intersection.end());
+	}
+
+	return intersections(result);
+}
+
+HitResult prepareComputations(const Intersection& intersection, const Ray& ray)
+{
+	// Instantiate a data structure for storing some precomputed values
+	HitResult hitResult;
+
+	// Copy the intersection's properties, for convenience
+	hitResult.t = intersection.t;
+	hitResult.object = intersection.object;
+
+	// Precompute some useful values
+	hitResult.position = ray.at(hitResult.t);
+	hitResult.viewDirection = -ray.direction;
+	hitResult.normal = normalAt(hitResult.object, hitResult.position);
+
+	if (dot(hitResult.normal, hitResult.viewDirection) < 0.0f)
+	{
+		hitResult.inside = true;
+		hitResult.normal = -hitResult.normal;
+	}
+	else
+	{
+		hitResult.inside = false;
+	}
+
+	return hitResult;
 }

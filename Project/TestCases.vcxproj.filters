@@ -6,6 +6,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Tests\camera.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Tests\canvas.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
@@ -37,6 +40,9 @@
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Tests\tuple.features.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Tests\world.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\src\canvas.cpp" />

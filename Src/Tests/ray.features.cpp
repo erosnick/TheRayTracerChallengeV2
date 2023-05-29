@@ -8,9 +8,11 @@
 #include "colors.h"
 #include <iostream>
 
+#include <intersection.h>
+
 // Chapter 5 Ray-Sphere Intersections
 
-SCENARIO("Creating and querying a ray", "[matrix]")
+SCENARIO("Creating and querying a ray", "[ray]")
 {
 	GIVEN("origin = point(1.0f, 2.0f, 3.0f)"
 		"And direction = vector(4.0f, 5.0f, 6.0f)")
@@ -51,7 +53,7 @@ SCENARIO("Computing a point from a distance", "[ray]")
 	}
 }
 
-SCENARIO("Translating a ray", "[matrix]")
+SCENARIO("Translating a ray", "[ray]")
 {
 	GIVEN("r = ray(point(1.0f, 2.0f, 3.0f), vector(0.0f, 1.0f, 0.0f))"
 		"And m = translation(3.0f, 4.0f, 5.0f)")
@@ -73,7 +75,7 @@ SCENARIO("Translating a ray", "[matrix]")
 	}
 }
 
-SCENARIO("Scaling a ray", "[matrix]")
+SCENARIO("Scaling a ray", "[ray]")
 {
 	GIVEN("r = ray(point(1.0f, 2.0f, 3.0f), vector(0.0f, 1.0f, 0.0f))"
 		"And m = scale(2.0f, 3.0f, 4.0f)")
@@ -95,7 +97,7 @@ SCENARIO("Scaling a ray", "[matrix]")
 	}
 }
 
-SCENARIO("Render test", "[matrix]")
+SCENARIO("Render test", "[ray]")
 {
 	auto canvas = Canvas(100, 100);
 

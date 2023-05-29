@@ -4,6 +4,9 @@
 #include "material.h"
 #include "light.h"
 #include "colors.h"
+#include "intersection.h"
+#include "camera.h"
+#include "canvas.h"
 
 tuple lighting(const Material& material, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal)
 {
@@ -54,4 +57,44 @@ tuple lighting(const Material& material, const PointLight& light, const tuple& p
 
 	// Add the three contributions together to get the final shading
 	return ambient + diffuse + specular;
+}
+
+inline tuple shadeHit(const World& world, const HitResult& hitResult)
+{
+	return lighting(hitResult.object->material, world.getLights()[0], hitResult.position, hitResult.viewDirection, hitResult.normal);
+}
+
+tuple colorAt(const World& world, const Ray& ray)
+{
+	auto intersections = intersectWorld(world, ray);
+
+	auto intersection = hit(intersections);
+
+	if (intersection.t > 0.0f)
+	{
+		auto hitResult = prepareComputations(intersection, ray);
+
+		return shadeHit(world, hitResult);
+	}
+
+	auto t = 0.5f * (ray.direction.y + 1.0f);
+	return (1.0f - t) * color(1.0f, 1.0f, 1.0f) + t * color(0.5f, 0.7f, 1.0f);
+}
+
+Canvas render(const Camera& camera, const World& world)
+{
+	auto image = Canvas(camera.imageWidth, camera.imageHeight);
+
+	for (int32_t y = 0; y < camera.imageHeight; y++)
+	{
+		std::cerr << "\rScanlines remaining: " << camera.imageHeight - y << ' ' << std::flush;
+		for (int32_t x = 0; x < camera.imageWidth; x++)
+		{
+			auto ray = camera.rayForPixel(x, y);
+			auto color = colorAt(world, ray);
+			image.writePixel(x, y, color);
+		}
+	}
+
+	return image;
 }
