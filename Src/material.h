@@ -1,6 +1,7 @@
 #pragma once
 
 #include "tuple.h"
+#include "pattern.h"
 
 struct Material
 {
@@ -9,6 +10,7 @@ struct Material
 	float diffuse = 0.9f;
 	float specular = 0.9f;
 	float shininess = 200.0f;
+	std::shared_ptr<Pattern> pattern;
 };
 
 inline static bool operator==(const Material& a, const Material& b)

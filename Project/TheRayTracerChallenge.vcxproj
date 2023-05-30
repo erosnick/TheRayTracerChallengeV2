@@ -114,6 +114,9 @@
     <Manifest>
       <EnableDpiAwareness>true</EnableDpiAwareness>
     </Manifest>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)/bin/Debug_Win32/$(ProjectName).exe</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -136,6 +139,9 @@
     <Manifest>
       <EnableDpiAwareness>true</EnableDpiAwareness>
     </Manifest>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)/bin/Debug_x64/$(ProjectName).exe</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -162,6 +168,9 @@
     <Manifest>
       <EnableDpiAwareness>true</EnableDpiAwareness>
     </Manifest>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)/bin/Release_Win32/$(ProjectName).exe</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -189,7 +198,7 @@
       <EnableDpiAwareness>true</EnableDpiAwareness>
     </Manifest>
     <PostBuildEvent>
-      <Command>$(SolutionDir)/bin\Release_x64/$(TargetName).exe</Command>
+      <Command>$(SolutionDir)/bin/Release_x64/$(ProjectName).exe</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -201,6 +210,7 @@
     <ClInclude Include="..\src\light.h" />
     <ClInclude Include="..\src\material.h" />
     <ClInclude Include="..\src\matrix.h" />
+    <ClInclude Include="..\src\pattern.h" />
     <ClInclude Include="..\src\plane.h" />
     <ClInclude Include="..\src\ray.h" />
     <ClInclude Include="..\src\shading.h" />

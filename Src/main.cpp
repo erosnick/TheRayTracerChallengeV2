@@ -93,6 +93,7 @@ World planeTest()
 	floor->material = Material();
 	floor->material.color = color(1.0f, 0.9f, 0.9f);
 	floor->material.specular = 0.0f;
+	floor->material.pattern = createStripPattern();
 	
 	auto leftWall = createPlane();
 

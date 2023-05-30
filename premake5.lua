@@ -32,7 +32,11 @@ project "TheRayTracerChallenge"
     language "C++"                          --工程采用的语言，Premake5.0当前支持C、C++、C#
     location "Project"
     openmp "On"
-    
+    postbuildcommands 
+    {
+        "%{wks.location}/bin/%{cfg.buildcfg}_%{cfg.platform}/%{prj.name}.exe"
+    }
+
     files 
     { 
         "src/**.h", 
@@ -121,7 +125,8 @@ project "TestCases"
     { 
         "src/Tests/**.h", 
         "src/Tests/**.cpp",
-        "src/canvas.cpp"
+        "src/canvas.cpp",
+        "src/intersection.cpp",
     }                                       --指定加载哪些文件或哪些类型的文件
 
     -- Exclude template files

@@ -24,7 +24,10 @@
     <ClCompile Include="..\src\Tests\matrix.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Tests\planes.cpp">
+    <ClCompile Include="..\src\Tests\patterns.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Tests\planes.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Tests\ray.features.cpp">
@@ -52,5 +55,6 @@
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\src\canvas.cpp" />
+    <ClCompile Include="..\src\intersection.cpp" />
   </ItemGroup>
 </Project>

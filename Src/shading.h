@@ -22,6 +22,11 @@ tuple lighting(const Material& material, const PointLight& light, const tuple& p
 	// Combine the surface color with the light's color/intensity
 	auto effectiveColor = material.color * light.intensity;
 
+	if (material.pattern != nullptr)
+	{
+		effectiveColor = material.pattern->colorAt(position) * light.intensity;
+	}
+
 	// Find the direction to the light source
 	auto lightDirection = normalize(light.position - position);
 
