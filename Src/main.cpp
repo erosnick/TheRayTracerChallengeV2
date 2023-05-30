@@ -93,8 +93,6 @@ World planeTest()
 	floor->material = Material();
 	floor->material.color = color(1.0f, 0.9f, 0.9f);
 	floor->material.specular = 0.0f;
-<<<<<<< HEAD
-=======
 	
 	auto leftWall = createPlane();
 
@@ -105,7 +103,6 @@ World planeTest()
 
 	rightWall->material = floor->material;
 	rightWall->setTransform(translate(0.0f, 0.0f, 5.0f) * rotateY(PI / 4.0f) * rotateX(PI / 2.0f));
->>>>>>> Chapter9-Planes
 
 	auto left = createSphere();
 	left->setTransform(translate(-1.5f, 0.33f, -0.75f) * scale(0.33f));
@@ -140,8 +137,6 @@ World planeTest()
 	auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Color::White);
 
 	auto world = World();
-
-	world.addLight(light);
 
 	world.setName("PlaneTest");
 
