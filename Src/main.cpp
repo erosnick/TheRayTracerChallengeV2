@@ -10,6 +10,8 @@
 #include "plane.h"
 #include "timer.h"
 
+#include "YAMLLoader.h"
+
 World shadowTest()
 {
 	auto floor = createSphere();
@@ -87,22 +89,23 @@ World planeTest()
 {
 	auto floor = createPlane();
 
-	floor->setTransform(scale(10.0f, 0.01f, 10.0f));
+	floor->setTransform(scale(0.5f, 0.5f, 0.5f));
 	floor->material = Material();
 
 	floor->material = Material();
 	floor->material.color = color(1.0f, 0.9f, 0.9f);
 	floor->material.specular = 0.0f;
 	floor->material.pattern = createStripPattern();
-	
+
 	auto leftWall = createPlane();
 
-	leftWall->material = floor->material;
+	leftWall->material = Material();
+	leftWall->material.color = color(1.0f, 0.9f, 0.9f);
 	leftWall->setTransform(translate(0.0f, 0.0f, 5.0f) * rotateY(-PI / 4.0f) * rotateX(PI / 2.0f));
 
 	auto rightWall = createPlane();
 
-	rightWall->material = floor->material;
+	rightWall->material = leftWall->material;
 	rightWall->setTransform(translate(0.0f, 0.0f, 5.0f) * rotateY(PI / 4.0f) * rotateX(PI / 2.0f));
 
 	auto ceiling = createPlane();
@@ -110,10 +113,10 @@ World planeTest()
 	ceiling->material = floor->material;
 	ceiling->setTransform(translate(0.0f, 0.0f, 0.0f));
 
-	auto platform = createPlane(1.0f, 2.0f);
+	auto platform = createPlane(0.5f, 0.5f);
 
 	platform->material = floor->material;
-	platform->setTransform(translate(0.0f, 1.0f, -2.0f));
+	platform->setTransform(translate(1.0f, 1.0f, -7.0f));
 
 	auto left = createSphere();
 	left->setTransform(translate(-1.5f, 0.33f, -0.75f) * scale(0.33f));
@@ -123,9 +126,12 @@ World planeTest()
 	left->material.specular = 0.3f;
 
 	auto middle = createSphere();
-	auto transform = translate(-0.5f, 1.0f, 0.5f);
+
+	auto transform = translate(-0.5f, 1.0f, 0.5f) * rotateY(-PI / 3.0f) * rotateZ(-PI / 9.0f);
 	middle->setTransform(transform);
 	middle->material = Material();
+	middle->material.pattern = createStripPattern(Color::RGB(14, 142, 71), Color::RGB(19, 192, 96));
+	middle->material.pattern->setTransform(translate(0.3f, 0.0f, 0.0f) * scale(0.125f));
 	middle->material.color = color(0.1f, 1.0f, 0.5f);
 	middle->material.diffuse = 0.7f;
 	middle->material.specular = 0.3f;
@@ -139,7 +145,7 @@ World planeTest()
 
 	auto topRight = createSphere();
 
-	topRight->setTransform(translate(1.5f, 1.5f, -0.5f) * rotateX(PI / 4.0F) * rotateZ(PI / 4.0F) * scale(0.5, 0.25f, 0.5f));
+	topRight->setTransform(translate(1.5f, 2.0f, -0.5f) * rotateX(PI / 4.0f) * rotateZ(PI / 4.0f) * scale(0.5, 0.25f, 0.5f));
 	topRight->material = Material();
 	topRight->material.color = color(1.0f, 0.0f, 0.0f);
 	topRight->material.diffuse = 0.7f;
@@ -171,12 +177,12 @@ int main(int argc, char* argv[])
 
 	world = planeTest();
 
-	auto camera = Camera(800, 400, radians(60.0f));
+	auto scene = loadScene("Assets/Scenes/cornellbox_empty.yaml");
 
-	camera.transform = viewTransform(point(0.0f, 1.5f, -10.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
+	world.addObject(scene.world.getObject(0));
 
 	AriaCore::ScopedTimer timer("Rendering");
-	auto canvas = render(camera, world);
+	auto canvas = render(scene.camera, world);
 
 	canvas.writeToPPM(world.getName());
 	canvas.writeToPNG(world.getName());

@@ -10,6 +10,8 @@
 class World
 {
 public:
+	World() {}
+
 	void setName(const std::string& inName)
 	{
 		name = inName;

@@ -1,0 +1,193 @@
+#include <yaml-cpp/yaml.h>
+
+#include "tuple.h"
+#include "matrix.h"
+#include "material.h"
+
+#include "scene.h"
+
+namespace YAML 
+{
+	template<>
+	struct convert<tuple> 
+	{
+		static Node encode(const tuple& rhs) 
+		{
+			Node node;
+			
+			node.push_back(rhs.x);
+			node.push_back(rhs.y);
+			node.push_back(rhs.z);
+			node.push_back(rhs.w);
+
+			return node;
+		}
+
+		static bool decode(const Node& node, tuple& rhs) 
+		{
+			if (!node.IsSequence() || node.size() != 4) 
+			{
+				return false;
+			}
+
+			rhs.x = node[0].as<float>();
+			rhs.y = node[1].as<float>();
+			rhs.z = node[2].as<float>();
+			rhs.w = node[3].as<float>();
+
+			return true;
+		}
+	};
+
+	template<>
+	struct convert<matrix4>
+	{
+		static Node encode(const matrix4& rhs)
+		{
+			Node node;
+			node.push_back(rhs(0, 0));
+			node.push_back(rhs(0, 1));
+			node.push_back(rhs(0, 2));
+			node.push_back(rhs(0, 3));
+
+			node.push_back(rhs(1, 0));
+			node.push_back(rhs(1, 1));
+			node.push_back(rhs(1, 2));
+			node.push_back(rhs(1, 3));
+
+			node.push_back(rhs(2, 0));
+			node.push_back(rhs(2, 1));
+			node.push_back(rhs(2, 2));
+			node.push_back(rhs(2, 3));
+
+			node.push_back(rhs(3, 0));
+			node.push_back(rhs(3, 1));
+			node.push_back(rhs(3, 2));
+			node.push_back(rhs(3, 3));
+
+			return node;
+		}
+
+		static bool decode(const Node& node, matrix4& rhs)
+		{
+			if (!node.IsSequence() || node.size() != 16)
+			{
+				return false;
+			}
+
+			rhs(0, 0) = node[0].as<float>();
+			rhs(0, 1) = node[1].as<float>();
+			rhs(0, 2) = node[2].as<float>();
+			rhs(0, 3) = node[3].as<float>();
+
+			rhs(1, 0) = node[4].as<float>();
+			rhs(1, 1) = node[5].as<float>();
+			rhs(1, 2) = node[6].as<float>();
+			rhs(1, 3) = node[7].as<float>();
+
+			rhs(2, 0) = node[8].as<float>();
+			rhs(2, 1) = node[9].as<float>();
+			rhs(2, 2) = node[10].as<float>();
+			rhs(2, 3) = node[11].as<float>();
+
+			rhs(3, 0) = node[12].as<float>();
+			rhs(3, 1) = node[13].as<float>();
+			rhs(3, 2) = node[14].as<float>();
+			rhs(3, 3) = node[15].as<float>();
+
+			return true;
+		}
+	};
+
+	template<>
+	struct convert<Material> {
+		static Node encode(const Material& rhs) 
+		{
+			Node node;
+			node["color"] = rhs.color;
+			node["ambient"] = rhs.ambient;;
+			node["diffuse"] = rhs.diffuse;
+			node["specular"] = rhs.specular;
+			node["shininess"] = rhs.shininess;
+
+			return node;
+		}
+
+		static bool decode(const Node& node, Material& rhs) 
+		{
+			printf("%d\n", static_cast<int32_t>(node.size()));
+
+			rhs.color = node["color"].as<tuple>();
+			rhs.ambient = node["ambient"].as<float>();
+			rhs.diffuse = node["diffuse"].as<float>();
+			rhs.specular = node["specular"].as<float>();
+			rhs.shininess = node["shininess"].as<float>();
+
+			return true;
+		}
+	};
+
+	template<>
+	struct convert<Sphere> {
+		static Node encode(const Sphere& rhs)
+		{
+			Node node;
+			node["center"] = rhs.center;
+			node["radius"] = rhs.radius;;
+			node["material"] = rhs.material;
+
+			return node;
+		}
+
+		static bool decode(const Node& node, Sphere& rhs)
+		{
+			printf("%d\n", static_cast<int32_t>(node.size()));
+
+			rhs.center = node["center"].as<tuple>();
+			rhs.radius = node["radius"].as<float>();
+			rhs.material = node["material"].as<Material>();
+
+			auto translation = node["translation"].as<tuple>();
+			auto rotation = node["rotation"].as<tuple>();
+			auto scaleFactor = node["scale"].as<tuple>();
+
+			rhs.transform = translate(translation) * rotateX(rotation.x) * rotateX(rotation.x) * rotateX(rotation.x) * scale(scaleFactor);
+
+			return true;
+		}
+	};
+}
+
+inline static Scene loadScene(const std::string& path)
+{
+	Scene scene;
+
+	YAML::Node config = YAML::LoadFile(path);
+
+	printf("name:%s\n", config["scene"]["name"].as<std::string>().c_str());
+
+	auto translation = config["transform"]["translation"].as<tuple>();
+
+	auto imageWidth = config["camera"]["imageWidth"].as<int32_t>();
+	auto imageHeight = config["camera"]["imageHeight"].as<int32_t>();
+	auto fov = config["camera"]["fov"].as<float>();
+
+	scene.camera = Camera(imageWidth, imageHeight, radians(fov));
+
+	auto from = config["camera"]["eye"].as<tuple>();
+	auto to = config["camera"]["center"].as<tuple>();
+	auto up = config["camera"]["up"].as<tuple>();
+
+	scene.camera.transform = viewTransform(from, to, up);
+
+	auto sphere = config["objects"]["sphere"].as<Sphere>();
+
+	scene.world.addObject(std::make_shared<Sphere>(sphere));
+
+	for (auto iterator = config["skills"].begin(); iterator != config["skills"].end(); iterator++)
+	{
+		printf("%s\n", iterator->first.as<std::string>().c_str());
+	}
+
+	return scene;
+}

@@ -29,7 +29,7 @@ SCENARIO("A stripe pattern is constant in y", "[patterns]")
 	auto black = Color::Black;
 	auto white = Color::White;
 
-	GIVEN("pattern = stripePattern(white, black)")
+	GIVEN("pattern = createStripPattern(white, black)")
 	{
 		auto pattern = createStripPattern(white, black);
 		THEN("colorAt(pattern, point(0.0f, 0.0f, 0.0f)) == white"
@@ -67,7 +67,7 @@ SCENARIO("A stripe pattern is constant in x", "[patterns]")
 	auto black = Color::Black;
 	auto white = Color::White;
 
-	GIVEN("pattern = stripePattern(white, black)")
+	GIVEN("pattern = createStripPattern(white, black)")
 	{
 		auto pattern = createStripPattern(white, black);
 		THEN("colorAt(pattern, point(0.0f, 0.0f, 0.0f)) == white"
@@ -89,7 +89,7 @@ SCENARIO("A stripe pattern is constant in x", "[patterns]")
 
 SCENARIO("Lighting with a pattern applied", "[patterns]")
 {
-	GIVEN("m.pattern = stripe_pattern(color(1, 1, 1), color(0, 0, 0))"
+	GIVEN("m.pattern = createStripPattern(color(1, 1, 1), color(0, 0, 0))"
 		"And m.ambient = 1.0f"
 		"And m.diffuse = 0.0f"
 		"And m.specular = 0.0f"
@@ -115,6 +115,76 @@ SCENARIO("Lighting with a pattern applied", "[patterns]")
 			{
 				REQUIRE(c1 == Color::White);
 				REQUIRE(c2 == Color::Black);
+			}
+		}
+	}
+}
+
+SCENARIO("Stripes with an object transformation", "[patterns]")
+{
+	auto black = Color::Black;
+	auto white = Color::White;
+
+	GIVEN("object = Sphere()"
+		"And setTransform(object, scale(2.0f, 2.0f, 2.0f))"
+		"And pattern = createStripPattern(white, black)")
+	{
+		auto object = createSphere();
+		object->setTransform(scale(2.0f, 2.0f, 2.0f));
+		auto pattern = createStripPattern(white, black);
+		WHEN("c = colorAt(pattern, point(1.5, 0, 0), object.transform)")
+		{
+			auto c = pattern->colorAt(point(1.5, 0, 0), object->transform);
+			THEN("c == white")
+			{
+				REQUIRE(c == white);
+			}
+		}
+	}
+}
+
+SCENARIO("Stripes with a pattern transformation", "[patterns]")
+{
+	auto black = Color::Black;
+	auto white = Color::White;
+
+	GIVEN("object = Sphere()"
+		"And setTransform(object, scale(2.0f, 2.0f, 2.0f))"
+		"And pattern = createStripPattern(white, black)")
+	{
+		auto object = createSphere();
+		auto pattern = createStripPattern(white, black);
+		pattern->setTransform(scale(2.0f, 2.0f, 2.0f));
+		WHEN("c = colorAt(pattern, point(1.5, 0, 0), object.transform)")
+		{
+			auto c = pattern->colorAt(point(1.5, 0, 0), object->transform);
+			THEN("c == white")
+			{
+				REQUIRE(c == white);
+			}
+		}
+	}
+}
+
+SCENARIO("Stripes with both an object and a pattern transformation", "[patterns]")
+{
+	auto black = Color::Black;
+	auto white = Color::White;
+
+	GIVEN("object = Sphere()"
+		"And setTransform(object, scale(2.0f, 2.0f, 2.0f))"
+		"And pattern = createStripPattern(white, black)")
+	{
+		auto object = createSphere();
+		object->setTransform(scale(2.0f, 2.0f, 2.0f));
+		auto pattern = createStripPattern(white, black);
+		pattern->setTransform(translate(0.5f, 0.0f, 0.0f));
+		WHEN("c = colorAt(pattern, point(1.5f, 0.0f, 0.0f), object.transform)")
+		{
+			auto c = pattern->colorAt(point(2.5f, 0.0f, 0.0f), object->transform);
+			THEN("c == white")
+			{
+				REQUIRE(c == white);
 			}
 		}
 	}

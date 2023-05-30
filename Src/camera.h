@@ -7,6 +7,10 @@
 class Camera
 {
 public:
+	Camera() 
+	: Camera(800, 600, radians(60.0f))
+	{}
+
 	Camera(int32_t inImageWidth, int32_t inImageHeight, float inFieldOfView)
 		: imageWidth(inImageWidth), imageHeight(inImageHeight), fieldOfView(inFieldOfView), pixelSize(0.0f)
 	{
@@ -52,9 +56,9 @@ public:
 
 	int32_t imageWidth;
 	int32_t imageHeight;
-	float halfWidth;
-	float halfHeight;
-	float fieldOfView;
-	matrix4 transform;
-	float pixelSize;
+	float halfWidth = 0.0f;
+	float halfHeight = 0.0f;
+	float fieldOfView = 0.0f;
+	matrix4 transform = matrix4(1.0f);
+	float pixelSize = 0.0f;
 };

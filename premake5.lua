@@ -34,7 +34,7 @@ project "TheRayTracerChallenge"
     openmp "On"
     postbuildcommands 
     {
-        "%{wks.location}/bin/%{cfg.buildcfg}_%{cfg.platform}/%{prj.name}.exe"
+        -- "%{wks.location}/bin/%{cfg.buildcfg}_%{cfg.platform}/%{prj.name}.exe"
     }
 
     files 
@@ -77,18 +77,21 @@ project "TheRayTracerChallenge"
         includedirs 
         { 
             './ThirdParty/Catch2/include',
+            './ThirdParty/yaml-cpp/include',
             './src'
         }
 
 		libdirs 
         { 
-            './ThirdParty/Catch2/lib'
+            './ThirdParty/Catch2/lib',
+            './ThirdParty/yaml-cpp/lib'
         }
 
 		links 
         {
             'Catch2d.lib',
-            'Catch2Maind.lib'
+            'Catch2Maind.lib',
+            'yaml-cppd.lib'
         }
 
     --Release配置项属性
@@ -100,18 +103,21 @@ project "TheRayTracerChallenge"
         includedirs 
         { 
             './ThirdParty/Catch2/include',
+            './ThirdParty/yaml-cpp/include',
             './src'
         }
 
 		libdirs 
         { 
-            './ThirdParty/Catch2/lib'
+            './ThirdParty/Catch2/lib',
+            './ThirdParty/yaml-cpp/lib'
         }
 
 		links 
         { 
             'Catch2.lib',
-            'Catch2Main.lib'
+            'Catch2Main.lib',
+            'yaml-cpp.lib'
         }
 
 --project: 对应VS中的项目

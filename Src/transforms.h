@@ -262,6 +262,11 @@ inline matrix4 translate(float x, float y, float z)
 	return result;
 }
 
+inline matrix4 translate(const tuple& translation)
+{
+	return translate(translation.x, translation.y, translation.z);
+}
+
 inline matrix4 identity()
 {
 	matrix4 result(1.0f);
@@ -278,6 +283,11 @@ inline matrix4 scale(float x, float y, float z)
 	result(2, 2) = z;
 
 	return result;
+}
+
+inline matrix4 scale(const tuple& value)
+{
+	return scale(value.x, value.y, value.z);
 }
 
 inline matrix4 scale(float value)

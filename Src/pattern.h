@@ -4,6 +4,8 @@
 #include <memory>
 
 #include "colors.h"
+#include "matrix.h"
+#include "transforms.h"
 
 class Pattern
 {
@@ -12,12 +14,25 @@ public:
 	: color1(inColor1), color2(inColor2)
 	{}
 
-	virtual tuple colorAt(const tuple& position)
+	void setTransform(const matrix4& inTransform)
+	{
+		transform = inTransform;
+	}
+
+	virtual tuple colorAt(const tuple& worldPosition)
 	{
 		return Color::White;
 	}
+
+	virtual tuple colorAt(const tuple& worldPosition, const matrix4& objectTransform)
+	{
+		return Color::White;
+	}
+
 	tuple color1 = Color::Black;
 	tuple color2 = Color::White;
+
+	matrix4 transform;
 };
 
 class StripPattern : public Pattern
@@ -27,14 +42,22 @@ public:
 	: Pattern(inColor1, inColor2)
 	{}
 
-	tuple colorAt(const tuple& position) override
+	tuple colorAt(const tuple& worldPosition) override
 	{
-		if (std::fmodf(std::floor(position.x), 2.0f) == 0)
+		if (std::fmodf(std::floor(worldPosition.x), 2.0f) == 0)
 		{
 			return color1;
 		}
 
 		return color2;
+	}
+
+	tuple colorAt(const tuple& worldPosition, const matrix4& objectTransform) override
+	{
+		auto objectPosition = inverse(objectTransform) * worldPosition;
+		auto patternPosition = inverse(transform) * objectPosition;
+
+		return colorAt(patternPosition);
 	}
 };
 
