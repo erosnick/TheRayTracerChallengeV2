@@ -9,9 +9,14 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
+const std::string ProjectRoot = "../";
+const std::string OutpuPath = ProjectRoot + "Output/";
+const std::string PPM = ".ppm";
+const std::string PNG = ".png";
+
 void Canvas::writeToPPM(const std::string& path)
 {
-	std::ofstream file(path);
+	std::ofstream file(OutpuPath + path + PPM);
 
 	auto ppm = std::string();
 	ppm.append("P3\n");
@@ -58,7 +63,9 @@ void Canvas::writeToPNG(const std::string& path)
 		}
 	}
 
-	stbi_write_png(path.c_str(), width, height, 3, data.data(), width * 3);
+	std::string outputPath = OutpuPath + path + PNG;
+
+	stbi_write_png(outputPath.c_str(), width, height, 3, data.data(), width * 3);
 }
 
 bool Canvas::black()

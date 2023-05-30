@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include "sphere.h"
 #include "light.h"
@@ -9,6 +10,11 @@
 class World
 {
 public:
+	void setName(const std::string& inName)
+	{
+		name = inName;
+	}
+
 	void addLight(const PointLight& light)
 	{
 		lights.emplace_back(light);
@@ -30,9 +36,12 @@ public:
 
 	auto& getLight(int32_t index) { return lights[index]; }
 	auto& getObject(int32_t index) { return objects[index]; }
+
+	auto getName() const { return name; }
 private:
 	std::vector<std::shared_ptr<Shape>> objects;
 	std::vector<PointLight> lights;
+	std::string name;
 };
 
 inline static World defaultWorld()

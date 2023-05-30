@@ -69,6 +69,8 @@ World shadowTest()
 	auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Color::White);
 
 	auto world = World();
+	world.setName("ShadowTest");
+
 	world.addLight(light);
 	world.addObject(floor);
 	world.addObject(leftWall);
@@ -91,6 +93,19 @@ World planeTest()
 	floor->material = Material();
 	floor->material.color = color(1.0f, 0.9f, 0.9f);
 	floor->material.specular = 0.0f;
+<<<<<<< HEAD
+=======
+	
+	auto leftWall = createPlane();
+
+	leftWall->material = floor->material;
+	leftWall->setTransform(translate(0.0f, 0.0f, 5.0f) * rotateY(-PI / 4.0f) * rotateX(PI / 2.0f));
+
+	auto rightWall = createPlane();
+
+	rightWall->material = floor->material;
+	rightWall->setTransform(translate(0.0f, 0.0f, 5.0f) * rotateY(PI / 4.0f) * rotateX(PI / 2.0f));
+>>>>>>> Chapter9-Planes
 
 	auto left = createSphere();
 	left->setTransform(translate(-1.5f, 0.33f, -0.75f) * scale(0.33f));
@@ -115,6 +130,7 @@ World planeTest()
 	right->material.specular = 0.3f;
 
 	auto topRight = createSphere();
+
 	topRight->setTransform(translate(1.5f, 1.5f, -0.5f) * rotateX(PI / 4.0F) * rotateZ(PI / 4.0F) * scale(0.5, 0.25f, 0.5f));
 	topRight->material = Material();
 	topRight->material.color = color(1.0f, 0.0f, 0.0f);
@@ -124,8 +140,15 @@ World planeTest()
 	auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Color::White);
 
 	auto world = World();
+
+	world.addLight(light);
+
+	world.setName("PlaneTest");
+
 	world.addLight(light);
 	world.addObject(floor);
+	world.addObject(leftWall);
+	world.addObject(rightWall);
 	world.addObject(left);
 	world.addObject(middle);
 	world.addObject(right);
@@ -147,8 +170,8 @@ int main(int argc, char* argv[])
 	AriaCore::ScopedTimer timer("Rendering");
 	auto canvas = render(camera, world);
 
-	canvas.writeToPPM("scene.ppm");
-	canvas.writeToPNG("scene.png");
+	canvas.writeToPPM(world.getName());
+	canvas.writeToPNG(world.getName());
 
 	return 0;
 }
