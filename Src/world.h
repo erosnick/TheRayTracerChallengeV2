@@ -14,7 +14,7 @@ public:
 		lights.emplace_back(light);
 	}
 
-	void addObject(const std::shared_ptr<Sphere>& object)
+	void addObject(const std::shared_ptr<Shape>& object)
 	{
 		objects.emplace_back(object);
 	}
@@ -31,11 +31,11 @@ public:
 	auto& getLight(int32_t index) { return lights[index]; }
 	auto& getObject(int32_t index) { return objects[index]; }
 private:
-	std::vector<std::shared_ptr<Sphere>> objects;
+	std::vector<std::shared_ptr<Shape>> objects;
 	std::vector<PointLight> lights;
 };
 
-World defaultWorld()
+inline static World defaultWorld()
 {
 	World world;
 
