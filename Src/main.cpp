@@ -104,6 +104,16 @@ World planeTest()
 	rightWall->material = floor->material;
 	rightWall->setTransform(translate(0.0f, 0.0f, 5.0f) * rotateY(PI / 4.0f) * rotateX(PI / 2.0f));
 
+	auto ceiling = createPlane();
+
+	ceiling->material = floor->material;
+	ceiling->setTransform(translate(0.0f, 0.0f, 0.0f));
+
+	auto platform = createPlane(1.0f, 2.0f);
+
+	platform->material = floor->material;
+	platform->setTransform(translate(0.0f, 1.0f, -2.0f));
+
 	auto left = createSphere();
 	left->setTransform(translate(-1.5f, 0.33f, -0.75f) * scale(0.33f));
 	left->material = Material();
@@ -141,6 +151,8 @@ World planeTest()
 	world.addLight(light);
 	world.addObject(floor);
 	world.addObject(leftWall);
+	world.addObject(ceiling);
+	world.addObject(platform);
 	world.addObject(rightWall);
 	world.addObject(left);
 	world.addObject(middle);
@@ -158,7 +170,7 @@ int main(int argc, char* argv[])
 
 	auto camera = Camera(800, 400, radians(60.0f));
 
-	camera.transform = viewTransform(point(0.0f, 1.5f, -5.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
+	camera.transform = viewTransform(point(0.0f, 1.5f, -10.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
 
 	AriaCore::ScopedTimer timer("Rendering");
 	auto canvas = render(camera, world);
