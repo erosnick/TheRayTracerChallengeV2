@@ -24,6 +24,9 @@
     <ClCompile Include="..\src\Tests\matrix.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Tests\planes.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Tests\ray.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
@@ -31,6 +34,9 @@
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Tests\shading.features.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Tests\shape.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Tests\spheres.features.cpp">

@@ -11,7 +11,7 @@ struct Material
 	float shininess = 200.0f;
 };
 
-bool operator==(const Material& a, const Material& b)
+inline static bool operator==(const Material& a, const Material& b)
 {
 	return a.color == b.color &&
 		equal(a.ambient, b.ambient) &&

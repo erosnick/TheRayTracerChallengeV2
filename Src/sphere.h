@@ -2,30 +2,57 @@
 
 #include "ray.h"
 #include <vector>
-
+#include <memory>
 #include "matrix.h"
 #include "material.h"
+#include "shape.h"
 
-struct Sphere
+class Sphere : public Shape
 {
-	Sphere() { id++; }
+public:
+	Sphere() { }
 
-	void setTransform(const matrix4& inTransform)
-	{
-		transform = inTransform;
+	virtual std::vector<Intersection> localIntersect(const Ray& transformedRay) override 
+	{ 
+		// The vector from the sphere's center, to the ray origin
+		// Remember: the sphere is centered at the world origin
+		auto sphereToRay = transformedRay.origin - center;
+
+		auto a = dot(transformedRay.direction, transformedRay.direction);
+		auto b = 2.0f * dot(transformedRay.direction, sphereToRay);
+		auto c = dot(sphereToRay, sphereToRay) - radius;
+
+		auto discriminant = b * b - 4.0f * a * c;
+
+		if (discriminant < 0.0f)
+		{
+			return {};
+		}
+
+		auto t1 = (-b - std::sqrtf(discriminant)) / (2.0f * a);
+		auto t2 = (-b + std::sqrtf(discriminant)) / (2.0f * a);
+
+		auto shape = shared_from_this();
+
+		// https://blog.csdn.net/u013745174/article/details/52900870
+		auto object = std::dynamic_pointer_cast<Sphere>(shared_from_this());
+
+		return { { t1, shape, object },
+				 { t2, shape, object } };
 	}
 
-	static int32_t id;
+	virtual tuple localNormalAt(const tuple& localPosition) override 
+	{ 
+		auto localNormal = localPosition - center;
+
+		return  localNormal;
+	}
 
 	tuple center{ 0.0f, 0.0f, 0.0f, 1.0f };
 	float radius = 1.0f;
-	matrix4 transform;
-	Material material;
 };
 
-int32_t Sphere::id = 0;
-
-bool operator==(const Sphere& a, const Sphere& b)
+inline static bool operator==(const Sphere& a, const Sphere& b)
 {
 	return (a.center == b.center) &&
 		   (a.radius == b.radius) &&

@@ -7,12 +7,13 @@
 #include "intersection.h"
 #include "camera.h"
 #include "canvas.h"
+#include "world.h"
 
 #include <omp.h>
 
 tuple lighting(const Material& material, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow = false);
 tuple shadeHit(const World& world, const HitResult& hitResult);
-tuple colorAt(const World& world, const Ray& ray);
+tuple colorAt(const World& world, const Ray& ray, bool backgroundColor = true);
 Canvas render(const Camera& camera, const World& world);
 std::vector<bool> isShadowed(const World& world, const tuple& position);
 
@@ -80,13 +81,13 @@ tuple shadeHit(const World& world, const HitResult& hitResult)
 
 	for (int32_t i = 0; i < world.lightCount(); i++)
 	{
-		finalColor += lighting(hitResult.object->material, world.getLights()[i], hitResult.position, hitResult.viewDirection, hitResult.normal, shadowResult[i]);
+		finalColor += lighting(hitResult.shape->material, world.getLights()[i], hitResult.position, hitResult.viewDirection, hitResult.normal, shadowResult[i]);
 	}
 
 	return finalColor;
 }
 
-tuple colorAt(const World& world, const Ray& ray)
+tuple colorAt(const World& world, const Ray& ray, bool backgroundColor)
 {
 	auto intersections = intersectWorld(world, ray);
 
@@ -99,8 +100,12 @@ tuple colorAt(const World& world, const Ray& ray)
 		return shadeHit(world, hitResult);
 	}
 
-	//auto t = 0.5f * (ray.direction.y + 1.0f);
-	//return (1.0f - t) * color(1.0f, 1.0f, 1.0f) + t * color(0.5f, 0.7f, 1.0f);
+	if (backgroundColor)
+	{
+		auto t = 0.5f * (ray.direction.y + 1.0f);
+		return (1.0f - t) * color(1.0f, 1.0f, 1.0f) + t * color(0.5f, 0.7f, 1.0f);
+	}
+
 	return Color::Black;
 }
 
@@ -115,7 +120,7 @@ Canvas render(const Camera& camera, const World& world)
 		for (int32_t x = 0; x < camera.imageWidth; x++)
 		{
 			auto ray = camera.rayForPixel(x, y);
-			auto color = colorAt(world, ray);
+			auto color = colorAt(world, ray, false);
 			image.writePixel(x, y, color);
 		}
 	}
