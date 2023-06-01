@@ -189,3 +189,103 @@ SCENARIO("Stripes with both an object and a pattern transformation", "[patterns]
 		}
 	}
 }
+
+SCENARIO("A gradient linearly interpolates between colors", "[patterns]")
+{
+	auto black = Color::Black;
+	auto white = Color::White;
+
+	GIVEN("pattern = gradientPattern(white, black)")
+	{
+		auto pattern = createGradientPattern();
+		THEN("patternAt(pattern, point(0.0f, 0.0f, 0.0f)) = white"
+			"And patternAt(pattern, point(0.25f, 0.0f, 0.0f)) = color(0.75f, 0.75f, 0.75f)"
+			"And patternAt(pattern, point(0.5f, 0.0f, 0.0f)) = color(0.5f, 0.5f, 0.5f)"
+			"And patternAt(pattern, point(0.75f, 0.0f, 0.0f)) = color(0.25f, 0.25f, 0.25f)")
+		{
+			REQUIRE(pattern->colorAt(point(0.0f, 0.0f, 0.0f)) == white);
+			REQUIRE(pattern->colorAt(point(0.25f, 0.0f, 0.0f)) == color(0.75f, 0.75f, 0.75f));
+			REQUIRE(pattern->colorAt(point(0.5f, 0.0f, 0.0f)) == color(0.5f, 0.5f, 0.5f));
+			REQUIRE(pattern->colorAt(point(0.75f, 0.0f, 0.0f)) == color(0.25f, 0.25f, 0.25f));
+		}
+	}
+}
+
+SCENARIO("A ring should extend in both x and z", "[patterns]")
+{
+	auto black = Color::Black;
+	auto white = Color::White;
+
+	GIVEN("pattern = ringPattern(white, black)")
+	{
+		auto pattern = createRingPattern();
+		THEN("patternAt(pattern, point(0.0f, 0.0f, 0.0f)) = white"
+			"And pattern_at(pattern, point(1.0f, 0.0f, 0.0f)) = black"
+			"And pattern_at(pattern, point(0.0f, 0.0f, 1.0f)) = black"
+			"# 0.708 = just slightly more than ¡Ì2 / 2.0f"
+			"And patternAt(pattern, point(0.708f, 0.0f, 0.708f)) = black")
+		{
+			REQUIRE(pattern->colorAt(point(0.0f, 0.0f, 0.0f)) == white);
+			REQUIRE(pattern->colorAt(point(1.0f, 0.0f, 0.0f)) == black);
+			REQUIRE(pattern->colorAt(point(0.0f, 0.0f, 1.0f)) == black);
+			REQUIRE(pattern->colorAt(point(0.708f, 0.0f, 0.708f)) == black);
+		}
+	}
+}
+
+SCENARIO("Checkers should repeat in x", "[patterns]")
+{
+	auto black = Color::Black;
+	auto white = Color::White;
+
+	GIVEN("pattern = checkersPattern(white, black)")
+	{
+		auto pattern = createCheckerPattern();
+		THEN("patternAt(pattern, point(0.0f, 0.0f, 0.0f)) = white"
+			"And patternAt(pattern, point(0.99f, 0.0f, 0.0f)) = white"
+			"And patternAt(pattern, point(1.01f, 0.0f, 0.0f)) = black")
+		{
+			REQUIRE(pattern->colorAt(point(0.0f, 0.0f, 0.0f)) == white);
+			REQUIRE(pattern->colorAt(point(0.99f, 0.0f, 0.0f)) == white);
+			REQUIRE(pattern->colorAt(point(1.01f, 0.0f, 0.0f)) == black);
+		}
+	}
+}
+
+SCENARIO("Checkers should repeat in y", "[patterns]")
+{
+	auto black = Color::Black;
+	auto white = Color::White;
+
+	GIVEN("pattern = checkersPattern(white, black)")
+	{
+		auto pattern = createCheckerPattern();
+		THEN("patternAt(pattern, point(0.0f, 0.0f, 0.0f)) = white"
+			"And patternAt(pattern, point(0.0f, 0.99f, 0.0f)) = white"
+			"And patternAt(pattern, point(0.0f, 1.01f, 0.0f)) = black")
+		{
+			REQUIRE(pattern->colorAt(point(0.0f, 0.0f, 0.0f)) == white);
+			REQUIRE(pattern->colorAt(point(0.0f, 0.99f, 0.0f)) == white);
+			REQUIRE(pattern->colorAt(point(0.0f, 1.01f, 0.0f)) == black);
+		}
+	}
+}
+
+SCENARIO("Checkers should repeat in z", "[patterns]")
+{
+	auto black = Color::Black;
+	auto white = Color::White;
+
+	GIVEN("pattern = checkersPattern(white, black)")
+	{
+		auto pattern = createCheckerPattern();
+		THEN("patternAt(pattern, point(0.0f, 0.0f, 0.0f)) = white"
+			"And patternAt(pattern, point(0.0f, 0.0f, 0.99f)) = white"
+			"And patternAt(pattern, point(0.0f, 0.0f, 1.01f)) = black")
+		{
+			REQUIRE(pattern->colorAt(point(0.0f, 0.0f, 0.0f)) == white);
+			REQUIRE(pattern->colorAt(point(0.0f, 0.99f, 0.0f)) == white);
+			REQUIRE(pattern->colorAt(point(0.0f, 1.01f, 0.0f)) == black);
+		}
+	}
+}

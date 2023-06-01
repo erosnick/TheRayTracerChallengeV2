@@ -331,6 +331,11 @@ inline matrix4 rotateZ(float radian)
 	return result;
 }
 
+inline matrix4 rotate(const tuple& value)
+{
+	return rotateZ(value.z) * rotateY(value.y) * rotateX(value.x);
+}
+
 inline matrix4 shearing(float xy, float xz, float yx, float yz, float zx, float zy)
 {
 	auto result = matrix4(1.0);

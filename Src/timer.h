@@ -14,6 +14,12 @@ namespace AriaCore {
 			Reset();
 		}
 
+		Timer(const std::string& name)
+		: m_Name(name)
+		{
+			Reset();
+		}
+
 		void Timer::Reset()
 		{
 			m_Start = std::chrono::high_resolution_clock::now();
@@ -29,8 +35,15 @@ namespace AriaCore {
 			return Elapsed() * 1000.0f;
 		}
 
+		void Timer::PrintElaspedMillis()
+		{
+			float time = ElapsedMillis();
+			std::cout << "[TIMER] " << m_Name << " - " << time << "ms\n";
+		}
+
 	private:
 		std::chrono::time_point<std::chrono::high_resolution_clock> m_Start;
+		std::string m_Name;
 	};
 
 	class ScopedTimer

@@ -3,7 +3,6 @@
 #include "tuple.h"
 #include "matrix.h"
 #include "material.h"
-
 #include "scene.h"
 
 namespace YAML 
@@ -150,6 +149,46 @@ namespace YAML
 			auto translation = node["translation"].as<tuple>();
 			auto rotation = node["rotation"].as<tuple>();
 			auto scaleFactor = node["scale"].as<tuple>();
+
+			auto patternNode = node["material"]["pattern"];
+
+			if (!patternNode.IsNull())
+			{
+				auto patternType = static_cast<PatternType>(patternNode["type"].as<uint8_t>());
+
+				switch (patternType)
+				{
+				case PatternType::Strip:
+				{
+					auto color1 = patternNode["color1"].as<tuple>();
+					auto color2 = patternNode["color2"].as<tuple>();
+					auto patternTranslation = patternNode["transform"]["translation"].as<tuple>();
+					auto patternRotation = patternNode["transform"]["rotation"].as<tuple>();
+					auto patternScale = patternNode["transform"]["scale"].as<tuple>();
+					auto pattern = createStripPattern(color1, color2);
+
+					auto translation = translate(patternTranslation);
+					auto rotation = rotate(patternRotation);
+					auto scaleFactor = scale(patternScale);
+
+					pattern->setTransform(translation * rotation * scaleFactor);
+					rhs.material.pattern = pattern;
+				}
+				break;
+				case PatternType::Gradient:
+					break;
+				case PatternType::Ring:
+					break;
+				case PatternType::Checker:
+					break;
+				case PatternType::RadialGradient:
+					break;
+				case PatternType::Blend:
+					break;
+				default:
+					break;
+				}
+			}
 
 			rhs.transform = translate(translation) * rotateX(rotation.x) * rotateX(rotation.x) * rotateX(rotation.x) * scale(scaleFactor);
 

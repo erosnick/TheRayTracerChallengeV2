@@ -190,6 +190,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\SimplexNoise.h" />
     <ClInclude Include="..\src\YAMLLoader.h" />
     <ClInclude Include="..\src\camera.h" />
     <ClInclude Include="..\src\canvas.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="..\src\world.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\SimplexNoise.cpp" />
     <ClCompile Include="..\src\canvas.cpp" />
     <ClCompile Include="..\src\intersection.cpp" />
     <ClCompile Include="..\src\main.cpp" />

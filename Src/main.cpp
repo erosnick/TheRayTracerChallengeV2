@@ -95,7 +95,22 @@ World planeTest()
 	floor->material = Material();
 	floor->material.color = color(1.0f, 0.9f, 0.9f);
 	floor->material.specular = 0.0f;
-	floor->material.pattern = createStripPattern();
+	//floor->material.pattern = createCheckerPattern();
+	////floor->material.pattern = createStripPattern();
+	////floor->material.pattern->setTransform(rotateY(PI / 2.0f));
+	//floor->material.pattern = createGradientPattern();
+	//floor->material.pattern->setTransform(scale(5.0f, 5.0f, 5.0f));
+	auto pattern1 = createStripPattern(Color::DarkGreen, Color::White);
+	pattern1->setTransform(rotateY(PI / 2.0f));
+	auto pattern2 = createStripPattern(Color::DarkGreen, Color::White);
+	floor->material.pattern = createBlendPattern(pattern1, pattern2);
+
+	pattern1 = createStripPattern(Color::RGB(146, 216, 250), Color::RGB(239, 134, 198));
+	pattern1->setTransform(rotateY(PI / 6.0f) * scale(0.25f));
+	pattern2 = createStripPattern();
+	pattern2->setTransform(rotateY(-PI / 6.0f) * scale(0.25f));
+	floor->material.pattern = createNestedPattern(pattern1, pattern2);
+	//floor->material.pattern = createPerturbedPattern(createStripPattern());
 
 	auto leftWall = createPlane();
 
@@ -105,7 +120,9 @@ World planeTest()
 
 	auto rightWall = createPlane();
 
-	rightWall->material = leftWall->material;
+	rightWall->material = Material();
+	rightWall->material.pattern = createRadialGradientPattern();
+	rightWall->material.pattern->setTransform(scale(0.5f));
 	rightWall->setTransform(translate(0.0f, 0.0f, 5.0f) * rotateY(PI / 4.0f) * rotateX(PI / 2.0f));
 
 	auto ceiling = createPlane();
@@ -116,7 +133,9 @@ World planeTest()
 	auto platform = createPlane(0.5f, 0.5f);
 
 	platform->material = floor->material;
-	platform->setTransform(translate(1.0f, 1.0f, -7.0f));
+	platform->material.pattern = createStripPattern();
+	platform->material.pattern->setTransform(scale(0.25f));
+	platform->setTransform(translate(1.0f, 1.0f, -5.0f));
 
 	auto left = createSphere();
 	left->setTransform(translate(-1.5f, 0.33f, -0.75f) * scale(0.33f));
@@ -142,6 +161,8 @@ World planeTest()
 	right->material.color = color(0.5f, 1.0f, 0.1f);
 	right->material.diffuse = 0.7f;
 	right->material.specular = 0.3f;
+	right->material.pattern = createGradientPattern(Color::RGB(146, 216, 250), Color::RGB(239, 134, 198));
+	right->material.pattern->setTransform(scale(1.0f));
 
 	auto topRight = createSphere();
 
@@ -181,8 +202,9 @@ int main(int argc, char* argv[])
 
 	world.addObject(scene.world.getObject(0));
 
-	AriaCore::ScopedTimer timer("Rendering");
+	AriaCore::Timer timer("Rendering");
 	auto canvas = render(scene.camera, world);
+	timer.PrintElaspedMillis();
 
 	canvas.writeToPPM(world.getName());
 	canvas.writeToPNG(world.getName());

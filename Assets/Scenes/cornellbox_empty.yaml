@@ -43,6 +43,34 @@ objects:
       diffuse:   1.0
       specular:  0.3
       shininess: 200.0
+      pattern:
+        type: 0
+        color1:
+          - 0.0
+          - 0.0
+          - 0.0
+          - 0.0
+        color2:
+          - 1.0
+          - 1.0
+          - 1.0
+          - 0.0
+        transform:
+          translation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+          rotation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+          scale:
+            - 0.25
+            - 0.25
+            - 0.25
+            - 1.0
     translation:
       -  3.0
       -  2.0
