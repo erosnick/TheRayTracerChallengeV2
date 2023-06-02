@@ -81,7 +81,7 @@ std::vector<Intersection> intersectWorld(const World& world, const Ray& ray)
 	return intersections(result);
 }
 
-HitResult prepareComputations(const Intersection& intersection, const Ray& ray)
+HitResult prepareComputations(const Intersection& intersection, const Ray& ray, const std::vector<Intersection>& intersections)
 {
 	// Instantiate a data structure for storing some precomputed values
 	HitResult hitResult;
@@ -110,6 +110,49 @@ HitResult prepareComputations(const Intersection& intersection, const Ray& ray)
 
 	// After computing and (if appropriate) negating the normal vector...
 	hitResult.overPosition = hitResult.position + hitResult.normal * EPSILON;
+	hitResult.underPosition = hitResult.position - hitResult.normal * EPSILON;
+	hitResult.reflectVector = reflect(ray.direction, hitResult.normal);
+
+	auto containers = std::vector<std::shared_ptr<Shape>>();
+
+	for (const auto& i : intersections)
+	{
+		if (i == intersection)
+		{
+			if (containers.empty())
+			{
+				hitResult.n1 = 1.0f;
+			}
+			else
+			{
+				auto shape = containers.back();
+				hitResult.n1 = shape->material.refractiveIndex;
+			}
+		}
+
+		if (auto result = std::find(containers.begin(), containers.end(), i.shape); result != containers.end())
+		{
+			containers.erase(result);
+		}
+		else
+		{
+			containers.emplace_back(i.shape);
+		}
+
+		if (i == intersection)
+		{
+			if (containers.empty())
+			{
+				hitResult.n2 = 1.0f;
+			}
+			else
+			{
+				auto shape = containers.back();
+				hitResult.n2 = shape->material.refractiveIndex;
+			}
+			break;
+		}
+	}
 
 	return hitResult;
 }

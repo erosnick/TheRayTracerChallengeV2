@@ -35,6 +35,8 @@ public:
 
 	virtual tuple localNormalAt(const tuple& localPosition) { return {}; }
 
+	bool transparent() { return material.transparency > 0.0f; }
+
 	matrix4 transform;
 	Material material;
 };

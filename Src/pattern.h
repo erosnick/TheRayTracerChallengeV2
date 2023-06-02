@@ -61,6 +61,20 @@ public:
 	matrix4 transform;
 };
 
+// Chapter 11 Reflection and Refraction
+// Test #7: Finding the Refracted Color Page 158~159
+// Remember that the test pattern will return a color based on the point of
+// intersection, which means the test can inspect the returned color to determine
+// whether or not the ray was refracted.Sneaky!
+class TestPattern : public Pattern
+{
+public:
+	virtual tuple colorAt(const tuple& worldPosition) override
+	{
+		return color(worldPosition.x, worldPosition.y, worldPosition.z);
+	}
+};
+
 class StripPattern : public Pattern
 {
 public:

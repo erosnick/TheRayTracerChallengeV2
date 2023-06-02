@@ -22,6 +22,11 @@ struct HitResult
 	tuple normal;
 	bool inside = false;
 	tuple overPosition;
+	tuple underPosition;
+	tuple reflectVector;
+	float n1 = 1.0f;
+	float n2 = 1.0f;
+	tuple backgroundColor;
 };
 
 inline static bool operator==(const Intersection& a, const Intersection& b)
@@ -51,4 +56,4 @@ Intersection hit(const std::vector<Intersection>& intersections);
 
 std::vector<Intersection> intersectWorld(const class World& world, const Ray& ray);
 
-HitResult prepareComputations(const Intersection& intersection, const Ray& ray);
+HitResult prepareComputations(const Intersection& intersection, const Ray& ray, const std::vector<Intersection>& intersections = {});

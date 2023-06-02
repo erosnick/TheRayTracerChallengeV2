@@ -400,3 +400,22 @@ SCENARIO(" A sphere may be assigned a material", "[sphere]")
 		}
 	}
 }
+
+// Chapter 11 Reflection and Refraction
+
+SCENARIO("A helper for producing a sphere with a glassy material", "[sphere]")
+{
+	GIVEN("s = createGlassSphere()")
+	{
+		auto s = createGlassSphere();
+		auto m = Material();
+		THEN("s.transform = identityMatrix"
+			"And s.material.transparency = 1.0f"
+			"And s.material.refractiveIndex = 1.5f")
+		{
+			REQUIRE(s->transform == matrix4(1.0f));
+			REQUIRE(s->material.transparency == 1.0f);
+			REQUIRE(s->material.refractiveIndex == 1.5f);
+		}
+	}
+}

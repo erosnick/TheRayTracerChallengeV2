@@ -68,3 +68,15 @@ inline auto createSphere(const matrix4& transform = matrix4(1.0f))
 
 	return sphere;
 }
+
+inline auto createGlassSphere(const matrix4& transform = matrix4(1.0f))
+{
+	auto sphere = std::make_shared<Sphere>();
+
+	sphere->setTransform(transform);
+
+	sphere->material.transparency = 1.0f;
+	sphere->material.refractiveIndex = 1.5f;
+
+	return sphere;
+}

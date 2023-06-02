@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 
+#include "plane.h"
 #include "sphere.h"
 #include "light.h"
 #include "colors.h"
@@ -63,6 +64,13 @@ inline static World defaultWorld()
 	auto sphere2 = createSphere(scale(0.5f, 0.5f, 0.5f));
 
 	world.addObject(sphere2);
+
+	auto plane = createPlane();
+
+	plane->material.reflective = 0.5f;
+	plane->setTransform(translate(0.0f, -1.0f, 0.0f));
+
+	world.addObject(plane);
 
 	return world;
 }

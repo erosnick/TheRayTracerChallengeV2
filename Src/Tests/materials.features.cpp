@@ -171,3 +171,31 @@ SCENARIO("Lighting with the surface in shadow", "[materials]")
 		}
 	}
 }
+
+// Chapter 11 Reflection and Refraction
+
+SCENARIO("Reflectivity for the default material", "[materials]")
+{
+	GIVEN("m = Material()")
+	{
+		auto m = Material();
+		THEN("m.reflective == 0.0")
+		{
+			REQUIRE(m.reflective == 0.0f);
+		}
+	}
+}
+
+SCENARIO("Transparency and Refractive Index for the default material", "[materials]")
+{
+	GIVEN("m = Material()")
+	{
+		auto m = Material();
+		THEN("m.transparency == 0.0f"
+			"And m.refractiveIndex == 1.0f")
+		{
+			REQUIRE(m.transparency == 0.0f);
+			REQUIRE(m.refractiveIndex == 1.0f);
+		}
+	}
+}

@@ -192,18 +192,159 @@ World planeTest()
 	return world;
 }
 
+World reflectionAndRefractionTest()
+{
+	auto floor = createPlane();
+
+	floor->setTransform(scale(0.5f, 0.5f, 0.5f));
+	floor->material = Material();
+
+	floor->material = Material();
+	floor->material.color = color(1.0f, 0.9f, 0.9f);
+	floor->material.specular = 0.0f;
+	floor->material.reflective = 0.5f;
+	floor->material.pattern = createCheckerPattern();
+	//floor->material.pattern->setTransform(scale(5.0f, 5.0f, 5.0f));
+
+	auto ceiling = createPlane(10.0f, 10.0f);
+
+	ceiling->material = floor->material;
+	ceiling->setTransform(translate(0.0f, 11.0f, 0.0f));
+
+	auto leftWall = createPlane();
+
+	leftWall->material = Material();
+	leftWall->material.color = color(1.0f, 0.9f, 0.9f);
+	leftWall->setTransform(translate(0.0f, 0.0f, 5.0f) * rotateY(-PI / 4.0f) * rotateX(PI / 2.0f));
+
+	auto rightWall = createPlane();
+
+	rightWall->material = Material();
+	rightWall->material.color = color(1.0f, 0.9f, 0.9f);
+	rightWall->setTransform(translate(0.0f, 0.0f, 5.0f) * rotateY(PI / 4.0f) * rotateX(PI / 2.0f));
+
+	auto left = createSphere();
+	left->setTransform(translate(-1.5f, 0.33f, -0.75f) * scale(0.33f));
+	left->material = Material();
+	left->material.color = color(1.0f, 0.8f, 0.1f);
+	left->material.diffuse = 0.7f;
+	left->material.specular = 0.3f;
+	left->material.reflective = 0.3f;
+
+	auto middle = createSphere();
+	auto transform = translate(-0.5f, 1.0f, 0.5f);
+	middle->setTransform(transform);
+	middle->material = Material();
+	middle->material.color = color(0.1f, 0.1f, 0.1f);
+	middle->material.diffuse = 0.7f;
+	middle->material.specular = 0.3f;
+	middle->material.reflective = 0.9f;
+	middle->material.transparency = 0.0f;
+	middle->material.refractiveIndex = 1.52f;
+
+	auto right = createSphere();
+	right->setTransform(translate(1.5f, 0.5f, -0.5f) * scale(0.5f));
+	right->material = Material();
+	right->material.color = color(0.0f, 0.0f, 0.0f);
+	right->material.diffuse = 0.7f;
+	right->material.specular = 0.3f;
+	right->material.reflective = 0.9f;
+	right->material.transparency = 1.0f;
+	right->material.refractiveIndex = 1.52f;
+
+	auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Color::White);
+
+	auto world = World();
+	world.setName("ReflectionTest");
+
+	world.addLight(light);
+
+	world.addObject(floor);
+	world.addObject(ceiling);
+	world.addObject(leftWall);
+	world.addObject(rightWall);
+	world.addObject(left);
+	world.addObject(middle);
+	world.addObject(right);
+
+	return world;
+}
+
+World poolScene()
+{
+	World world;
+	world.setName("PoolScene");
+
+	auto wall = createPlane();
+
+	wall->setTransform(translate(0.0f, 0.0f, -20.0f) * rotateX(PI / 2.0f));
+	wall->material.pattern = createCheckerPattern(color(0.9f, 0.9f, 0.9f), Color::White);
+	wall->material.pattern->setTransform(scale(0.25f));
+	world.addObject(wall);
+
+	auto floor = createPlane();
+
+	floor->setTransform(translate(0.0f, -1.0f, 0.0f));
+	floor->material.pattern = createCheckerPattern(Color::RGB(196, 156, 92), Color::RGB(126, 193, 89));
+	floor->material.pattern->setTransform(scale(0.5f));
+	world.addObject(floor);
+
+	auto middle = createSphere();
+	auto transform = translate(0.0f, -0.5f, 0.5f) * scale(0.5f);
+	middle->setTransform(transform);
+	middle->material = Material();
+	middle->material.color = color(1.0f, 0.0f, 0.0f);
+	middle->material.diffuse = 0.7f;
+	middle->material.specular = 0.3f;
+	middle->material.reflective = 0.0f;
+	middle->material.transparency = 0.0f;
+	middle->material.refractiveIndex = 1.52f;
+	world.addObject(middle);
+
+	auto window = createPlane(1.0f, 1.0f);
+	window->setTransform(translate(0.0f, 0.5f, 0.0f) * rotateX(PI / 2.0f));
+	window->material = Material();
+	window->material.color = color(0.0f, 0.0f, 0.0f);
+	window->material.diffuse = 0.7f;
+	window->material.specular = 0.3f;
+	window->material.reflective = 0.9f;
+	window->material.transparency = 1.0f;
+	window->material.refractiveIndex = 1.52f;
+	//world.addObject(window);
+
+	auto water = createPlane();
+
+	water->setTransform(translate(0.0f, 0.0f, 0.0f));
+	water->material.color = color(0.1f, 0.1f, 0.1f);
+	water->material.diffuse = 0.1f;
+	water->material.specular = 1.0f;
+	water->material.shininess = 300.0f;
+	water->material.reflective = 0.8f;
+	water->material.transparency = 1.0f;
+	water->material.refractiveIndex = 1.33f;
+	world.addObject(water);
+
+	auto light = pointLight(point(0.0f, 30.0f, 20.0f), Color::White);
+
+	world.addLight(light);
+
+	return world;
+}
+
 int main(int argc, char* argv[])
 {
 	auto world = shadowTest();
 
-	world = planeTest();
+	world = poolScene();
 
 	auto scene = loadScene("Assets/Scenes/cornellbox_empty.yaml");
 
-	world.addObject(scene.world.getObject(0));
+	auto camera = Camera(800, 400, radians(60.0f));
+	camera.transform = viewTransform(point(0.0f, 1.0f, 10.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
+	//world.addObject(scene.world.getObject(0));
 
 	AriaCore::Timer timer("Rendering");
-	auto canvas = render(scene.camera, world);
+	auto canvas = render(camera, world, true, 5);
 	timer.PrintElaspedMillis();
 
 	canvas.writeToPPM(world.getName());
