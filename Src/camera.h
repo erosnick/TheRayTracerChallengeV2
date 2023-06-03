@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdint>
 #include "matrix.h"
 #include "ray.h"
 
@@ -31,7 +30,7 @@ public:
 		pixelSize = (halfWidth * 2.0f) / imageWidth;
 	}
 
-	Ray rayForPixel(int32_t x, int32_t y) const
+	Ray rayForPixel(float x, float y) const
 	{
 		// The offset from the edge of the canvas to the pixel's center
 		auto xOffset = (x + 0.5f) * pixelSize;

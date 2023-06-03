@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include "sphere.h"
 #include "world.h"
 

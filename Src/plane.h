@@ -8,7 +8,7 @@ class Plane : public Shape
 public:
 	Plane(float inExtentX = std::numeric_limits<float>::max(),
 		  float inExtentZ = std::numeric_limits<float>::max())
-		: extendX(inExtentX), extendZ(inExtentZ)
+		: extentX(inExtentX), extentZ(inExtentZ)
 	{}
 
 	std::vector<Intersection> localIntersect(const Ray& transformedRay) override
@@ -22,8 +22,8 @@ public:
 
 		auto position = transformedRay.at(t);
 
-		if ((position.x > extendX || position.x < -extendX) ||
-			(position.z > extendZ || position.z < -extendZ))
+		if ((position.x > extentX || position.x < -extentX) ||
+			(position.z > extentZ || position.z < -extentZ))
 		{
 			return {};
 		}
@@ -38,8 +38,8 @@ public:
 		return vector(0.0f, 1.0f, 0.0f);
 	}
 
-	float extendX = std::numeric_limits<float>::max();
-	float extendZ = std::numeric_limits<float>::max();
+	float extentX = std::numeric_limits<float>::max();
+	float extentZ = std::numeric_limits<float>::max();
 };
 
 inline static std::shared_ptr<Shape> createPlane(float extendX = std::numeric_limits<float>::max(),

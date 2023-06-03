@@ -190,19 +190,22 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\SimplexNoise.h" />
     <ClInclude Include="..\src\YAMLLoader.h" />
     <ClInclude Include="..\src\camera.h" />
     <ClInclude Include="..\src\canvas.h" />
     <ClInclude Include="..\src\colors.h" />
     <ClInclude Include="..\src\constants.h" />
+    <ClInclude Include="..\src\cube.h" />
     <ClInclude Include="..\src\intersection.h" />
     <ClInclude Include="..\src\light.h" />
     <ClInclude Include="..\src\material.h" />
     <ClInclude Include="..\src\matrix.h" />
     <ClInclude Include="..\src\pattern.h" />
+    <ClInclude Include="..\src\pch.h" />
+    <ClInclude Include="..\src\perlin.h" />
     <ClInclude Include="..\src\plane.h" />
     <ClInclude Include="..\src\ray.h" />
+    <ClInclude Include="..\src\rtweekend.h" />
     <ClInclude Include="..\src\scene.h" />
     <ClInclude Include="..\src\shading.h" />
     <ClInclude Include="..\src\shape.h" />
@@ -212,13 +215,14 @@
     <ClInclude Include="..\src\transforms.h" />
     <ClInclude Include="..\src\tuple.h" />
     <ClInclude Include="..\src\utils.h" />
+    <ClInclude Include="..\src\vec3.h" />
     <ClInclude Include="..\src\world.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\SimplexNoise.cpp" />
     <ClCompile Include="..\src\canvas.cpp" />
     <ClCompile Include="..\src\intersection.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\pch.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -24,3 +24,13 @@ inline static bool operator==(const Material& a, const Material& b)
 	equal(a.specular, b.specular) &&
 	equal(a.shininess, b.shininess);
 }
+
+namespace Materials
+{
+	const Material White{ Color::White, 0.1f, 0.9f, 0.3f, 300.0f, 0.0f, 0.0f, 1.0f };
+	const Material Red{ Color::Red, 0.1f, 0.9f, 0.3f, 300.0f, 0.0f, 0.0f, 1.0f };
+	const Material Glass{ Color::Black, 0.1f, 0.9f, 1.0f, 300.0f, 1.0f, 1.0f, 1.52f };
+	const Material Water{ Color::Black, 0.1f, 0.9f, 1.0f, 200.0f, 1.0f, 1.0f, 1.33f };
+	const Material Diamond{ Color::Black, 0.1f, 0.9f, 1.0f, 200.0f, 1.0f, 1.0f, 2.417f };
+	const Material Mirror{ Color::Black, 0.1f, 0.9f, 1.0f, 200.0f, 1.0f, 0.0f, 1.0f };
+}

@@ -1,9 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <memory>
-#include <algorithm>
-
 #include "ray.h"
 
 struct Intersection

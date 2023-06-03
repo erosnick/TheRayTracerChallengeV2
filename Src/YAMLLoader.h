@@ -146,49 +146,119 @@ namespace YAML
 			rhs.radius = node["radius"].as<float>();
 			rhs.material = node["material"].as<Material>();
 
-			auto translation = node["translation"].as<tuple>();
-			auto rotation = node["rotation"].as<tuple>();
-			auto scaleFactor = node["scale"].as<tuple>();
+			auto translation = node["transform"]["translation"].as<tuple>();
+			auto rotation = node["transform"]["rotation"].as<tuple>();
+			auto scaleFactor = node["transform"]["scale"].as<tuple>();
 
 			auto patternNode = node["material"]["pattern"];
 
-			if (!patternNode.IsNull())
-			{
-				auto patternType = static_cast<PatternType>(patternNode["type"].as<uint8_t>());
+			//if (!patternNode.IsNull())
+			//{
+			//	auto patternType = static_cast<PatternType>(patternNode["type"].as<uint8_t>());
 
-				switch (patternType)
-				{
-				case PatternType::Strip:
-				{
-					auto color1 = patternNode["color1"].as<tuple>();
-					auto color2 = patternNode["color2"].as<tuple>();
-					auto patternTranslation = patternNode["transform"]["translation"].as<tuple>();
-					auto patternRotation = patternNode["transform"]["rotation"].as<tuple>();
-					auto patternScale = patternNode["transform"]["scale"].as<tuple>();
-					auto pattern = createStripPattern(color1, color2);
+			//	switch (patternType)
+			//	{
+			//	case PatternType::Strip:
+			//	{
+			//		auto color1 = patternNode["color1"].as<tuple>();
+			//		auto color2 = patternNode["color2"].as<tuple>();
+			//		auto patternTranslation = patternNode["transform"]["translation"].as<tuple>();
+			//		auto patternRotation = patternNode["transform"]["rotation"].as<tuple>();
+			//		auto patternScale = patternNode["transform"]["scale"].as<tuple>();
+			//		auto pattern = createStripPattern(color1, color2);
 
-					auto translation = translate(patternTranslation);
-					auto rotation = rotate(patternRotation);
-					auto scaleFactor = scale(patternScale);
+			//		auto translation = translate(patternTranslation);
+			//		auto rotation = rotate(patternRotation);
+			//		auto scaleFactor = scale(patternScale);
 
-					pattern->setTransform(translation * rotation * scaleFactor);
-					rhs.material.pattern = pattern;
-				}
-				break;
-				case PatternType::Gradient:
-					break;
-				case PatternType::Ring:
-					break;
-				case PatternType::Checker:
-					break;
-				case PatternType::RadialGradient:
-					break;
-				case PatternType::Blend:
-					break;
-				default:
-					break;
-				}
-			}
+			//		pattern->setTransform(translation * rotation * scaleFactor);
+			//		rhs.material.pattern = pattern;
+			//	}
+			//	break;
+			//	case PatternType::Gradient:
+			//		break;
+			//	case PatternType::Ring:
+			//		break;
+			//	case PatternType::Checker:
+			//		break;
+			//	case PatternType::RadialGradient:
+			//		break;
+			//	case PatternType::Blend:
+			//		break;
+			//	default:
+			//		break;
+			//	}
+			//}
+
+			rhs.transform = translate(translation) * rotateX(rotation.x) * rotateX(rotation.x) * rotateX(rotation.x) * scale(scaleFactor);
+
+			return true;
+		}
+	};
+
+	template<>
+	struct convert<Plane> {
+		static Node encode(const Plane& rhs)
+		{
+			Node node;
+			node["extent"] = rhs.extentX;
+			node["extent"] = rhs.extentZ;
+			node["material"] = rhs.material;
+
+			return node;
+		}
+
+		static bool decode(const Node& node, Plane& rhs)
+		{
+			printf("%d\n", static_cast<int32_t>(node.size()));
+
+			rhs.extentX = node["extent"].as<float>();
+			rhs.extentZ = node["extent"].as<float>();
+			rhs.material = node["material"].as<Material>();
+
+			auto translation = node["transform"]["translation"].as<tuple>();
+			auto rotation = node["transform"]["rotation"].as<tuple>();
+			auto scaleFactor = node["transform"]["scale"].as<tuple>();
+
+			auto patternNode = node["material"]["pattern"];
+
+			//if (!patternNode.IsNull())
+			//{
+			//	auto patternType = static_cast<PatternType>(patternNode["type"].as<uint8_t>());
+
+			//	switch (patternType)
+			//	{
+			//	case PatternType::Strip:
+			//	{
+			//		auto color1 = patternNode["color1"].as<tuple>();
+			//		auto color2 = patternNode["color2"].as<tuple>();
+			//		auto patternTranslation = patternNode["transform"]["translation"].as<tuple>();
+			//		auto patternRotation = patternNode["transform"]["rotation"].as<tuple>();
+			//		auto patternScale = patternNode["transform"]["scale"].as<tuple>();
+			//		auto pattern = createStripPattern(color1, color2);
+
+			//		auto translation = translate(patternTranslation);
+			//		auto rotation = rotate(patternRotation);
+			//		auto scaleFactor = scale(patternScale);
+
+			//		pattern->setTransform(translation * rotation * scaleFactor);
+			//		rhs.material.pattern = pattern;
+			//	}
+			//	break;
+			//	case PatternType::Gradient:
+			//		break;
+			//	case PatternType::Ring:
+			//		break;
+			//	case PatternType::Checker:
+			//		break;
+			//	case PatternType::RadialGradient:
+			//		break;
+			//	case PatternType::Blend:
+			//		break;
+			//	default:
+			//		break;
+			//	}
+			//}
 
 			rhs.transform = translate(translation) * rotateX(rotation.x) * rotateX(rotation.x) * rotateX(rotation.x) * scale(scaleFactor);
 
@@ -197,31 +267,46 @@ namespace YAML
 	};
 }
 
+Camera createCamera(const YAML::Node& cameraNode)
+{
+	auto imageWidth = cameraNode["imageWidth"].as<int32_t>();
+	auto imageHeight = cameraNode["imageHeight"].as<int32_t>();
+	auto fov = cameraNode["fov"].as<float>();
+
+	Camera camera(imageWidth, imageHeight, radians(fov));
+
+	auto cameraRotation = cameraNode["rotation"].as<tuple>();
+
+	auto from = cameraNode["eye"].as<tuple>();
+	auto to = cameraNode["center"].as<tuple>();
+	auto up = cameraNode["up"].as<tuple>();
+
+	camera.transform = viewTransform(from, to, up);
+
+	return camera;
+}
+
 inline static Scene loadScene(const std::string& path)
 {
 	Scene scene;
 
 	YAML::Node config = YAML::LoadFile(path);
 
-	printf("name:%s\n", config["scene"]["name"].as<std::string>().c_str());
+	auto sceneName = config["scene"]["name"].as<std::string>();
 
-	auto translation = config["transform"]["translation"].as<tuple>();
+	scene.world.setName(sceneName);
 
-	auto imageWidth = config["camera"]["imageWidth"].as<int32_t>();
-	auto imageHeight = config["camera"]["imageHeight"].as<int32_t>();
-	auto fov = config["camera"]["fov"].as<float>();
+	printf("name:%s\n", sceneName.c_str());
 
-	scene.camera = Camera(imageWidth, imageHeight, radians(fov));
+	scene.camera = createCamera(config["scene"]["camera"]);
 
-	auto from = config["camera"]["eye"].as<tuple>();
-	auto to = config["camera"]["center"].as<tuple>();
-	auto up = config["camera"]["up"].as<tuple>();
-
-	scene.camera.transform = viewTransform(from, to, up);
-
-	auto sphere = config["objects"]["sphere"].as<Sphere>();
+	auto sphere = config["scene"]["objects"]["sphere"].as<Sphere>();
 
 	scene.world.addObject(std::make_shared<Sphere>(sphere));
+
+	auto plane = config["scene"]["objects"]["plane"].as<Plane>();
+
+	scene.world.addObject(std::make_shared<Plane>(plane));
 
 	for (auto iterator = config["skills"].begin(); iterator != config["skills"].end(); iterator++)
 	{

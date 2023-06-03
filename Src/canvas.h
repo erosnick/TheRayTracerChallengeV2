@@ -1,10 +1,6 @@
 #pragma once
 
-#include <cstdint>
-#include <memory>
-#include <string>
-
-#include <tuple.h>
+#include "tuple.h"
 
 class Canvas
 {

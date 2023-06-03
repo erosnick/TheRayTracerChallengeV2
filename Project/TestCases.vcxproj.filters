@@ -12,6 +12,9 @@
     <ClCompile Include="..\src\Tests\canvas.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Tests\cube.freatures.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Tests\intersections.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>

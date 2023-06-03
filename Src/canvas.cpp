@@ -1,11 +1,6 @@
+#include "pch.h"
+
 #include "canvas.h"
-
-#include "utils.h"
-
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"

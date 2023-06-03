@@ -5,7 +5,12 @@
 #include "material.h"
 #include "intersection.h"
 
-#include <memory>
+enum class ShapeType : uint8_t
+{
+	Plane,
+	Sphere,
+	Cube
+};
 
 class Shape : public std::enable_shared_from_this<Shape>
 {

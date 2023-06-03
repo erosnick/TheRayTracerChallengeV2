@@ -1,14 +1,11 @@
 #pragma once
 
 #include <tuple.h>
-#include <memory>
 
 #include "colors.h"
 #include "matrix.h"
 #include "transforms.h"
 
-#include "PerlinNoise.hpp"
-#include "SimplexNoise.h"
 #include "perlin.h"
 
 enum class PatternType : uint8_t
@@ -276,34 +273,6 @@ public:
 
 	tuple colorAt(const tuple& worldPosition) override
 	{
-		//const float Scale = 0.01f;
-		//const int32_t Octaves = 8;
-
-		//const double noiseX = perlin.octave2D_01((worldPosition.x * Scale), (worldPosition.y * Scale), Octaves);
-		//const double noiseY = perlin.octave2D_01((worldPosition.y * Scale), (worldPosition.z * Scale), Octaves);
-		//const double noiseZ = perlin.octave2D_01((worldPosition.z * Scale), (worldPosition.x * Scale), Octaves);
-
-		//tuple newPosition = { worldPosition.x + static_cast<float>(noiseX * 0.2f),
-		//					  worldPosition.y + static_cast<float>(noiseY * 0.2f), 
-		//					  worldPosition.z + static_cast<float>(noiseZ * 0.2f), 1.0f };
-		//float scale = 400.f;
-		//float offset_x = 5.9f;
-		//float offset_y = 5.1f;
-		//float offset_z = 0.05f;
-		//float lacunarity = 1.99f;
-		//float persistance = 0.5f;
-
-		//const float x = static_cast<float>(worldPosition.x - 400.0f / 2 + offset_x * scale);
-		//const float z = static_cast<float>(worldPosition.z - 400.0f / 2 + offset_y * scale);
-
-		//const SimplexNoise simplex(0.1f / scale, 0.5f, lacunarity, persistance); // Amplitude of 0.5 for the 1st octave : sum ~1.0f
-		//const int octaves = static_cast<int>(5 + std::log(scale)); // Estimate number of octaves needed for the current scale
-		//const float noise = simplex.fractal(octaves, x, z) + offset_z;
-
-		//tuple newPosition = { worldPosition.x + static_cast<float>(noise),
-		//					  worldPosition.y + static_cast<float>(noise),
-		//					  worldPosition.z + static_cast<float>(noise), 1.0f };
-
 		perlin noise;
 		vec3 p{ worldPosition.x, worldPosition.y, worldPosition.z };
 		auto value = static_cast<float>(noise.noise(p)) * 0.5f;
@@ -319,8 +288,6 @@ public:
 
 		return Color::Black;
 	}
-
-	//siv::PerlinNoise perlin;
 };
 
 inline static std::shared_ptr<Pattern> createPerturbedPattern(const std::shared_ptr<Pattern>& pattern)

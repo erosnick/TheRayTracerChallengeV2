@@ -1,7 +1,6 @@
 #pragma once
 
 #include <tuple.h>
-#include <cstdint>
 
 struct matrix2
 {

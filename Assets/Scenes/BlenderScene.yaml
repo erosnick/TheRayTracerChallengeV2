@@ -1,0 +1,90 @@
+scene:
+  camera:
+    center:
+    - 22.804065704345703
+    - 5.4840850830078125
+    - -17.360200881958008
+    - 1.0
+    eye:
+    - 23.583572387695312
+    - 5.689720153808594
+    - -17.951879501342773
+    - 1.0
+    fov: 50.0
+    imageHeight: 512
+    imageWidth: 512
+    rotation:
+    - 1.3636837005615234
+    - 0.9215335249900818
+    - -1.4165229345053376e-07
+    - 1.0
+    up:
+    - -0.16379454731941223
+    - 0.9786287546157837
+    - 0.12432673573493958
+    - 1.0
+  name: Test
+  objects:
+    plane:
+      extent: 1.0
+      material:
+        ambient: 0.1
+        color:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 0.0
+        diffuse: 1.0
+        shininess: 200
+        specular: 0.3
+      transform:
+        rotation:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 2.0
+        - 1.0
+        - 2.0
+        - 1.0
+        translation:
+        - 0.0
+        - -1.0
+        - 0.0
+        - 1.0
+      type: 1
+    sphere:
+      center:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 1.0
+      material:
+        ambient: 0.1
+        color:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 0.0
+        diffuse: 1.0
+        shininess: 200
+        specular: 0.3
+      radius: 0.5
+      transform:
+        rotation:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        translation:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 1.0
+      type: 0

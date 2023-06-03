@@ -183,7 +183,7 @@ tuple colorAt(const World& world, const Ray& ray, int32_t depth)
 
 	auto intersection = hit(intersections);
 
-	auto backgroundColor = computeBackgroundColor(ray);
+	auto backgroundColor = Color::Background;// computeBackgroundColor(ray);
 
 	if (intersection.t > 0.0f)
 	{
@@ -198,16 +198,22 @@ tuple colorAt(const World& world, const Ray& ray, int32_t depth)
 Canvas render(const Camera& camera, const World& world, bool useBackgroundColor, int32_t maxDepth)
 {
 	auto image = Canvas(camera.imageWidth, camera.imageHeight);
-
+	constexpr int32_t samplesPerPixel = 1;
 #pragma omp parallel for
 	for (int32_t y = 0; y < camera.imageHeight; y++)
 	{
 		printf("\rScanlines remaining: %d\033[0K\r ", camera.imageHeight - y);
 		for (int32_t x = 0; x < camera.imageWidth; x++)
 		{
-			auto ray = camera.rayForPixel(x, y);
-			auto color = colorAt(world, ray, maxDepth);
-			image.writePixel(x, y, color);
+			auto finalColor = Color::Black;
+			for (auto sample = 0; sample < samplesPerPixel; sample++)
+			{
+				auto rx = randomFloat();
+				auto ry = randomFloat();
+				auto ray = camera.rayForPixel(static_cast<float>(x), static_cast<float>(y));
+				finalColor += colorAt(world, ray, maxDepth);
+			}
+			image.writePixel(x, y, finalColor / samplesPerPixel);
 		}
 	}
 

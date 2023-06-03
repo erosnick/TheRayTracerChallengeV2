@@ -10,10 +10,13 @@ namespace Color
 	}
 
 	const tuple White{ 1.0f, 1.0f, 1.0f, 0.0f };
+	const tuple HalfWhite{ 0.5f, 0.5f, 0.5f, 0.0f };
 	const tuple Black{ 0.0f, 0.0f, 0.0f, 0.0f };
+	const tuple Grey{ 0.9f, 0.9f, 0.9f, 0.0f };
 
 	const tuple Red{ 1.0f, 0.0f, 0.0f, 0.0f };
 	const tuple Green{ 0.0f, 1.0f, 0.0f, 0.0f };
 	const tuple DarkGreen = RGB(29, 72, 29);
 	const tuple Blue{ 0.0f, 0.0f, 1.0f, 0.0f };
+	const tuple Background{ 0.235294f, 0.67451f, 0.843137f, 0.0f };
 }

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "matrix.h"
 
 inline float determinant(const matrix2& m);

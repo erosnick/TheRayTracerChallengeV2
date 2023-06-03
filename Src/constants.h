@@ -1,5 +1,7 @@
 #pragma once
 
+#include <limits>
+
 constexpr float PI = 3.1415926f;
 
 constexpr float EPSILON = 0.001f;

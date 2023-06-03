@@ -1,6 +1,5 @@
-#include <iostream>
+#include "pch.h"
 
-#include "colors.h"
 #include "canvas.h"
 #include "light.h"
 #include "shading.h"
@@ -8,7 +7,7 @@
 #include "intersection.h"
 #include "sphere.h"
 #include "plane.h"
-#include "timer.h"
+#include "cube.h"
 
 #include "YAMLLoader.h"
 
@@ -234,23 +233,11 @@ World reflectionAndRefractionTest()
 	auto middle = createSphere();
 	auto transform = translate(-0.5f, 1.0f, 0.5f);
 	middle->setTransform(transform);
-	middle->material = Material();
-	middle->material.color = color(0.1f, 0.1f, 0.1f);
-	middle->material.diffuse = 0.7f;
-	middle->material.specular = 0.3f;
-	middle->material.reflective = 0.9f;
-	middle->material.transparency = 0.0f;
-	middle->material.refractiveIndex = 1.52f;
+	middle->material = Materials::Mirror;
 
 	auto right = createSphere();
 	right->setTransform(translate(1.5f, 0.5f, -0.5f) * scale(0.5f));
-	right->material = Material();
-	right->material.color = color(0.0f, 0.0f, 0.0f);
-	right->material.diffuse = 0.7f;
-	right->material.specular = 0.3f;
-	right->material.reflective = 0.9f;
-	right->material.transparency = 1.0f;
-	right->material.refractiveIndex = 1.52f;
+	right->material = Materials::Glass;
 
 	auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Color::White);
 
@@ -278,14 +265,15 @@ World poolScene()
 	auto wall = createPlane();
 
 	wall->setTransform(translate(0.0f, 0.0f, -20.0f) * rotateX(PI / 2.0f));
-	wall->material.pattern = createCheckerPattern(color(0.9f, 0.9f, 0.9f), Color::White);
+	wall->material.pattern = createCheckerPattern(Color::Grey, Color::White);
 	wall->material.pattern->setTransform(scale(0.25f));
 	world.addObject(wall);
 
 	auto floor = createPlane();
 
-	floor->setTransform(translate(0.0f, -1.0f, 0.0f));
-	floor->material.pattern = createCheckerPattern(Color::RGB(196, 156, 92), Color::RGB(126, 193, 89));
+	floor->setTransform(translate(0.0f, -5.0f, 0.0f));
+	//floor->material.pattern = createCheckerPattern(Color::RGB(196, 156, 92), Color::RGB(126, 193, 89));
+	floor->material.pattern = createCheckerPattern();
 	floor->material.pattern->setTransform(scale(0.5f));
 	world.addObject(floor);
 
@@ -299,29 +287,20 @@ World poolScene()
 	middle->material.reflective = 0.0f;
 	middle->material.transparency = 0.0f;
 	middle->material.refractiveIndex = 1.52f;
+
 	world.addObject(middle);
 
 	auto window = createPlane(1.0f, 1.0f);
 	window->setTransform(translate(0.0f, 0.5f, 0.0f) * rotateX(PI / 2.0f));
 	window->material = Material();
-	window->material.color = color(0.0f, 0.0f, 0.0f);
-	window->material.diffuse = 0.7f;
-	window->material.specular = 0.3f;
-	window->material.reflective = 0.9f;
-	window->material.transparency = 1.0f;
-	window->material.refractiveIndex = 1.52f;
+	window->material = Materials::Glass;
 	//world.addObject(window);
 
 	auto water = createPlane();
 
 	water->setTransform(translate(0.0f, 0.0f, 0.0f));
-	water->material.color = color(0.1f, 0.1f, 0.1f);
-	water->material.diffuse = 0.1f;
-	water->material.specular = 1.0f;
-	water->material.shininess = 300.0f;
-	water->material.reflective = 0.8f;
-	water->material.transparency = 1.0f;
-	water->material.refractiveIndex = 1.33f;
+	water->material = Materials::Water;
+
 	world.addObject(water);
 
 	auto light = pointLight(point(0.0f, 30.0f, 20.0f), Color::White);
@@ -331,24 +310,139 @@ World poolScene()
 	return world;
 }
 
+World cubeTest()
+{
+	World world;
+	world.setName("CubeTest");
+
+	auto floor = createPlane();
+	floor->material.pattern = createCheckerPattern();
+	floor->material.reflective = 0.5f;
+	floor->material.transparency = 0.0f;
+
+	world.addObject(floor);
+
+	auto cube = createCube();
+	cube->setTransform(translate(-1.5f, 1.0f, 0.0f) * rotateY(PI / 4.0f));
+	cube->material.color = Color::Black;
+	cube->material.reflective = 0.9f;
+	cube->material.transparency = 0.0f;
+
+	world.addObject(cube);
+
+	auto sphere = createSphere();
+	sphere->setTransform(translate(1.5f, 1.0f, 0.0f) * rotateY(PI / 4.0f));
+	sphere->material = Materials::Red;
+
+	world.addObject(sphere);
+
+	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Color::White);
+
+	world.addLight(light);
+
+	return world;
+}
+
+std::tuple<World, Camera> cornelBox()
+{
+	auto scene = loadScene("Assets/Scenes/cornellbox.yaml");
+
+	World world;
+	world.setName("CornelBox");
+
+	auto ceiling = createPlane(0.5f, 0.5f);
+	ceiling->setTransform(translate(0.0f, 0.5f, 0.0f));
+
+	world.addObject(ceiling);
+
+	auto floor = createPlane(0.5f, 0.5f);
+	floor->setTransform(translate(0.0f, -0.5f, 0.0f));
+
+	world.addObject(floor);
+
+	auto leftWall = createPlane(0.5f, 0.5f);
+	leftWall->setTransform(translate(-0.5f, 0.0f, 0.0f) * rotateZ(PI / 2.0f));
+	leftWall->material.color = color(0.75f, 0.25f, 0.25f);
+
+	world.addObject(leftWall);
+
+	auto rightWall = createPlane(0.5f, 0.5f);
+	rightWall->setTransform(translate(0.5f, 0.0f, 0.0f) * rotateZ(-PI / 2.0f));
+	rightWall->material.color = color(0.25f, 0.25f, 0.75f);
+
+	world.addObject(rightWall);
+
+	auto backWall = createPlane(0.5f, 0.5f);
+	backWall->setTransform(translate(0.0f, 0.0f, 0.5f) * rotateX(PI / 2.0f));
+	backWall->material.color = Color::White;
+	backWall->material.specular = 0.0f;
+
+	world.addObject(backWall);
+
+	auto leftCube = createCube();
+	leftCube->setTransform(translate(-0.1f, -0.3f, 0.1f) * rotateY(-PI / 4.0f) * scale(0.1f, 0.2f, 0.1f));
+	leftCube->material = Materials::Mirror;
+
+	world.addObject(leftCube);
+
+	auto leftSphere = createSphere();
+	leftSphere->setTransform(translate(-0.1f, 0.0f, 0.1f) * scale(0.1f, 0.1f, 0.1f));
+	leftSphere->material = Materials::Glass;
+
+	world.addObject(leftSphere);
+
+	auto rightSphere = createSphere();
+	rightSphere->setTransform(translate(0.2f, -0.4f, 0.1f) * scale(0.1f, 0.1f, 0.1f));
+
+	world.addObject(rightSphere);
+
+	auto light1 = pointLight(point(-0.3f, 0.3f, -0.3f), Color::HalfWhite);
+	world.addLight(light1);
+
+	auto light2 = pointLight(point(0.3f, 0.3f, -0.3f), Color::HalfWhite);
+	world.addLight(light2);
+
+	Camera camera(512, 512, radians(60.0f));
+	camera.transform = viewTransform(point(0.0f, 0.0f, -1.25f), point(0.0f, 0.0f, -1.0f), vector(0.0f, 1.0f, 0.0f));
+
+	return { world, camera };
+}
+
+Scene blenderScene()
+{
+	Scene scene = loadScene("Assets/Scenes/BlenderScene.yaml");
+
+	return scene;
+}
+
 int main(int argc, char* argv[])
 {
-	auto world = shadowTest();
+	//auto world = cubeTest();
 
-	world = poolScene();
+	////auto [world, camera] = cornelBox();
 
-	auto scene = loadScene("Assets/Scenes/cornellbox_empty.yaml");
+	//auto camera = Camera(1280, 720, radians(60.0f));
+	//camera.transform = viewTransform(point(0.0f, 1.0f, -10.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
+	////world.addObject(scene.world.getObject(0));
 
-	auto camera = Camera(800, 400, radians(60.0f));
-	camera.transform = viewTransform(point(0.0f, 1.0f, 10.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
-	//world.addObject(scene.world.getObject(0));
+	//AriaCore::Timer timer("Rendering");
+	//auto canvas = render(camera, world, true, 5);
+	//timer.PrintElaspedMillis();
+
+	//canvas.writeToPPM(world.getName());
+	//canvas.writeToPNG(world.getName());
+
+	auto scene = blenderScene();
+
+	auto camera = Camera(1280, 720, radians(60.0f));
+	camera.transform = viewTransform(point(0.0f, 1.0f, -10.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
 
 	AriaCore::Timer timer("Rendering");
-	auto canvas = render(camera, world, true, 5);
+	auto canvas = render(scene.camera, scene.world, true, 5);
 	timer.PrintElaspedMillis();
 
-	canvas.writeToPPM(world.getName());
-	canvas.writeToPNG(world.getName());
+	canvas.writeToPPM(scene.world.getName());
+	canvas.writeToPNG(scene.world.getName());
 
 	return 0;
 }

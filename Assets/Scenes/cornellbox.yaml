@@ -1,0 +1,101 @@
+scene:
+  name: CornelBox
+camera:
+  imageWidth:  512
+  imageHeight: 512
+  eye:
+    -  0.0
+    -  0.0
+    - -1.25
+    -  1.0
+  center:
+    -  0.0
+    -  0.0
+    -  0.0
+    - -1.0
+  up:
+    - 0.0
+    - 1.0
+    - 0.0
+    - 0.0
+  fov: 60.0
+objects:
+  plane:
+    type: 0
+    extent: 0.5
+    transform:
+      translate:
+        - 0.0
+        - 0.5
+        - 0.0
+        - 1.0
+      rotation:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+      scale:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+  sphere:
+    center:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 1.0
+    radius: 1.0
+    material:
+      color:
+        - 0.0
+        - 1.0
+        - 1.0
+        - 0.0
+      ambient:   0.1
+      diffuse:   1.0
+      specular:  0.3
+      shininess: 200.0
+      pattern:
+        type: 0
+        color1:
+          - 0.0
+          - 0.0
+          - 0.0
+          - 0.0
+        color2:
+          - 1.0
+          - 1.0
+          - 1.0
+          - 0.0
+        transform:
+          translation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+          rotation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+          scale:
+            - 0.25
+            - 0.25
+            - 0.25
+            - 1.0
+    translation:
+      -  3.0
+      -  1.0
+      - -1.0
+      -  1.0
+    rotation:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 1.0
+    scale:
+      - 0.5
+      - 0.5
+      - 0.5
+      - 1.0

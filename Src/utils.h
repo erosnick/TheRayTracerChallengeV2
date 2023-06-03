@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <random>
 
 #define ToString(a) #a
 
@@ -31,4 +32,18 @@ inline float clamp(float value, float min, float max)
 inline float radians(float angle)
 {
 	return (PI / 180.0f) * angle;
+}
+
+inline double randomDouble() 
+{
+	static std::uniform_real_distribution<double> distribution(0.0, 1.0);
+	static std::mt19937_64 generator;
+	return distribution(generator);
+}
+
+inline float randomFloat()
+{
+	static std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+	static std::mt19937_64 generator;
+	return distribution(generator);
 }
