@@ -1,4 +1,9 @@
 #include "pch.h"
+#include "FileWatch.hpp"
+
+#ifdef RGB
+#undef RGB
+#endif
 
 #include "canvas.h"
 #include "light.h"
@@ -443,6 +448,44 @@ int main(int argc, char* argv[])
 
 	canvas.writeToPPM(scene.world.getName());
 	canvas.writeToPNG(scene.world.getName());
+
+	filewatch::FileWatch<std::string> watch(
+		"./Assets/Scenes/BlenderScene.yaml",
+		[&](const std::string& path, const filewatch::Event change_type) {
+			std::cout << path << L"\n";
+			switch (change_type)
+			{
+			case filewatch::Event::added:
+				std::cout << "The file was added to the directory." << '\n';
+				break;
+			case filewatch::Event::removed:
+				std::cout << "The file was removed from the directory." << '\n';
+				break;
+			case filewatch::Event::modified:
+			{
+				std::cout << "The file was modified. This can be a change in the time stamp or attributes." << '\n';
+
+				scene = blenderScene();
+
+				AriaCore::Timer timer("Rendering");
+				canvas = render(scene.camera, scene.world, true, 5);
+				timer.PrintElaspedMillis();
+
+				canvas.writeToPPM(scene.world.getName());
+				canvas.writeToPNG(scene.world.getName());
+			}
+				break;
+			case filewatch::Event::renamed_old:
+				std::cout << "The file was renamed and this is the old name." << '\n';
+				break;
+			case filewatch::Event::renamed_new:
+				std::cout << "The file was renamed and this is the new name." << '\n';
+				break;
+			};
+		}
+	);
+
+	system("pause");
 
 	return 0;
 }

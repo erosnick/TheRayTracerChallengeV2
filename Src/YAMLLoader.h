@@ -108,6 +108,9 @@ namespace YAML
 			node["diffuse"] = rhs.diffuse;
 			node["specular"] = rhs.specular;
 			node["shininess"] = rhs.shininess;
+			node["reflective"] = rhs.reflective;
+			node["transparency"] = rhs.transparency;
+			node["refractiveIndex"] = rhs.refractiveIndex;
 
 			return node;
 		}
@@ -121,6 +124,9 @@ namespace YAML
 			rhs.diffuse = node["diffuse"].as<float>();
 			rhs.specular = node["specular"].as<float>();
 			rhs.shininess = node["shininess"].as<float>();
+			rhs.reflective = node["reflective"].as<float>();
+			rhs.transparency = node["transparency"].as<float>();
+			rhs.refractiveIndex = node["refractiveIndex"].as<float>();
 
 			return true;
 		}
@@ -273,7 +279,7 @@ Camera createCamera(const YAML::Node& cameraNode)
 	auto imageHeight = cameraNode["imageHeight"].as<int32_t>();
 	auto fov = cameraNode["fov"].as<float>();
 
-	Camera camera(imageWidth, imageHeight, radians(fov));
+	Camera camera(imageWidth, imageHeight, fov);
 
 	auto cameraRotation = cameraNode["rotation"].as<tuple>();
 
@@ -307,6 +313,12 @@ inline static Scene loadScene(const std::string& path)
 	auto plane = config["scene"]["objects"]["plane"].as<Plane>();
 
 	scene.world.addObject(std::make_shared<Plane>(plane));
+
+	auto lightPosition = config["scene"]["lights"]["pointLight"]["location"].as<tuple>();
+	auto lightColor = config["scene"]["lights"]["pointLight"]["color"].as<tuple>();
+
+	auto light = pointLight(lightPosition, lightColor);
+	scene.world.addLight(light);
 
 	for (auto iterator = config["skills"].begin(); iterator != config["skills"].end(); iterator++)
 	{

@@ -23,6 +23,7 @@ def export_spheres():
         camera_location = camera.location
         camera_rotation = camera.rotation_euler
         camera_lens = camera.data.lens
+        camera_angle = camera.data.angle
 
         # Print the camera information
         # print("Camera Name:", camera_name)
@@ -34,7 +35,7 @@ def export_spheres():
         sensor_width = camera.data.sensor_width
         sensor_height = camera.data.sensor_height
 
-        print("Camera data:", camera.data)
+        print("Camera location:", camera_location)
 
         # Get the render resolution
         render_resolution_x = bpy.context.scene.render.resolution_x
@@ -61,7 +62,7 @@ def export_spheres():
         scene['camera']['imageWidth'] = render_resolution_x
         scene['camera']['imageHeight'] = render_resolution_y
         scene['camera']['center'] = [target_position.x, target_position.z, target_position.y, 1.0]
-        scene['camera']['up'] = [up_vector.x, up_vector.z, up_vector.y, 1.0]
+        scene['camera']['up'] = [up_vector.x, up_vector.z, up_vector.y, 0.0]
 
         # Print the camera view size
         # print("Camera View Width:", render_resolution_x)
@@ -73,7 +74,7 @@ def export_spheres():
 
     scene['name'] = 'Test'
     scene['objects'] = {}
-    scene['camera']['fov'] = camera_lens
+    scene['camera']['fov'] = camera_angle
     scene['camera']['eye'] = [eye_position.x, eye_position.z, eye_position.y, 1.0]
     scene['camera']['rotation'] = [camera_rotation.x, camera_rotation.z, camera_rotation.y, 1.0]
 
@@ -82,7 +83,7 @@ def export_spheres():
     for sphere in spheres:
         objects['sphere'] = {}
         objects['sphere']['type'] = 0
-        objects['sphere']['radius'] = sphere.scale.x * 0.5
+        objects['sphere']['radius'] = sphere.scale.x
         objects['sphere']['center'] = sphere.scale.x * 0.5
         objects['sphere']['transform'] = {}
         objects['sphere']['center'] = [0.0, 0.0, 0.0, 1.0]
@@ -90,11 +91,35 @@ def export_spheres():
         objects['sphere']['transform']['rotation'] = [sphere.rotation_euler.x, sphere.rotation_euler.z, sphere.rotation_euler.y, 1.0]
         objects['sphere']['transform']['scale'] = [sphere.scale.x, sphere.scale.z, sphere.scale.y, 1.0]
         objects['sphere']['material'] = {}
-        objects['sphere']['material']['color'] = [1.0, 1.0, 1.0, 0.0]
         objects['sphere']['material']['ambient'] = 0.1
         objects['sphere']['material']['diffuse'] = 1.0
         objects['sphere']['material']['specular'] = 0.3
         objects['sphere']['material']['shininess'] = 200
+
+        material = sphere.active_material
+
+        # Find the Principled BSDF node
+        principled_node = None
+        for node in material.node_tree.nodes:
+            if node.type == 'BSDF_PRINCIPLED':
+                principled_node = node
+                break
+        if principled_node:
+            base_color = principled_node.inputs['Base Color'].default_value
+            metallic = principled_node.inputs['Metallic'].default_value
+            roughness = principled_node.inputs['Roughness'].default_value
+            ior = principled_node.inputs['IOR'].default_value
+            specular = principled_node.inputs['Specular'].default_value
+            transmission = principled_node.inputs['Transmission'].default_value
+            objects['sphere']['material']['color'] = [base_color[0], base_color[1], base_color[2], 0.0]
+            objects['sphere']['material']['specular'] = specular
+            objects['sphere']['material']['reflective'] = metallic
+            objects['sphere']['material']['refractiveIndex'] = ior
+            objects['sphere']['material']['transparency'] = transmission
+            print("Base Color:", base_color)
+            print("Metallic:", metallic)
+            print("Roughness:", roughness)
+            print("IOR:", ior)
 
     for plane in planes:
         objects['plane'] = {}
@@ -103,7 +128,7 @@ def export_spheres():
         objects['plane']['transform']['translation'] = [plane.location.x, plane.location.z, plane.location.y, 1.0]
         objects['plane']['transform']['rotation'] = [plane.rotation_euler.x, plane.rotation_euler.z, plane.rotation_euler.y, 1.0]
         objects['plane']['transform']['scale'] = [plane.scale.x, plane.scale.z, plane.scale.y, 1.0]
-        objects['plane']['extent'] = plane.scale.x * 0.5
+        objects['plane']['extent'] = 1.0
         objects['plane']['material'] = {}
         objects['plane']['material']['color'] = [1.0, 1.0, 1.0, 0.0]
         objects['plane']['material']['ambient'] = 0.1
@@ -111,7 +136,60 @@ def export_spheres():
         objects['plane']['material']['specular'] = 0.3
         objects['plane']['material']['shininess'] = 200
 
-    with open('./BlenderScene.yaml', 'w', encoding='utf-8') as f:
+        material = plane.active_material
+
+        principled_node = None
+        for node in material.node_tree.nodes:
+            if node.type == 'BSDF_PRINCIPLED':
+                principled_node = node
+                break
+        if principled_node:
+            base_color = principled_node.inputs['Base Color'].default_value
+            metallic = principled_node.inputs['Metallic'].default_value
+            roughness = principled_node.inputs['Roughness'].default_value
+            ior = principled_node.inputs['IOR'].default_value
+            specular = principled_node.inputs['Specular'].default_value
+            transmission = principled_node.inputs['Transmission'].default_value
+            objects['plane']['material']['color'] = [base_color[0], base_color[1], base_color[2], 0.0]
+            objects['plane']['material']['specular'] = specular
+            objects['plane']['material']['reflective'] = metallic
+            objects['plane']['material']['refractiveIndex'] = ior
+            objects['plane']['material']['transparency'] = transmission
+
+    scene['lights'] = {}
+
+    scene['lights']['pointLight'] = {}
+
+    # Get the active light in the scene
+    light = bpy.context.scene.objects.get("Point")
+
+    # Check if the active object is a point light
+    if light is not None and light.type == 'LIGHT' and light.data.type == 'POINT':
+        # Retrieve light information
+        light_name = light.name
+        light_location = light.location
+        light_energy = light.data.energy
+        light_color = light.data.color
+
+        # Print the light information
+        print("Light Name:", light_name)
+        print("Light Location:", light_location)
+        print("Light Energy:", light_energy)
+        print("Light Color:", light_color)
+        print("Light type:", light.data.type)
+
+        scene['lights']['pointLight']['location'] = [light_location.x, light_location.z, light_location.y, 1.0]
+        scene['lights']['pointLight']['color'] = [light_color.r, light_color.g, light_color.b, 0.0]
+        scene['lights']['pointLight']['light_energy'] = light_energy
+
+    else:
+        print("No active point light found or the active object is not a point light.")
+
+    # sphereMaterial = bpy.data.materials['Sphere']
+
+    # print("Material:", sphereMaterial)
+
+    with open('E:/OpenSources/RayTracing/TheRayTracerChallengeV2/Assets/Scenes/BlenderScene.yaml', 'w', encoding='utf-8') as f:
         yaml.dump(data = exportData, stream = f, allow_unicode = True)
 
 if __name__ == '__main__':

@@ -1,28 +1,41 @@
 scene:
   camera:
     center:
-    - 22.804065704345703
-    - 5.4840850830078125
-    - -17.360200881958008
+    - 0.0
+    - 4.371138828673793e-08
+    - -9.0
     - 1.0
     eye:
-    - 23.583572387695312
-    - 5.689720153808594
-    - -17.951879501342773
+    - 0.0
+    - 0.0
+    - -10.0
     - 1.0
-    fov: 50.0
+    fov: 0.6911112070083618
     imageHeight: 512
     imageWidth: 512
     rotation:
-    - 1.3636837005615234
-    - 0.9215335249900818
-    - -1.4165229345053376e-07
+    - 1.5707963705062866
+    - 0.0
+    - -0.0
     - 1.0
     up:
-    - -0.16379454731941223
-    - 0.9786287546157837
-    - 0.12432673573493958
+    - 0.0
     - 1.0
+    - -4.371138828673793e-08
+    - 0.0
+  lights:
+    pointLight:
+      color:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 0.0
+      light_energy: 10.0
+      location:
+      - 0.011797904968261719
+      - 3.0
+      - 0.034722328186035156
+      - 1.0
   name: Test
   objects:
     plane:
@@ -30,13 +43,16 @@ scene:
       material:
         ambient: 0.1
         color:
-        - 1.0
-        - 1.0
-        - 1.0
+        - 0.8000000715255737
+        - 0.032059695571660995
+        - 0.09268093854188919
         - 0.0
         diffuse: 1.0
+        reflective: 0.5
+        refractiveIndex: 1.4500000476837158
         shininess: 200
-        specular: 0.3
+        specular: 0.5
+        transparency: 0.0
       transform:
         rotation:
         - 0.0
@@ -44,9 +60,9 @@ scene:
         - 0.0
         - 1.0
         scale:
-        - 2.0
+        - 4.0
         - 1.0
-        - 2.0
+        - 4.0
         - 1.0
         translation:
         - 0.0
@@ -63,14 +79,17 @@ scene:
       material:
         ambient: 0.1
         color:
-        - 1.0
-        - 1.0
-        - 1.0
+        - 0.0
+        - 0.0
+        - 0.0
         - 0.0
         diffuse: 1.0
+        reflective: 0.5
+        refractiveIndex: 1.4500000476837158
         shininess: 200
-        specular: 0.3
-      radius: 0.5
+        specular: 0.5
+        transparency: 1.0
+      radius: 1.0
       transform:
         rotation:
         - 0.0
