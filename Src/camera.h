@@ -44,7 +44,8 @@ public:
 		// Using the camera matrix, transform the canvas point and the origin,
 		// then compute the ray's direction vector.
 		// (remember that the canvas is at z = -1)
-		// inverse(transform): camera space to world space
+		// transform: World space to camera space
+		// inverse(transform): Camera space to world space
 		auto pixel = inverse(transform) * point(worldX, worldY, -1.0f);
 		auto origin = inverse(transform) * point(0.0f, 0.0f, 0.0f);
 

@@ -1,0 +1,124 @@
+scene:
+  camera:
+    center:
+    - 13.085328102111816
+    - 8.952909469604492
+    - -6.096145153045654
+    - 1.0
+    eye:
+    - 13.85566234588623
+    - 9.479968070983887
+    - -6.455025672912598
+    - 1.0
+    fov: 0.6911112070083618
+    imageHeight: 512
+    imageWidth: 512
+    rotation:
+    - 1.0156210660934448
+    - 1.1277633905410767
+    - 0.011374899186193943
+    - 0.0
+    up:
+    - -0.4720607101917267
+    - 0.8497530817985535
+    - 0.23468777537345886
+    - 0.0
+  lights:
+    Light:
+      color:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 0.0
+      lightEnergy: 1000.0
+      location:
+      - 4.076245307922363
+      - 5.903861999511719
+      - 1.0054539442062378
+      - 1.0
+      name: Light
+  name: House
+  objects:
+    Plane:
+      extent: 1.0
+      material:
+        ambient: 0.1
+        color:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 0.0
+        diffuse: 1.0
+        pattern:
+          color1:
+          - 0.8999999761581421
+          - 0.8999999761581421
+          - 0.8999999761581421
+          - 0.0
+          color2:
+          - 1.0
+          - 1.0
+          - 1.0
+          - 0.0
+          type: 3
+        reflective: 0.0
+        refractiveIndex: 1.0
+        shininess: 200
+        specular: 0.3
+        transparency: 0.0
+      name: Plane
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 5.0
+        - 1.0
+        - 5.0
+        - 1.0
+        translation:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 1.0
+      type: 1
+    Sphere:
+      center:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 1.0
+      material:
+        ambient: 0.1
+        color:
+        - 1.0
+        - 0.0
+        - 0.0
+        - 0.0
+        diffuse: 1.0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: Sphere
+      radius: 1.0
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        translation:
+        - 0.0
+        - 1.0
+        - 0.0
+        - 1.0
+      type: 0

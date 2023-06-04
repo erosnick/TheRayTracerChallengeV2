@@ -10,6 +10,8 @@ public:
 		  float inExtentZ = std::numeric_limits<float>::max())
 		: extentX(inExtentX), extentZ(inExtentZ)
 	{}
+	
+	virtual ~Plane() = default;
 
 	std::vector<Intersection> localIntersect(const Ray& transformedRay) override
 	{

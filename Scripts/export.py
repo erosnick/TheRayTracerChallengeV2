@@ -1,6 +1,9 @@
 import bpy
 import yaml
 import mathutils
+import bpy
+from mathutils import Matrix, Vector
+import math
 
 def createCamera(camera):
     # Check if a camera is set as active
@@ -140,7 +143,23 @@ def createPlane(plane):
     if material:
         planeNode['material'] = createMaterial(material)
     else:
-        print("No materia.")
+        print("No material.")
+
+    patternName = plane.data.get("Pattern")
+    patternType = plane.data.get("PatternType")
+    color1 = plane.data.get("Color1")
+    color2 = plane.data.get("Color2")
+    print("Color1", color1)
+    if patternName:
+        print("Pattern:", patternName)
+        planeNode['material']['pattern'] = {}
+        print("Pattern Type:", patternType)
+        planeNode['material']['pattern']['type'] = patternType
+        if color1:
+            planeNode['material']['pattern']['color1'] = [color1[0], color1[1], color1[2], 0.0]
+        if color2:
+            planeNode['material']['pattern']['color2'] = [color2[0], color2[1], color2[2], 0.0]
+
     return planeNode
 
 def createCube(cube):
@@ -228,8 +247,62 @@ def exportScene():
 
     # print("Material:", sphereMaterial)
 
-    with open('E:/OpenSources/RayTracing/TheRayTracerChallengeV2/Assets/Scenes/' + bpy.context.scene.name + '.yaml', 'w', encoding='utf-8') as f:
+    path = 'E:/OpenSources/RayTracing/TheRayTracerChallengeV2/Assets/Scenes/'
+    with open(path + bpy.context.scene.name + '.yaml', 'w', encoding='utf-8') as f:
         yaml.dump(data = exportData, stream = f, allow_unicode = True)
+        print("Write to ", path)
 
-if __name__ == '__main__':
-    exportScene()
+# if __name__ == '__main__':
+#     exportScene()
+
+mode_keymap = None
+
+class RollOperator(bpy.types.Operator):
+    bl_idname = "transform.roll"
+    bl_label = "Roll active object"
+    def execute(self, context):
+        dx = self.dx / 100
+        dy = self.dy / 100
+        #matrix = Matrix.Rotation((dx**2 + dy**2)**.5, 4, Vector((-dy, dx, 0)))
+        #matrix *= context.object.matrix_world
+        context.object.rotation_euler.x += dx * math.pi / 4
+        context.object.rotation_euler.y += dy * math.pi / 4
+        context.object.location.x += dx
+        context.object.location.y += dy
+        return {'FINISHED'}
+    def modal(self, context, event):
+        if event.type == 'MOUSEMOVE':  # Apply
+            self.dx = event.mouse_x - event.mouse_prev_x
+            self.dy = event.mouse_y - event.mouse_prev_y            
+            self.execute(context)
+        elif event.type == 'LEFTMOUSE':  # Confirm
+            return {'FINISHED'}
+        elif event.type in ('RIGHTMOUSE', 'ESC'):  # Cancel
+            context.object.location = self.location
+            context.object.rotation_euler = self.rotation_euler
+            return {'CANCELLED'}
+        return {'RUNNING_MODAL'}
+    def invoke(self, context, event):
+        rotation = context.object.rotation_euler
+        location = context.object.location
+        self.location = location[0], location[1], location[2]
+        self.rotation_euler = rotation[0], rotation[1], rotation[2]        
+        self.dx = 0
+        self.dy = 0        
+        self.execute(context)
+        # context.window_manager.modal_handler_add(self)
+        exportScene()
+        return {'RUNNING_MODAL'}
+
+
+bpy.utils.register_class(RollOperator)
+
+key_config = bpy.context.window_manager.keyconfigs.addon
+if key_config:
+    key_map = key_config.keymaps.new(name='3D View', space_type='VIEW_3D')
+    key_entry = key_map.keymap_items.new("transform.roll",
+                                        type='Q',
+                                        value='PRESS',
+                                        shift=True,
+    )
+    mode_keymap = (key_map, key_entry)

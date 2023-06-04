@@ -348,71 +348,6 @@ World cubeTest()
 	return world;
 }
 
-std::tuple<World, Camera> cornelBox()
-{
-	auto scene = loadScene("Assets/Scenes/cornellbox.yaml");
-
-	World world;
-	world.setName("CornelBox");
-
-	auto ceiling = createPlane(0.5f, 0.5f);
-	ceiling->setTransform(translate(0.0f, 0.5f, 0.0f));
-
-	world.addObject(ceiling);
-
-	auto floor = createPlane(0.5f, 0.5f);
-	floor->setTransform(translate(0.0f, -0.5f, 0.0f));
-
-	world.addObject(floor);
-
-	auto leftWall = createPlane(0.5f, 0.5f);
-	leftWall->setTransform(translate(-0.5f, 0.0f, 0.0f) * rotateZ(PI / 2.0f));
-	leftWall->material.color = color(0.75f, 0.25f, 0.25f);
-
-	world.addObject(leftWall);
-
-	auto rightWall = createPlane(0.5f, 0.5f);
-	rightWall->setTransform(translate(0.5f, 0.0f, 0.0f) * rotateZ(-PI / 2.0f));
-	rightWall->material.color = color(0.25f, 0.25f, 0.75f);
-
-	world.addObject(rightWall);
-
-	auto backWall = createPlane(0.5f, 0.5f);
-	backWall->setTransform(translate(0.0f, 0.0f, 0.5f) * rotateX(PI / 2.0f));
-	backWall->material.color = Color::White;
-	backWall->material.specular = 0.0f;
-
-	world.addObject(backWall);
-
-	auto leftCube = createCube();
-	leftCube->setTransform(translate(-0.1f, -0.3f, 0.1f) * rotateY(-PI / 4.0f) * scale(0.1f, 0.2f, 0.1f));
-	leftCube->material = Materials::Mirror;
-
-	world.addObject(leftCube);
-
-	auto leftSphere = createSphere();
-	leftSphere->setTransform(translate(-0.1f, 0.0f, 0.1f) * scale(0.1f, 0.1f, 0.1f));
-	leftSphere->material = Materials::Glass;
-
-	world.addObject(leftSphere);
-
-	auto rightSphere = createSphere();
-	rightSphere->setTransform(translate(0.2f, -0.4f, 0.1f) * scale(0.1f, 0.1f, 0.1f));
-
-	world.addObject(rightSphere);
-
-	auto light1 = pointLight(point(-0.3f, 0.3f, -0.3f), Color::HalfWhite);
-	world.addLight(light1);
-
-	auto light2 = pointLight(point(0.3f, 0.3f, -0.3f), Color::HalfWhite);
-	world.addLight(light2);
-
-	Camera camera(512, 512, radians(60.0f));
-	camera.transform = viewTransform(point(0.0f, 0.0f, -1.25f), point(0.0f, 0.0f, -1.0f), vector(0.0f, 1.0f, 0.0f));
-
-	return { world, camera };
-}
-
 Scene blenderScene(const std::string& path)
 {
 	Scene scene = loadScene(path);
@@ -453,7 +388,8 @@ int main(int argc, char* argv[])
 	//canvas.writeToPPM(world.getName());
 	//canvas.writeToPNG(world.getName());
 
-	renderScene("Assets/Scenes/BlenderCornelBox.yaml");
+	//renderScene("Assets/Scenes/BlenderCornelBox.yaml");
+	renderScene("Assets/Scenes/House.yaml");
 
 	const std::string SceneBase = "./Assets/Scenes/";
 
