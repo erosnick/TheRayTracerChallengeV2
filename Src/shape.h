@@ -7,8 +7,8 @@
 
 enum class ShapeType : uint8_t
 {
-	Plane,
 	Sphere,
+	Plane,
 	Cube
 };
 

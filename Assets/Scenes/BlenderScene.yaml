@@ -11,8 +11,8 @@ scene:
     - -10.0
     - 1.0
     fov: 0.6911112070083618
-    imageHeight: 512
-    imageWidth: 512
+    imageHeight: 1024
+    imageWidth: 1024
     rotation:
     - 1.5707963705062866
     - 0.0
@@ -32,20 +32,51 @@ scene:
       - 0.0
       light_energy: 10.0
       location:
-      - 0.011797904968261719
+      - 0.9824286103248596
       - 3.0
-      - 0.034722328186035156
+      - -2.6842877864837646
       - 1.0
-  name: Test
+  name: BlenderScene
   objects:
-    plane:
+    Cube:
+      material:
+        ambient: 0.1
+        color:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        diffuse: 1.0
+        reflective: 0.699999988079071
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      transform:
+        rotation:
+        - 0.0
+        - -0.5235987901687622
+        - -0.0
+        - 1.0
+        scale:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        translation:
+        - -1.0560461282730103
+        - 0.0
+        - 0.3586962819099426
+        - 1.0
+      type: 2
+    Plane:
       extent: 1.0
       material:
         ambient: 0.1
         color:
         - 0.8000000715255737
-        - 0.032059695571660995
-        - 0.09268093854188919
+        - 0.11560534685850143
+        - 0.18704654276371002
         - 0.0
         diffuse: 1.0
         reflective: 0.5
@@ -70,7 +101,7 @@ scene:
         - 0.0
         - 1.0
       type: 1
-    sphere:
+    Sphere:
       center:
       - 0.0
       - 0.0
@@ -102,8 +133,45 @@ scene:
         - 1.0
         - 1.0
         translation:
+        - 1.823561191558838
+        - 0.0
+        - -0.33720287680625916
+        - 1.0
+      type: 0
+    Sphere.001:
+      center:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 1.0
+      material:
+        ambient: 0.1
+        color:
+        - 1.0
         - 0.0
         - 0.0
         - 0.0
+        diffuse: 1.0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      radius: 1.0
+      transform:
+        rotation:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 0.5
+        - 0.5
+        - 0.5
+        - 1.0
+        translation:
+        - 0.4355394244194031
+        - -0.5
+        - -1.8479312658309937
         - 1.0
       type: 0

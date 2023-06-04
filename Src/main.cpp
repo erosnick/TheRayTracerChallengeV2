@@ -413,11 +413,27 @@ std::tuple<World, Camera> cornelBox()
 	return { world, camera };
 }
 
-Scene blenderScene()
+Scene blenderScene(const std::string& path)
 {
-	Scene scene = loadScene("Assets/Scenes/BlenderScene.yaml");
+	Scene scene = loadScene(path);
+	//Scene scene = loadScene("Assets/Scenes/BlenderScene.yaml");
 
 	return scene;
+}
+
+void renderScene(const std::string& path)
+{
+	auto scene = blenderScene(path);
+
+	auto camera = Camera(1280, 720, radians(60.0f));
+	camera.transform = viewTransform(point(0.0f, 1.0f, -10.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
+
+	AriaCore::Timer timer("Rendering");
+	auto canvas = render(scene.camera, scene.world, true, 5);
+	timer.PrintElaspedMillis();
+
+	canvas.writeToPPM(scene.world.getName());
+	canvas.writeToPNG(scene.world.getName());
 }
 
 int main(int argc, char* argv[])
@@ -437,22 +453,13 @@ int main(int argc, char* argv[])
 	//canvas.writeToPPM(world.getName());
 	//canvas.writeToPNG(world.getName());
 
-	auto scene = blenderScene();
+	renderScene("Assets/Scenes/BlenderCornelBox.yaml");
 
-	auto camera = Camera(1280, 720, radians(60.0f));
-	camera.transform = viewTransform(point(0.0f, 1.0f, -10.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
-
-	AriaCore::Timer timer("Rendering");
-	auto canvas = render(scene.camera, scene.world, true, 5);
-	timer.PrintElaspedMillis();
-
-	canvas.writeToPPM(scene.world.getName());
-	canvas.writeToPNG(scene.world.getName());
+	const std::string SceneBase = "./Assets/Scenes/";
 
 	filewatch::FileWatch<std::string> watch(
-		"./Assets/Scenes/BlenderScene.yaml",
+		SceneBase,
 		[&](const std::string& path, const filewatch::Event change_type) {
-			std::cout << path << L"\n";
 			switch (change_type)
 			{
 			case filewatch::Event::added:
@@ -463,16 +470,9 @@ int main(int argc, char* argv[])
 				break;
 			case filewatch::Event::modified:
 			{
-				std::cout << "The file was modified. This can be a change in the time stamp or attributes." << '\n';
+				std::cout << path << "was modified. This can be a change in the time stamp or attributes." << '\n';
 
-				scene = blenderScene();
-
-				AriaCore::Timer timer("Rendering");
-				canvas = render(scene.camera, scene.world, true, 5);
-				timer.PrintElaspedMillis();
-
-				canvas.writeToPPM(scene.world.getName());
-				canvas.writeToPNG(scene.world.getName());
+				renderScene(SceneBase + path);
 			}
 				break;
 			case filewatch::Event::renamed_old:

@@ -1,0 +1,359 @@
+scene:
+  camera:
+    center:
+    - -1.2706174151278024e-17
+    - 1.0
+    - -2.759999990463257
+    - 1.0
+    eye:
+    - 0.0
+    - 1.0
+    - -3.759999990463257
+    - 1.0
+    fov: 0.6911112070083618
+    imageHeight: 512
+    imageWidth: 512
+    rotation:
+    - 1.5707963705062866
+    - 0.0
+    - -2.9068336626636437e-10
+    - 0.0
+    up:
+    - -2.9068336626636437e-10
+    - 1.0
+    - -4.371138828673793e-08
+    - 0.0
+  lights:
+    Point:
+      color:
+      - 0.5
+      - 0.5
+      - 0.5
+      - 0.0
+      lightEnergy: 10.0
+      location:
+      - -0.6000000238418579
+      - 1.0
+      - -0.6000000238418579
+      - 1.0
+      name: Point
+    Point.001:
+      color:
+      - 0.5
+      - 0.5
+      - 0.5
+      - 0.0
+      lightEnergy: 10.0
+      location:
+      - 0.6000000238418579
+      - 1.0
+      - -0.6000000238418579
+      - 1.0
+      name: Point.001
+  name: BlenderCornelBox
+  objects:
+    BackWall:
+      extent: 1.0
+      material:
+        ambient: 0.1
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.0
+        diffuse: 1.0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.0
+        transparency: 0.0
+      name: BackWall
+      transform:
+        rotation:
+        - 1.5707963705062866
+        - -0.0
+        - -0.0
+        - 1.0
+        scale:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        translation:
+        - 0.0
+        - 1.0
+        - 1.0
+        - 1.0
+      type: 1
+    Ceiling:
+      extent: 1.0
+      material:
+        ambient: 0.1
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.0
+        diffuse: 1.0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: Ceiling
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        translation:
+        - 0.0
+        - 2.0
+        - 0.0
+        - 1.0
+      type: 1
+    Floor:
+      extent: 1.0
+      material:
+        ambient: 0.1
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.0
+        diffuse: 1.0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: Floor
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        translation:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 1.0
+      type: 1
+    LeftCube:
+      material:
+        ambient: 0.1
+        color:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        diffuse: 1.0
+        reflective: 1.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.0
+        transparency: 0.0
+      name: LeftCube
+      transform:
+        rotation:
+        - 0.0
+        - -0.5235987901687622
+        - 0.0
+        - 1.0
+        scale:
+        - 0.25
+        - 0.5
+        - 0.25
+        - 1.0
+        translation:
+        - -0.36194464564323425
+        - 0.5
+        - 0.4761781692504883
+        - 1.0
+      type: 2
+    LeftWall:
+      extent: 1.0
+      material:
+        ambient: 0.1
+        color:
+        - 0.75
+        - 0.25
+        - 0.25
+        - 0.0
+        diffuse: 1.0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.0
+        transparency: 0.0
+      name: LeftWall
+      transform:
+        rotation:
+        - -0.0
+        - -0.0
+        - 1.570796251296997
+        - 1.0
+        scale:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        translation:
+        - -1.0
+        - 1.0
+        - 0.0
+        - 1.0
+      type: 1
+    RightCube:
+      material:
+        ambient: 0.1
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.0
+        diffuse: 1.0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.0
+        transparency: 0.0
+      name: RightCube
+      transform:
+        rotation:
+        - 0.0
+        - 0.3490658402442932
+        - 0.0
+        - 1.0
+        scale:
+        - 0.25
+        - 0.4000000059604645
+        - 0.25
+        - 1.0
+        translation:
+        - 0.5427299737930298
+        - 0.4000000059604645
+        - 0.4761781692504883
+        - 1.0
+      type: 2
+    RightWall:
+      extent: 1.0
+      material:
+        ambient: 0.1
+        color:
+        - 0.25
+        - 0.25
+        - 0.75
+        - 0.0
+        diffuse: 1.0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.0
+        transparency: 0.0
+      name: RightWall
+      transform:
+        rotation:
+        - -0.0
+        - -0.0
+        - 1.570796251296997
+        - 1.0
+        scale:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        translation:
+        - 1.0
+        - 1.0
+        - 0.0
+        - 1.0
+      type: 1
+    Sphere:
+      center:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 1.0
+      material:
+        ambient: 0.1
+        color:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        diffuse: 1.0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 1.0
+      name: Sphere
+      radius: 1.0
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 0.25
+        - 0.25
+        - 0.25
+        - 1.0
+        translation:
+        - -0.36168310046195984
+        - 1.25
+        - 0.47847840189933777
+        - 1.0
+      type: 0
+    Sphere.001:
+      center:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 1.0
+      material:
+        ambient: 0.1
+        color:
+        - 1.0
+        - 0.0
+        - 0.0
+        - 0.0
+        diffuse: 1.0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: Sphere.001
+      radius: 1.0
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 0.25
+        - 0.25
+        - 0.25
+        - 1.0
+        translation:
+        - 0.0
+        - 0.25
+        - -0.10000000149011612
+        - 1.0
+      type: 0

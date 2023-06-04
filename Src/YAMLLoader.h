@@ -8,6 +8,26 @@
 namespace YAML 
 {
 	template<>
+	struct convert<ShapeType>
+	{
+		static Node encode(const ShapeType& rhs)
+		{
+			Node node;
+
+			node["type"] = static_cast<int32_t>(rhs);
+
+			return node;
+		}
+
+		static bool decode(const Node& node, ShapeType& rhs)
+		{
+			rhs = static_cast<ShapeType>(node.as<int32_t>());
+
+			return true;
+		}
+	};
+
+	template<>
 	struct convert<tuple> 
 	{
 		static Node encode(const tuple& rhs) 
@@ -196,7 +216,7 @@ namespace YAML
 			//	}
 			//}
 
-			rhs.transform = translate(translation) * rotateX(rotation.x) * rotateX(rotation.x) * rotateX(rotation.x) * scale(scaleFactor);
+			rhs.transform = translate(translation) * rotateZ(rotation.z) * rotateY(rotation.y) * rotateX(rotation.x) * scale(scaleFactor);
 
 			return true;
 		}
@@ -266,7 +286,73 @@ namespace YAML
 			//	}
 			//}
 
-			rhs.transform = translate(translation) * rotateX(rotation.x) * rotateX(rotation.x) * rotateX(rotation.x) * scale(scaleFactor);
+			rhs.transform = translate(translation) * rotateZ(rotation.z) * rotateY(rotation.y) * rotateX(rotation.x) * scale(scaleFactor);
+
+			return true;
+		}
+	};
+
+	template<>
+	struct convert<Cube> {
+		static Node encode(const Cube& rhs)
+		{
+			Node node;
+			node["material"] = rhs.material;
+
+			return node;
+		}
+
+		static bool decode(const Node& node, Cube& rhs)
+		{
+			printf("%d\n", static_cast<int32_t>(node.size()));
+
+			rhs.material = node["material"].as<Material>();
+
+			auto translation = node["transform"]["translation"].as<tuple>();
+			auto rotation = node["transform"]["rotation"].as<tuple>();
+			auto scaleFactor = node["transform"]["scale"].as<tuple>();
+
+			auto patternNode = node["material"]["pattern"];
+
+			//if (!patternNode.IsNull())
+			//{
+			//	auto patternType = static_cast<PatternType>(patternNode["type"].as<uint8_t>());
+
+			//	switch (patternType)
+			//	{
+			//	case PatternType::Strip:
+			//	{
+			//		auto color1 = patternNode["color1"].as<tuple>();
+			//		auto color2 = patternNode["color2"].as<tuple>();
+			//		auto patternTranslation = patternNode["transform"]["translation"].as<tuple>();
+			//		auto patternRotation = patternNode["transform"]["rotation"].as<tuple>();
+			//		auto patternScale = patternNode["transform"]["scale"].as<tuple>();
+			//		auto pattern = createStripPattern(color1, color2);
+
+			//		auto translation = translate(patternTranslation);
+			//		auto rotation = rotate(patternRotation);
+			//		auto scaleFactor = scale(patternScale);
+
+			//		pattern->setTransform(translation * rotation * scaleFactor);
+			//		rhs.material.pattern = pattern;
+			//	}
+			//	break;
+			//	case PatternType::Gradient:
+			//		break;
+			//	case PatternType::Ring:
+			//		break;
+			//	case PatternType::Checker:
+			//		break;
+			//	case PatternType::RadialGradient:
+			//		break;
+			//	case PatternType::Blend:
+			//		break;
+			//	default:
+			//		break;
+			//	}
+			//}
+
+			rhs.transform = translate(translation) * rotateZ(rotation.z) * rotateY(rotation.y) * rotateX(rotation.x) * scale(scaleFactor);
 
 			return true;
 		}
@@ -306,22 +392,54 @@ inline static Scene loadScene(const std::string& path)
 
 	scene.camera = createCamera(config["scene"]["camera"]);
 
-	auto sphere = config["scene"]["objects"]["sphere"].as<Sphere>();
+	auto lights = config["scene"]["lights"];
 
-	scene.world.addObject(std::make_shared<Sphere>(sphere));
-
-	auto plane = config["scene"]["objects"]["plane"].as<Plane>();
-
-	scene.world.addObject(std::make_shared<Plane>(plane));
-
-	auto lightPosition = config["scene"]["lights"]["pointLight"]["location"].as<tuple>();
-	auto lightColor = config["scene"]["lights"]["pointLight"]["color"].as<tuple>();
-
-	auto light = pointLight(lightPosition, lightColor);
-	scene.world.addLight(light);
-
-	for (auto iterator = config["skills"].begin(); iterator != config["skills"].end(); iterator++)
+	for (auto iterator = lights.begin(); iterator != lights.end(); iterator++)
 	{
+		auto lightName = iterator->first.as<std::string>();
+
+		auto lightNode = lights[lightName];
+
+		auto lightPosition = lightNode["location"].as<tuple>();
+		auto lightColor = lightNode["color"].as<tuple>();
+
+		auto light = pointLight(lightPosition, lightColor);
+		scene.world.addLight(light);
+	}
+
+	auto objects = config["scene"]["objects"];
+
+	for (auto iterator = objects.begin(); iterator != objects.end(); iterator++)
+	{
+		auto objectName = iterator->first.as<std::string>();
+
+		auto objectNode = objects[objectName];
+		auto shapeType = objectNode["type"].as<ShapeType>();
+
+		switch (shapeType)
+		{
+		case ShapeType::Plane:
+		{
+			auto plane = objects[objectName].as<Plane>();
+			scene.world.addObject(std::make_shared<Plane>(plane));
+		}
+			break;
+		case ShapeType::Sphere:
+		{
+			auto sphere = objects[objectName].as<Sphere>();
+			scene.world.addObject(std::make_shared<Sphere>(sphere));
+		}
+			break;
+		case ShapeType::Cube:
+		{
+			auto cube = objects[objectName].as<Cube>();
+			scene.world.addObject(std::make_shared<Cube>(cube));
+		}
+			break;
+		default:
+			break;
+		}
+
 		printf("%s\n", iterator->first.as<std::string>().c_str());
 	}
 
