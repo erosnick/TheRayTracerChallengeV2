@@ -1,27 +1,27 @@
 scene:
   camera:
     center:
-    - 13.085328102111816
-    - 8.952909469604492
-    - -6.096145153045654
+    - 17.991682052612305
+    - 7.808047771453857
+    - -18.7198486328125
     - 1.0
     eye:
-    - 13.85566234588623
-    - 9.479968070983887
-    - -6.455025672912598
+    - 18.673423767089844
+    - 8.0
+    - -19.425811767578125
     - 1.0
     fov: 0.6911112070083618
-    imageHeight: 512
-    imageWidth: 512
+    imageHeight: 720
+    imageWidth: 1280
     rotation:
-    - 1.0156210660934448
-    - 1.1277633905410767
-    - 0.011374899186193943
+    - 1.3776451349258423
+    - 0.7679451704025269
+    - 6.988666712004488e-08
     - 0.0
     up:
-    - -0.4720607101917267
-    - 0.8497530817985535
-    - 0.23468777537345886
+    - -0.13334135711193085
+    - 0.9814042448997498
+    - 0.13807903230190277
     - 0.0
   lights:
     Light:
@@ -32,41 +32,59 @@ scene:
       - 0.0
       lightEnergy: 1000.0
       location:
-      - 4.076245307922363
-      - 5.903861999511719
-      - 1.0054539442062378
+      - 5.076245307922363
+      - 8.800000190734863
+      - -11.994545936584473
       - 1.0
       name: Light
   name: House
   objects:
-    Plane:
+    Ceiling:
       extent: 1.0
       material:
         ambient: 0.1
+        castShadow: true
         color:
-        - 1.0
-        - 1.0
-        - 1.0
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
         - 0.0
-        diffuse: 1.0
+        diffuse: 0.9
         pattern:
           color1:
-          - 0.8999999761581421
-          - 0.8999999761581421
-          - 0.8999999761581421
+          - 1.0
+          - 1.0
+          - 1.0
           - 0.0
           color2:
-          - 1.0
-          - 1.0
-          - 1.0
           - 0.0
+          - 0.0
+          - 0.0
+          - 0.0
+          name: CheckerPattern
+          transform:
+            rotation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+            scale:
+            - 0.25
+            - 0.25
+            - 0.25
+            - 1.0
+            translation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
           type: 3
-        reflective: 0.0
-        refractiveIndex: 1.0
+        reflective: 0.10000000149011612
+        refractiveIndex: 1.4500000476837158
         shininess: 200
-        specular: 0.3
+        specular: 0.5
         transparency: 0.0
-      name: Plane
+      name: Ceiling
       transform:
         rotation:
         - 0.0
@@ -74,14 +92,781 @@ scene:
         - 0.0
         - 1.0
         scale:
-        - 5.0
+        - 20.0
+        - 1.0
+        - 20.0
+        - 1.0
+        translation:
+        - 10.0
+        - 10.0
+        - -10.0
+        - 1.0
+      type: 1
+    Floor:
+      extent: 1.0
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.0
+        diffuse: 0.9
+        pattern:
+          color1:
+          - 1.0
+          - 1.0
+          - 1.0
+          - 0.0
+          color2:
+          - 0.0
+          - 0.0
+          - 0.0
+          - 0.0
+          name: CheckerPattern
+          transform:
+            rotation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+            scale:
+            - 0.10000000149011612
+            - 0.10000000149011612
+            - 0.10000000149011612
+            - 1.0
+            translation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+          type: 3
+        reflective: 0.10000000149011612
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: Floor
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 20.0
+        - 1.0
+        - 20.0
+        - 1.0
+        translation:
+        - 10.0
+        - 0.0
+        - -10.0
+        - 1.0
+      type: 1
+    GlassCube:
+      material:
+        ambient: 0.1
+        castShadow: false
+        color:
+        - 0.10000000149011612
+        - 0.10000000149011612
+        - 0.10000000149011612
+        - 0.0
+        diffuse: 0.9
+        pattern: null
+        reflective: 1.0
+        refractiveIndex: 2.4170000553131104
+        shininess: 200
+        specular: 0.5
+        transparency: 1.0
+      name: GlassCube
+      transform:
+        rotation:
+        - 0.0
+        - 0.1745329201221466
+        - 0.0
+        - 1.0
+        scale:
+        - 0.30000001192092896
+        - 0.30000001192092896
+        - 0.30000001192092896
+        - 1.0
+        translation:
+        - 1.5838053226470947
+        - 4.699999809265137
+        - -2.433223247528076
+        - 1.0
+      type: 2
+    LeftWall:
+      extent: 1.0
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.0
+        diffuse: 0.9
+        pattern:
+          color1:
+          - 0.6724428534507751
+          - 0.5583400726318359
+          - 0.2917707860469818
+          - 0.0
+          color2:
+          - 0.5583402514457703
+          - 0.39157217741012573
+          - 0.20863692462444305
+          - 0.0
+          name: StripPattern
+          transform:
+            rotation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+            scale:
+            - 0.05000000074505806
+            - 0.05000000074505806
+            - 0.05000000074505806
+            - 1.0
+            translation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+          type: 0
+        reflective: 0.10000000149011612
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.0
+        transparency: 0.0
+      name: LeftWall
+      transform:
+        rotation:
+        - 1.5707963705062866
+        - -1.5707963705062866
+        - 0.0
+        - 1.0
+        scale:
+        - 20.0
         - 1.0
         - 5.0
         - 1.0
         translation:
+        - -10.0
+        - 5.0
+        - -10.0
+        - 1.0
+      type: 1
+    Leg1:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
         - 0.0
+        diffuse: 0.9
+        pattern:
+          color1:
+          - 0.6700000166893005
+          - 0.5600000023841858
+          - 0.28999999165534973
+          - 0.0
+          color2:
+          - 0.6700000166893005
+          - 0.5600000023841858
+          - 0.28999999165534973
+          - 0.0
+          name: StripPatern
+          transform:
+            rotation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+            scale:
+            - 1.0
+            - 1.0
+            - 1.0
+            - 1.0
+            translation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+          type: 0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: Leg1
+      transform:
+        rotation:
         - 0.0
+        - -0.0
         - 0.0
+        - 1.0
+        scale:
+        - 0.20000000298023224
+        - 2.0
+        - 0.20000000298023224
+        - 1.0
+        translation:
+        - -0.6161954402923584
+        - 2.0
+        - -3.8332228660583496
+        - 1.0
+      type: 2
+    Leg2:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.0
+        diffuse: 0.9
+        pattern:
+          color1:
+          - 0.6700000166893005
+          - 0.5600000023841858
+          - 0.28999999165534973
+          - 0.0
+          color2:
+          - 0.6700000166893005
+          - 0.5600000023841858
+          - 0.28999999165534973
+          - 0.0
+          name: StripPatern
+          transform:
+            rotation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+            scale:
+            - 1.0
+            - 1.0
+            - 1.0
+            - 1.0
+            translation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+          type: 0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: Leg2
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 0.20000000298023224
+        - 2.0
+        - 0.20000000298023224
+        - 1.0
+        translation:
+        - 6.183805465698242
+        - 2.0
+        - -1.0332227945327759
+        - 1.0
+      type: 2
+    Leg3:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.0
+        diffuse: 0.9
+        pattern:
+          color1:
+          - 0.6700000166893005
+          - 0.5600000023841858
+          - 0.28999999165534973
+          - 0.0
+          color2:
+          - 0.6700000166893005
+          - 0.5600000023841858
+          - 0.28999999165534973
+          - 0.0
+          name: StripPatern
+          transform:
+            rotation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+            scale:
+            - 1.0
+            - 1.0
+            - 1.0
+            - 1.0
+            translation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+          type: 0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: Leg3
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 0.20000000298023224
+        - 2.0
+        - 0.20000000298023224
+        - 1.0
+        translation:
+        - -0.6161954402923584
+        - 2.0
+        - -1.0332227945327759
+        - 1.0
+      type: 2
+    Leg4:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.0
+        diffuse: 0.9
+        pattern:
+          color1:
+          - 0.6700000166893005
+          - 0.5600000023841858
+          - 0.28999999165534973
+          - 0.0
+          color2:
+          - 0.6700000166893005
+          - 0.5600000023841858
+          - 0.28999999165534973
+          - 0.0
+          name: StripPatern
+          transform:
+            rotation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+            scale:
+            - 1.0
+            - 1.0
+            - 1.0
+            - 1.0
+            translation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+          type: 0
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: Leg4
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 0.20000000298023224
+        - 2.0
+        - 0.20000000298023224
+        - 1.0
+        translation:
+        - 6.183805465698242
+        - 2.0
+        - -3.8332228660583496
+        - 1.0
+      type: 2
+    LightGreenCube:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.0
+        - 0.8000000715255737
+        - 0.021287105977535248
+        - 0.0
+        diffuse: 0.9
+        pattern: null
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: LightGreenCube
+      transform:
+        rotation:
+        - 0.0
+        - 0.5235987901687622
+        - 0.0
+        - 1.0
+        scale:
+        - 0.30000001192092896
+        - 0.07000000029802322
+        - 0.07000000029802322
+        - 1.0
+        translation:
+        - 2.383805513381958
+        - 4.470000267028809
+        - -1.3332234621047974
+        - 1.0
+      type: 2
+    Mirror:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.10000000149011612
+        - 0.10000000149011612
+        - 0.10000000149011612
+        - 0.0
+        diffuse: 0.9
+        pattern: null
+        reflective: 1.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: Mirror
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 8.0
+        - 2.5
+        - 1.0
+        - 1.0
+        translation:
+        - 1.2471823692321777
+        - 5.35282039642334
+        - 10.735074996948242
+        - 1.0
+      type: 2
+    PinkGreenCube:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.41999998688697815
+        - 0.7699999809265137
+        - 0.6800000071525574
+        - 0.0
+        diffuse: 0.9
+        pattern: null
+        reflective: 0.0
+        refractiveIndex: 1.5199999809265137
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: PinkGreenCube
+      transform:
+        rotation:
+        - 0.0
+        - -0.3490658402442932
+        - 0.0
+        - 1.0
+        scale:
+        - 0.07000000029802322
+        - 0.30000001192092896
+        - 0.07000000029802322
+        - 1.0
+        translation:
+        - 5.583805084228516
+        - 4.700000286102295
+        - -1.4332233667373657
+        - 1.0
+      type: 2
+    PurpleCube:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.21638552844524384
+        - 0.1682492196559906
+        - 0.8000000715255737
+        - 0.0
+        diffuse: 0.9
+        pattern: null
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: PurpleCube
+      transform:
+        rotation:
+        - 0.0
+        - -0.3490658402442932
+        - 0.0
+        - 1.0
+        scale:
+        - 0.07000000029802322
+        - 0.30000001192092896
+        - 0.07000000029802322
+        - 1.0
+        translation:
+        - 1.2838051319122314
+        - 4.700000286102295
+        - -4.033224105834961
+        - 1.0
+      type: 2
+    RedCube:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 1.0
+        - 0.5356234312057495
+        - 0.5014612674713135
+        - 0.0
+        diffuse: 0.9
+        pattern: null
+        reflective: 0.5
+        refractiveIndex: 1.5199999809265137
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: RedCube
+      transform:
+        rotation:
+        - 0.0
+        - -0.3490658402442932
+        - 0.0
+        - 1.0
+        scale:
+        - 0.15000000596046448
+        - 0.15000000596046448
+        - 0.15000000596046448
+        - 1.0
+        translation:
+        - 4.583805084228516
+        - 4.550000190734863
+        - -3.433223247528076
+        - 1.0
+      type: 2
+    RighWall:
+      extent: 1.0
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.0
+        diffuse: 0.9
+        pattern:
+          color1:
+          - 0.6724428534507751
+          - 0.5583400726318359
+          - 0.2917707860469818
+          - 0.0
+          color2:
+          - 0.5600000023841858
+          - 0.38999998569488525
+          - 0.20999999344348907
+          - 0.0
+          name: StripPattern
+          transform:
+            rotation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+            scale:
+            - 0.05000000074505806
+            - 0.05000000074505806
+            - 0.05000000074505806
+            - 1.0
+            translation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+          type: 0
+        reflective: 0.10000000149011612
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.0
+        transparency: 0.0
+      name: RighWall
+      transform:
+        rotation:
+        - 1.5707963705062866
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 20.0
+        - 1.0
+        - 5.0
+        - 1.0
+        translation:
+        - 10.0
+        - 5.0
+        - 10.0
+        - 1.0
+      type: 1
+    RighWall.001:
+      extent: 1.0
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.0
+        diffuse: 0.9
+        pattern:
+          color1:
+          - 0.6724428534507751
+          - 0.5583400726318359
+          - 0.2917707860469818
+          - 0.0
+          color2:
+          - 0.5600000023841858
+          - 0.38999998569488525
+          - 0.20999999344348907
+          - 0.0
+          name: StripPattern
+          transform:
+            rotation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+            scale:
+            - 0.05000000074505806
+            - 0.05000000074505806
+            - 0.05000000074505806
+            - 1.0
+            translation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+          type: 0
+        reflective: 0.10000000149011612
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.0
+        transparency: 0.0
+      name: RighWall.001
+      transform:
+        rotation:
+        - 1.5707963705062866
+        - -1.5707963705062866
+        - -0.0
+        - 1.0
+        scale:
+        - 20.0
+        - 1.0
+        - 5.0
+        - 1.0
+        translation:
+        - 30.0
+        - 5.0
+        - -10.0
+        - 1.0
+      type: 1
+    RighWall.002:
+      extent: 1.0
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.0
+        diffuse: 0.9
+        pattern:
+          color1:
+          - 0.6724428534507751
+          - 0.5583400726318359
+          - 0.2917707860469818
+          - 0.0
+          color2:
+          - 0.5600000023841858
+          - 0.38999998569488525
+          - 0.20999999344348907
+          - 0.0
+          name: StripPattern
+          transform:
+            rotation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+            scale:
+            - 0.05000000074505806
+            - 0.05000000074505806
+            - 0.05000000074505806
+            - 1.0
+            translation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+          type: 0
+        reflective: 0.10000000149011612
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.0
+        transparency: 0.0
+      name: RighWall.002
+      transform:
+        rotation:
+        - 1.5707963705062866
+        - -3.1415929794311523
+        - 0.0
+        - 1.0
+        scale:
+        - 20.0
+        - 1.0
+        - 5.0
+        - 1.0
+        translation:
+        - 10.0
+        - 5.0
+        - -30.0
         - 1.0
       type: 1
     Sphere:
@@ -92,17 +877,19 @@ scene:
       - 1.0
       material:
         ambient: 0.1
+        castShadow: false
         color:
-        - 1.0
+        - 0.10000000149011612
+        - 0.10000000149011612
+        - 0.10000000149011612
         - 0.0
-        - 0.0
-        - 0.0
-        diffuse: 1.0
-        reflective: 0.0
-        refractiveIndex: 1.4500000476837158
+        diffuse: 0.9
+        pattern: null
+        reflective: 1.0
+        refractiveIndex: 2.4170000553131104
         shininess: 200
         specular: 0.5
-        transparency: 0.0
+        transparency: 1.0
       name: Sphere
       radius: 1.0
       transform:
@@ -112,13 +899,211 @@ scene:
         - 0.0
         - 1.0
         scale:
-        - 1.0
-        - 1.0
-        - 1.0
+        - 0.25
+        - 0.25
+        - 0.25
         - 1.0
         translation:
-        - 0.0
-        - 1.0
-        - 0.0
+        - 2.9838054180145264
+        - 4.650000095367432
+        - -3.133223533630371
         - 1.0
       type: 0
+    Table:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.800000011920929
+        - 0.0
+        diffuse: 0.9
+        pattern:
+          color1:
+          - 0.6724432706832886
+          - 0.5583406686782837
+          - 0.29177066683769226
+          - 0.0
+          color2:
+          - 0.5583402514457703
+          - 0.39157217741012573
+          - 0.20863692462444305
+          - 0.0
+          name: StripPattern
+          transform:
+            rotation:
+            - 1.0
+            - 90.0
+            - 1.0
+            - 1.0
+            scale:
+            - 0.05000000074505806
+            - 0.05000000074505806
+            - 0.05000000074505806
+            - 1.0
+            translation:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+          type: 0
+        reflective: 0.10000000149011612
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: Table
+      transform:
+        rotation:
+        - 0.0
+        - -1.5707963705062866
+        - 0.0
+        - 1.0
+        scale:
+        - 2.5
+        - 0.20000004768371582
+        - 4.0
+        - 1.0
+        translation:
+        - 2.7838051319122314
+        - 4.1999993324279785
+        - -2.433223247528076
+        - 1.0
+      type: 2
+    WallCubeBlue:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.00020214624237269163
+        - 0.04270463436841965
+        - 0.8000000715255737
+        - 0.0
+        diffuse: 0.9
+        pattern: null
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: WallCubeBlue
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 1.0
+        - 0.6000000238418579
+        - 0.6000000238418579
+        - 1.0
+        translation:
+        - -10.911200523376465
+        - 5.071373462677002
+        - 0.51309734582901
+        - 1.0
+      type: 2
+    WallCubeGreen:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.08213704824447632
+        - 0.8000000715255737
+        - 0.004666793625801802
+        - 0.0
+        diffuse: 0.9
+        pattern: null
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: WallCubeGreen
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 1.0
+        - 0.6000000238418579
+        - 0.6000000238418579
+        - 1.0
+        translation:
+        - -10.911200523376465
+        - 6.829977512359619
+        - 0.514194130897522
+        - 1.0
+      type: 2
+    WallCubeRed:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.8999999761581421
+        - 0.0
+        - 0.0
+        - 0.0
+        diffuse: 0.9
+        pattern: null
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: WallCubeRed
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 1.0
+        - 1.5
+        - 1.5
+        - 1.0
+        translation:
+        - -10.911200523376465
+        - 5.953930377960205
+        - -1.9579799175262451
+        - 1.0
+      type: 2
+    YellowCube:
+      material:
+        ambient: 0.1
+        castShadow: true
+        color:
+        - 0.7103263139724731
+        - 0.8000000715255737
+        - 0.05694282799959183
+        - 0.0
+        diffuse: 0.9
+        pattern: null
+        reflective: 0.0
+        refractiveIndex: 1.4500000476837158
+        shininess: 200
+        specular: 0.5
+        transparency: 0.0
+      name: YellowCube
+      transform:
+        rotation:
+        - 0.0
+        - -0.0
+        - 0.0
+        - 1.0
+        scale:
+        - 0.20000000298023224
+        - 0.10000000149011612
+        - 0.20000000298023224
+        - 1.0
+        translation:
+        - 0.26547932624816895
+        - 4.500594139099121
+        - -2.6206002235412598
+        - 1.0
+      type: 2

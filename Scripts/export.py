@@ -5,6 +5,60 @@ import bpy
 from mathutils import Matrix, Vector
 import math
 
+def createPattern(data):
+    patternNode = {}
+    patternName = data.get("Pattern")
+
+    # print("Pattern name:", patternName)
+
+    if patternName:
+        patternNode['name'] = patternName
+        patternType = data.get("Type")
+        patternNode['type'] = patternType
+
+        color1 = data.get("Color1")
+        color2 = data.get("Color2")
+
+        if color1:
+            patternNode['color1'] = [color1[0], color1[1], color1[2], 0.0]
+        if color2:
+            patternNode['color2'] = [color2[0], color2[1], color2[2], 0.0]
+
+        scale = data.get("Scale")
+
+        patternNode['transform'] = {}
+
+        if scale:
+            patternNode['transform']['scale'] = [scale, scale, scale, 1.0]
+        else:
+            patternNode['transform']['scale'] = [1.0, 1.0, 1.0, 1.0]
+
+        rotation = data.get("Rotation")
+
+        if rotation:
+            # print("Rotation:", rotation)
+            patternNode['transform']['rotation'] = [rotation[0], rotation[1], rotation[2], 1.0]
+        else:
+            patternNode['transform']['rotation'] = [0.0, 0.0, 0.0, 1.0]
+
+        translation = data.get("Translation")
+
+        if translation:
+            patternNode['transform']['translation'] = [translation[0], translation[1], translation[2], 1.0]
+        else:
+            patternNode['transform']['translation'] = [0.0, 0.0, 0.0, 1.0]
+    else:
+        patternNode = None
+        # patternNode['type'] = 0
+        # patternNode['transform'] = {}
+        # patternNode['transform']['scale'] = [1.0, 1.0, 1.0, 1.0]
+        # patternNode['transform']['translation'] = [0.0, 0.0, 0.0, 1.0]
+        # patternNode['transform']['rotation'] = [0.0, 0.0, 0.0, 1.0]
+        # patternNode['color1'] = [0.0, 0.0, 0.0, 0.0]
+        # patternNode['color2'] = [0.0, 0.0, 0.0, 0.0]
+
+    return patternNode
+
 def createCamera(camera):
     # Check if a camera is set as active
     if camera is not None and camera.type == 'CAMERA':
@@ -25,7 +79,7 @@ def createCamera(camera):
         sensor_width = camera.data.sensor_width
         sensor_height = camera.data.sensor_height
 
-        print("Camera location:", camera_location)
+        # print("Camera location:", camera_location)
 
         # Get the render resolution
         render_resolution_x = bpy.context.scene.render.resolution_x
@@ -68,13 +122,14 @@ def createCamera(camera):
 def createDefaultMaterial():
     materialNode = {}
     materialNode['ambient'] = 0.1
-    materialNode['diffuse'] = 1.0
+    materialNode['diffuse'] = 0.9
     materialNode['specular'] = 0.3
     materialNode['shininess'] = 200
     materialNode['color'] = [1.0, 1.0, 1.0, 0.0]
     materialNode['reflective'] = 0.0
     materialNode['refractiveIndex'] = 1.0
     materialNode['transparency'] = 0.0
+    materialNode['castShadow'] = True
     return materialNode
 
 def createMaterial(material):
@@ -95,16 +150,20 @@ def createMaterial(material):
         transmission = principled_node.inputs['Transmission'].default_value
         materialNode['color'] = [base_color[0], base_color[1], base_color[2], 0.0]
         materialNode['ambient'] = 0.1
-        materialNode['diffuse'] = 1.0
+        materialNode['diffuse'] = 0.9
         materialNode['specular'] = specular
         materialNode['shininess'] = 200
         materialNode['reflective'] = metallic
         materialNode['refractiveIndex'] = ior
         materialNode['transparency'] = transmission
-        print("Base Color:", base_color)
-        print("Metallic:", metallic)
-        print("Roughness:", roughness)
-        print("IOR:", ior)
+        if transmission > 0.0:
+            materialNode['castShadow'] = False
+        else:
+            materialNode['castShadow'] = True
+        # print("Base Color:", base_color)
+        # print("Metallic:", metallic)
+        # print("Roughness:", roughness)
+        # print("IOR:", ior)
     return materialNode
 
 def createSphere(sphere):
@@ -124,7 +183,10 @@ def createSphere(sphere):
     if material:
         sphereNode['material'] = createMaterial(material)
     else:
-        print("No material.")
+        print(sphere.name + " no material")
+
+    sphereNode['material']['pattern'] = createPattern(sphere.data)
+
     return sphereNode
 
 def createPlane(plane):
@@ -143,22 +205,9 @@ def createPlane(plane):
     if material:
         planeNode['material'] = createMaterial(material)
     else:
-        print("No material.")
+        print(plane.name + " no material")
 
-    patternName = plane.data.get("Pattern")
-    patternType = plane.data.get("PatternType")
-    color1 = plane.data.get("Color1")
-    color2 = plane.data.get("Color2")
-    print("Color1", color1)
-    if patternName:
-        print("Pattern:", patternName)
-        planeNode['material']['pattern'] = {}
-        print("Pattern Type:", patternType)
-        planeNode['material']['pattern']['type'] = patternType
-        if color1:
-            planeNode['material']['pattern']['color1'] = [color1[0], color1[1], color1[2], 0.0]
-        if color2:
-            planeNode['material']['pattern']['color2'] = [color2[0], color2[1], color2[2], 0.0]
+    planeNode['material']['pattern'] = createPattern(plane.data)
 
     return planeNode
 
@@ -177,19 +226,23 @@ def createCube(cube):
     if material:
         cubeNode['material'] = createMaterial(material)
     else:
-        print("No material")
+        print(cube.name + " no material")
+
+    cubeNode['material']['pattern'] = createPattern(cube.data)
+    
     return cubeNode
+
 
 def createPointLight(light):
     pointLightNode = {}
     pointLightNode['name'] = light.name
     # Retrieve light information
     # Print the light information
-    print("Light Name:", light.name)
-    print("Light Location:", light.location)
-    print("Light Energy:", light.data.energy)
-    print("Light Color:", light.data.color)
-    print("Light type:", light.data.type)
+    # print("Light Name:", light.name)
+    # print("Light Location:", light.location)
+    # print("Light Energy:", light.data.energy)
+    # print("Light Color:", light.data.color)
+    # print("Light type:", light.data.type)
 
     pointLightNode['location'] = [light.location.x, light.location.z, light.location.y, 1.0]
     pointLightNode['color'] = [light.data.color.r, light.data.color.g, light.data.color.b, 0.0]
@@ -224,11 +277,10 @@ def exportScene():
         objects[sphere.name] = createSphere(sphere)
 
     for plane in planes:
-        objects[plane.name] = {}
         objects[plane.name] = createPlane(plane)
 
     for cube in cubes:
-        objects[cube.name] = {}
+        # print("Cube:", cube.name)
         objects[cube.name] = createCube(cube)
 
     scene['lights'] = {}
@@ -255,20 +307,21 @@ def exportScene():
 # if __name__ == '__main__':
 #     exportScene()
 
+# https://blender.stackexchange.com/questions/260573/how-do-i-properly-add-a-shortcut-key-to-run-a-script
 mode_keymap = None
 
 class RollOperator(bpy.types.Operator):
     bl_idname = "transform.roll"
     bl_label = "Roll active object"
     def execute(self, context):
-        dx = self.dx / 100
-        dy = self.dy / 100
+        # dx = self.dx / 100
+        # dy = self.dy / 100
         #matrix = Matrix.Rotation((dx**2 + dy**2)**.5, 4, Vector((-dy, dx, 0)))
         #matrix *= context.object.matrix_world
-        context.object.rotation_euler.x += dx * math.pi / 4
-        context.object.rotation_euler.y += dy * math.pi / 4
-        context.object.location.x += dx
-        context.object.location.y += dy
+        # context.object.rotation_euler.x += dx * math.pi / 4
+        # context.object.rotation_euler.y += dy * math.pi / 4
+        # context.object.location.x += dx
+        # context.object.location.y += dy
         return {'FINISHED'}
     def modal(self, context, event):
         if event.type == 'MOUSEMOVE':  # Apply
@@ -282,13 +335,7 @@ class RollOperator(bpy.types.Operator):
             context.object.rotation_euler = self.rotation_euler
             return {'CANCELLED'}
         return {'RUNNING_MODAL'}
-    def invoke(self, context, event):
-        rotation = context.object.rotation_euler
-        location = context.object.location
-        self.location = location[0], location[1], location[2]
-        self.rotation_euler = rotation[0], rotation[1], rotation[2]        
-        self.dx = 0
-        self.dy = 0        
+    def invoke(self, context, event):   
         self.execute(context)
         # context.window_manager.modal_handler_add(self)
         exportScene()

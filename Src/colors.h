@@ -12,6 +12,7 @@ namespace Color
 	const tuple White{ 1.0f, 1.0f, 1.0f, 0.0f };
 	const tuple HalfWhite{ 0.5f, 0.5f, 0.5f, 0.0f };
 	const tuple Black{ 0.0f, 0.0f, 0.0f, 0.0f };
+	const tuple Dark{ 0.1f, 0.1f, 0.1f, 0.0f };
 	const tuple Grey{ 0.9f, 0.9f, 0.9f, 0.0f };
 
 	const tuple Red{ 1.0f, 0.0f, 0.0f, 0.0f };

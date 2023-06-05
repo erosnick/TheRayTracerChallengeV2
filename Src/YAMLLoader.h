@@ -137,7 +137,7 @@ namespace YAML
 
 		static bool decode(const Node& node, Material& rhs) 
 		{
-			printf("%d\n", static_cast<int32_t>(node.size()));
+			//printf("%d\n", static_cast<int32_t>(node.size()));
 
 			rhs.color = node["color"].as<tuple>();
 			rhs.ambient = node["ambient"].as<float>();
@@ -147,6 +147,49 @@ namespace YAML
 			rhs.reflective = node["reflective"].as<float>();
 			rhs.transparency = node["transparency"].as<float>();
 			rhs.refractiveIndex = node["refractiveIndex"].as<float>();
+			rhs.castShadow = node["castShadow"].as<bool>();
+
+			auto patternNode = node["pattern"];
+
+			if (!patternNode.IsNull())
+			{
+				auto patternType = static_cast<PatternType>(patternNode["type"].as<uint8_t>());
+
+				auto color1 = patternNode["color1"].as<tuple>();
+				auto color2 = patternNode["color2"].as<tuple>();
+
+				auto translation = patternNode["transform"]["translation"].as<tuple>();
+				auto rotation = patternNode["transform"]["rotation"].as<tuple>();
+				auto scaleFactor = patternNode["transform"]["scale"].as<tuple>();
+
+				switch (patternType)
+				{
+				case PatternType::Strip:
+				{
+					auto pattern = createStripPattern(color1, color2);
+
+					rhs.pattern = pattern;
+				}
+				break;
+				case PatternType::Gradient:
+					break;
+				case PatternType::Ring:
+					break;
+				case PatternType::Checker:
+				{
+					rhs.pattern = createCheckerPattern(color1, color2);
+				}
+				break;
+				case PatternType::RadialGradient:
+					break;
+				case PatternType::Blend:
+					break;
+				default:
+					break;
+				}
+
+				rhs.pattern->transform = translate(translation) * rotateZ(radians(rotation.z)) * rotateY(radians(rotation.y)) * rotateX(radians(rotation.x)) * scale(scaleFactor);
+			}
 
 			return true;
 		}
@@ -166,7 +209,7 @@ namespace YAML
 
 		static bool decode(const Node& node, Sphere& rhs)
 		{
-			printf("%d\n", static_cast<int32_t>(node.size()));
+			//printf("%d\n", static_cast<int32_t>(node.size()));
 
 			rhs.center = node["center"].as<tuple>();
 			rhs.radius = node["radius"].as<float>();
@@ -175,46 +218,6 @@ namespace YAML
 			auto translation = node["transform"]["translation"].as<tuple>();
 			auto rotation = node["transform"]["rotation"].as<tuple>();
 			auto scaleFactor = node["transform"]["scale"].as<tuple>();
-
-			auto patternNode = node["material"]["pattern"];
-
-			//if (!patternNode.IsNull())
-			//{
-			//	auto patternType = static_cast<PatternType>(patternNode["type"].as<uint8_t>());
-
-			//	switch (patternType)
-			//	{
-			//	case PatternType::Strip:
-			//	{
-			//		auto color1 = patternNode["color1"].as<tuple>();
-			//		auto color2 = patternNode["color2"].as<tuple>();
-			//		auto patternTranslation = patternNode["transform"]["translation"].as<tuple>();
-			//		auto patternRotation = patternNode["transform"]["rotation"].as<tuple>();
-			//		auto patternScale = patternNode["transform"]["scale"].as<tuple>();
-			//		auto pattern = createStripPattern(color1, color2);
-
-			//		auto translation = translate(patternTranslation);
-			//		auto rotation = rotate(patternRotation);
-			//		auto scaleFactor = scale(patternScale);
-
-			//		pattern->setTransform(translation * rotation * scaleFactor);
-			//		rhs.material.pattern = pattern;
-			//	}
-			//	break;
-			//	case PatternType::Gradient:
-			//		break;
-			//	case PatternType::Ring:
-			//		break;
-			//	case PatternType::Checker:
-			//		break;
-			//	case PatternType::RadialGradient:
-			//		break;
-			//	case PatternType::Blend:
-			//		break;
-			//	default:
-			//		break;
-			//	}
-			//}
 
 			rhs.transform = translate(translation) * rotateZ(rotation.z) * rotateY(rotation.y) * rotateX(rotation.x) * scale(scaleFactor);
 
@@ -236,7 +239,7 @@ namespace YAML
 
 		static bool decode(const Node& node, Plane& rhs)
 		{
-			printf("%d\n", static_cast<int32_t>(node.size()));
+			//printf("%d\n", static_cast<int32_t>(node.size()));
 
 			rhs.extentX = node["extent"].as<float>();
 			rhs.extentZ = node["extent"].as<float>();
@@ -245,52 +248,6 @@ namespace YAML
 			auto translation = node["transform"]["translation"].as<tuple>();
 			auto rotation = node["transform"]["rotation"].as<tuple>();
 			auto scaleFactor = node["transform"]["scale"].as<tuple>();
-
-			auto patternNode = node["material"]["pattern"];
-
-			if (!patternNode.IsNull())
-			{
-				auto patternType = static_cast<PatternType>(patternNode["type"].as<uint8_t>());
-
-				switch (patternType)
-				{
-				case PatternType::Strip:
-				{
-					auto color1 = patternNode["color1"].as<tuple>();
-					auto color2 = patternNode["color2"].as<tuple>();
-					auto patternTranslation = patternNode["transform"]["translation"].as<tuple>();
-					auto patternRotation = patternNode["transform"]["rotation"].as<tuple>();
-					auto patternScale = patternNode["transform"]["scale"].as<tuple>();
-					auto pattern = createStripPattern(color1, color2);
-
-					auto translation = translate(patternTranslation);
-					auto rotation = rotate(patternRotation);
-					auto scaleFactor = scale(patternScale);
-
-					pattern->setTransform(translation * rotation * scaleFactor);
-					rhs.material.pattern = pattern;
-				}
-				break;
-				case PatternType::Gradient:
-					break;
-				case PatternType::Ring:
-					break;
-				case PatternType::Checker:
-				{
-					auto color1 = patternNode["color1"].as<tuple>();
-					auto color2 = patternNode["color2"].as<tuple>();
-
-					rhs.material.pattern = createCheckerPattern(color1, color2); 
-				}
-					break;
-				case PatternType::RadialGradient:
-					break;
-				case PatternType::Blend:
-					break;
-				default:
-					break;
-				}
-			}
 
 			rhs.transform = translate(translation) * rotateZ(rotation.z) * rotateY(rotation.y) * rotateX(rotation.x) * scale(scaleFactor);
 
@@ -310,53 +267,13 @@ namespace YAML
 
 		static bool decode(const Node& node, Cube& rhs)
 		{
-			printf("%d\n", static_cast<int32_t>(node.size()));
+			//printf("%d\n", static_cast<int32_t>(node.size()));
 
 			rhs.material = node["material"].as<Material>();
 
 			auto translation = node["transform"]["translation"].as<tuple>();
 			auto rotation = node["transform"]["rotation"].as<tuple>();
 			auto scaleFactor = node["transform"]["scale"].as<tuple>();
-
-			auto patternNode = node["material"]["pattern"];
-
-			//if (!patternNode.IsNull())
-			//{
-			//	auto patternType = static_cast<PatternType>(patternNode["type"].as<uint8_t>());
-
-			//	switch (patternType)
-			//	{
-			//	case PatternType::Strip:
-			//	{
-			//		auto color1 = patternNode["color1"].as<tuple>();
-			//		auto color2 = patternNode["color2"].as<tuple>();
-			//		auto patternTranslation = patternNode["transform"]["translation"].as<tuple>();
-			//		auto patternRotation = patternNode["transform"]["rotation"].as<tuple>();
-			//		auto patternScale = patternNode["transform"]["scale"].as<tuple>();
-			//		auto pattern = createStripPattern(color1, color2);
-
-			//		auto translation = translate(patternTranslation);
-			//		auto rotation = rotate(patternRotation);
-			//		auto scaleFactor = scale(patternScale);
-
-			//		pattern->setTransform(translation * rotation * scaleFactor);
-			//		rhs.material.pattern = pattern;
-			//	}
-			//	break;
-			//	case PatternType::Gradient:
-			//		break;
-			//	case PatternType::Ring:
-			//		break;
-			//	case PatternType::Checker:
-			//		break;
-			//	case PatternType::RadialGradient:
-			//		break;
-			//	case PatternType::Blend:
-			//		break;
-			//	default:
-			//		break;
-			//	}
-			//}
 
 			rhs.transform = translate(translation) * rotateZ(rotation.z) * rotateY(rotation.y) * rotateX(rotation.x) * scale(scaleFactor);
 
@@ -394,7 +311,7 @@ inline static Scene loadScene(const std::string& path)
 
 	scene.world.setName(sceneName);
 
-	printf("name:%s\n", sceneName.c_str());
+	//printf("name:%s\n", sceneName.c_str());
 
 	scene.camera = createCamera(config["scene"]["camera"]);
 
@@ -446,7 +363,7 @@ inline static Scene loadScene(const std::string& path)
 			break;
 		}
 
-		printf("%s\n", iterator->first.as<std::string>().c_str());
+		//printf("%s\n", iterator->first.as<std::string>().c_str());
 	}
 
 	return scene;

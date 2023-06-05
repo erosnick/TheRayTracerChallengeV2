@@ -31,7 +31,7 @@ project "TheRayTracerChallenge"
     kind "ConsoleApp"                       --项目类型，控制台程序
     language "C++"                          --工程采用的语言，Premake5.0当前支持C、C++、C#
     location "Project"
-    openmp "On"
+    
     postbuildcommands 
     {
         -- "%{wks.location}/bin/%{cfg.buildcfg}_%{cfg.platform}/%{prj.name}.exe"
@@ -125,7 +125,6 @@ project "TestCases"
     kind "ConsoleApp"                       --项目类型，控制台程序
     language "C++"                          --工程采用的语言，Premake5.0当前支持C、C++、C#
     location "Project"
-    openmp "On"
 
     files 
     { 

@@ -9,7 +9,10 @@
 #include "canvas.h"
 #include "world.h"
 
-#include <omp.h>
+#include <thread>
+#include <atomic>
+#include <execution>
+#include <mutex>
 
 tuple lighting(const Material& material, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow = false);
 tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow);
@@ -141,8 +144,11 @@ tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, co
 		}
 	}
 
+	float distance = length(light.position - position);
+	float attenuation = 1.0f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
 	// Add the three contributions together to get the final shading
-	return ambient + diffuse + specular;
+	return ambient + (diffuse + specular) * attenuation;
 }
 
 tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth)
@@ -199,23 +205,57 @@ Canvas render(const Camera& camera, const World& world, bool useBackgroundColor,
 {
 	auto image = Canvas(camera.imageWidth, camera.imageHeight);
 	constexpr int32_t samplesPerPixel = 1;
-#pragma omp parallel for
-	for (int32_t y = 0; y < camera.imageHeight; y++)
+
+	// Total number of iterations or tasks
+	int32_t pixelCount = camera.imageWidth * camera.imageHeight;
+
+	// Variable to track completed iterations
+	std::atomic_int completedIterations = 0;
+
+	// Mutex to ensure thread-safe access to completedIterations
+	std::mutex mtx;
+
+	std::vector<int32_t> imageHorizontalIterator;
+	std::vector<int32_t> imageVerticalIterator;
+
+	imageHorizontalIterator.resize(camera.imageWidth);
+	imageVerticalIterator.resize(camera.imageHeight);
+
+	for (int32_t i = 0; i < camera.imageWidth; i++)
 	{
-		printf("\rScanlines remaining: %d\033[0K\r ", camera.imageHeight - y);
-		for (int32_t x = 0; x < camera.imageWidth; x++)
-		{
-			auto finalColor = Color::Black;
-			for (auto sample = 0; sample < samplesPerPixel; sample++)
-			{
-				auto rx = randomFloat();
-				auto ry = randomFloat();
-				auto ray = camera.rayForPixel(static_cast<float>(x), static_cast<float>(y));
-				finalColor += colorAt(world, ray, maxDepth);
-			}
-			image.writePixel(x, y, finalColor / samplesPerPixel);
-		}
+		imageHorizontalIterator[i] = i;
 	}
+
+	for (int32_t i = 0; i < camera.imageHeight; i++)
+	{
+		imageVerticalIterator[i] = i;
+	}
+
+	std::cout << "Start Rendering...\n";
+
+	std::for_each(std::execution::par, imageVerticalIterator.begin(), imageVerticalIterator.end(),
+	[&](int32_t y)
+	{
+		// Update completedIterations atomically
+		completedIterations.fetch_add(camera.imageWidth, std::memory_order_relaxed);
+		printf("\rScanlines remaining: %.0f%%",  completedIterations / static_cast<float>(pixelCount) * 100.0f);
+
+		std::for_each(std::execution::par, imageHorizontalIterator.begin(), imageHorizontalIterator.end(),
+		[&, y](int32_t x)
+			{
+				auto finalColor = Color::Black;
+				for (auto sample = 0; sample < samplesPerPixel; sample++)
+				{
+					auto rx = randomFloat();
+					auto ry = randomFloat();
+					auto ray = camera.rayForPixel(static_cast<float>(x), static_cast<float>(y));
+					finalColor += colorAt(world, ray, maxDepth);
+				}
+				image.writePixel(x, y, finalColor / static_cast<float>(samplesPerPixel));
+			});
+	});
+
+	printf("\nRendering done.\n");
 
 	return image;
 }
@@ -239,7 +279,7 @@ inline std::vector<bool> isShadowed(const World & world, const tuple & position)
 		{
 			shadowResult[i] = true;
 
-			if (intersection.shape->transparent())
+			if (!intersection.shape->material.castShadow)
 			{
 				shadowResult[i] = false;
 			}

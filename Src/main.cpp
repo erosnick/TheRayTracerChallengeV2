@@ -315,6 +315,37 @@ World poolScene()
 	return world;
 }
 
+World glassCubeTest()
+{
+	World world;
+	world.setName("GlassCubeTest");
+
+	auto floor = createPlane();
+	floor->material.pattern = createCheckerPattern();
+	floor->material.reflective = 0.0f;
+	floor->material.transparency = 0.0f;
+
+	world.addObject(floor);
+
+	auto cube = createCube();
+	cube->setTransform(translate(-1.5f, 1.0f, 0.0f) * rotateY(PI / 1.0f));
+	cube->material = Materials::Glass;
+
+	world.addObject(cube);
+
+	auto sphere = createSphere();
+	sphere->setTransform(translate(1.5f, 1.0f, 0.0f) * rotateY(PI / 4.0f));
+	sphere->material = Materials::Glass;
+
+	world.addObject(sphere);
+
+	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Color::White);
+
+	world.addLight(light);
+
+	return world;
+}
+
 World cubeTest()
 {
 	World world;
@@ -329,9 +360,8 @@ World cubeTest()
 
 	auto cube = createCube();
 	cube->setTransform(translate(-1.5f, 1.0f, 0.0f) * rotateY(PI / 4.0f));
-	cube->material.color = Color::Black;
-	cube->material.reflective = 0.9f;
-	cube->material.transparency = 0.0f;
+	cube->material = Materials::Glass;
+	cube->material.reflective = 0.0f;
 
 	world.addObject(cube);
 
@@ -367,18 +397,18 @@ void renderScene(const std::string& path)
 	auto canvas = render(scene.camera, scene.world, true, 5);
 	timer.PrintElaspedMillis();
 
-	canvas.writeToPPM(scene.world.getName());
+	//canvas.writeToPPM(scene.world.getName());
 	canvas.writeToPNG(scene.world.getName());
 }
 
 int main(int argc, char* argv[])
 {
-	//auto world = cubeTest();
+	//auto world = glassCubeTest();
 
-	////auto [world, camera] = cornelBox();
+	//auto [world, camera] = cornelBox();
 
 	//auto camera = Camera(1280, 720, radians(60.0f));
-	//camera.transform = viewTransform(point(0.0f, 1.0f, -10.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
+	//camera.transform = viewTransform(point(0.0f, 2.0f, -10.0f), point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
 	////world.addObject(scene.world.getObject(0));
 
 	//AriaCore::Timer timer("Rendering");
