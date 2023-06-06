@@ -13,6 +13,7 @@
 #include "sphere.h"
 #include "plane.h"
 #include "cube.h"
+#include "bvh.h"
 
 #include "YAMLLoader.h"
 
@@ -20,6 +21,7 @@ World shadowTest()
 {
 	auto floor = createSphere();
 
+	floor->setScale(10.0f, 0.01f, 10.0f);
 	floor->setTransform(scale(10.0f, 0.01f, 10.0f));
 	floor->material = Material();
 
@@ -29,21 +31,31 @@ World shadowTest()
 
 	auto leftWall = createSphere();
 
+	leftWall->setScale(0.0f, 0.05f, 10.0f);
+	leftWall->setRotation(PI / 2.0f, -PI / 4.0f, 0.0f);
+	leftWall->setTranslation(0.0f, 0.0f, 5.0f);
+
 	leftWall->setTransform(translate(0.0f, 0.0f, 5.0f) *
-		rotateY(-PI / 4.0f) *
-		rotateX(PI / 2.0f) *
-		scale(10.0f, 0.05f, 10.0f));
+									  rotateY(-PI / 4.0f) *
+									  rotateX(PI / 2.0f) *
+									  scale(10.0f, 0.05f, 10.0f));
 
 	leftWall->material = floor->material;
 
 	auto rightWall = createSphere();
+
+	rightWall->setScale(10.0f, 0.05f, 10.0f);
+	rightWall->setRotation(PI / 2.0f, PI / 4.0f, 0.0f);
+	rightWall->setTranslation(0.0f, 0.0f, 5.0f);
 	rightWall->setTransform(translate(0.0f, 0.0f, 5.0f) *
-		rotateY(PI / 4.0f) * rotateX(PI / 2.0f) *
-		scale(10.0f, 0.05f, 10.0f));
+									   rotateY(PI / 4.0f) * rotateX(PI / 2.0f) *
+									   scale(10.0f, 0.05f, 10.0f));
 
 	rightWall->material = floor->material;
 
 	auto left = createSphere();
+	left->setScale(0.33f, 0.33f, 0.33f);
+	left->setTranslation(-1.5f, 0.33f, -0.75f);
 	left->setTransform(translate(-1.5f, 0.33f, -0.75f) * scale(0.33f));
 	left->material = Material();
 	left->material.color = color(1.0f, 0.8f, 0.1f);
@@ -52,6 +64,7 @@ World shadowTest()
 
 	auto middle = createSphere();
 	auto transform = translate(-0.5f, 1.0f, 0.5f);
+	middle->setTranslation(-0.5f, 1.0f, 0.5f);
 	middle->setTransform(transform);
 	middle->material = Material();
 	middle->material.color = color(0.1f, 1.0f, 0.5f);
@@ -59,6 +72,8 @@ World shadowTest()
 	middle->material.specular = 0.3f;
 
 	auto right = createSphere();
+	right->setScale(0.5f, 0.5f, 0.5f);
+	right->setTranslation(1.5f, 0.5f, -0.5f);
 	right->setTransform(translate(1.5f, 0.5f, -0.5f) * scale(0.5f));
 	right->material = Material();
 	right->material.color = color(0.5f, 1.0f, 0.1f);
@@ -66,7 +81,10 @@ World shadowTest()
 	right->material.specular = 0.3f;
 
 	auto topRight = createSphere();
-	topRight->setTransform(translate(1.5f, 1.5f, -0.5f) * rotateX(PI / 4.0F) * rotateZ(PI / 4.0F) * scale(0.5, 0.25f, 0.5f));
+	topRight->setScale(0.5, 0.25f, 0.5f);
+	topRight->setRotation(PI / 4.0f, 0.0f, PI / 4.0f);
+	topRight->setTranslation(1.5f, 1.5f, -0.5f);;
+	topRight->setTransform(translate(1.5f, 1.5f, -0.5f) * rotateX(PI / 4.0f) * rotateZ(PI / 4.0f) * scale(0.5, 0.25f, 0.5f));
 	topRight->material = Material();
 	topRight->material.color = color(1.0f, 0.0f, 0.0f);
 	topRight->material.diffuse = 0.7f;
@@ -93,6 +111,7 @@ World planeTest()
 {
 	auto floor = createPlane();
 
+	floor->setScale(0.5f, 0.5f, 0.5f);
 	floor->setTransform(scale(0.5f, 0.5f, 0.5f));
 	floor->material = Material();
 
@@ -120,6 +139,8 @@ World planeTest()
 
 	leftWall->material = Material();
 	leftWall->material.color = color(1.0f, 0.9f, 0.9f);
+	leftWall->setTranslation(0.0f, 0.0f, 5.0f);
+	leftWall->setRotation(PI / 2.0f, -PI / 4.0f, 0.0f);
 	leftWall->setTransform(translate(0.0f, 0.0f, 5.0f) * rotateY(-PI / 4.0f) * rotateX(PI / 2.0f));
 
 	auto rightWall = createPlane();
@@ -127,11 +148,14 @@ World planeTest()
 	rightWall->material = Material();
 	rightWall->material.pattern = createRadialGradientPattern();
 	rightWall->material.pattern->setTransform(scale(0.5f));
+	rightWall->setTranslation(0.0f, 0.0f, 5.0f);
+	rightWall->setRotation(PI / 2.0f, PI / 4.0f, 0.0f);
 	rightWall->setTransform(translate(0.0f, 0.0f, 5.0f) * rotateY(PI / 4.0f) * rotateX(PI / 2.0f));
 
 	auto ceiling = createPlane();
 
 	ceiling->material = floor->material;
+	ceiling->setTranslation(0.0f, 0.0f, 0.0f);
 	ceiling->setTransform(translate(0.0f, 0.0f, 0.0f));
 
 	auto platform = createPlane(0.5f, 0.5f);
@@ -139,9 +163,12 @@ World planeTest()
 	platform->material = floor->material;
 	platform->material.pattern = createStripPattern();
 	platform->material.pattern->setTransform(scale(0.25f));
+	platform->setTranslation(1.0f, 1.0f, -5.0f);
 	platform->setTransform(translate(1.0f, 1.0f, -5.0f));
 
 	auto left = createSphere();
+	left->setScale(0.33f, 0.33f, 0.33f);
+	left->setTranslation(-1.5f, 0.33f, -0.75f);
 	left->setTransform(translate(-1.5f, 0.33f, -0.75f) * scale(0.33f));
 	left->material = Material();
 	left->material.color = color(1.0f, 0.8f, 0.1f);
@@ -151,6 +178,9 @@ World planeTest()
 	auto middle = createSphere();
 
 	auto transform = translate(-0.5f, 1.0f, 0.5f) * rotateY(-PI / 3.0f) * rotateZ(-PI / 9.0f);
+	
+	middle->setRotation(0.0f, -PI / 3.0f, -PI / 9.0f);
+	middle->setTranslation(-0.5f, 1.0f, 0.5f);
 	middle->setTransform(transform);
 	middle->material = Material();
 	middle->material.pattern = createStripPattern(Color::RGB(14, 142, 71), Color::RGB(19, 192, 96));
@@ -160,6 +190,8 @@ World planeTest()
 	middle->material.specular = 0.3f;
 
 	auto right = createSphere();
+	right->setTranslation(1.5f, 0.5f, -0.5f);	
+	right->setScale(0.5f, 0.5f, 0.5f);
 	right->setTransform(translate(1.5f, 0.5f, -0.5f) * scale(0.5f));
 	right->material = Material();
 	right->material.color = color(0.5f, 1.0f, 0.1f);
@@ -170,6 +202,9 @@ World planeTest()
 
 	auto topRight = createSphere();
 
+	topRight->setScale(0.5, 0.25f, 0.5f);
+	topRight->setRotation(PI / 4.0f, 0.0f, PI / 4.0f);
+	topRight->setTranslation(1.5f, 2.0f, -0.5f);
 	topRight->setTransform(translate(1.5f, 2.0f, -0.5f) * rotateX(PI / 4.0f) * rotateZ(PI / 4.0f) * scale(0.5, 0.25f, 0.5f));
 	topRight->material = Material();
 	topRight->material.color = color(1.0f, 0.0f, 0.0f);
@@ -200,6 +235,7 @@ World reflectionAndRefractionTest()
 {
 	auto floor = createPlane();
 
+	floor->setScale(0.5f, 0.5f, 0.5f);
 	floor->setTransform(scale(0.5f, 0.5f, 0.5f));
 	floor->material = Material();
 
@@ -213,21 +249,28 @@ World reflectionAndRefractionTest()
 	auto ceiling = createPlane(10.0f, 10.0f);
 
 	ceiling->material = floor->material;
+	ceiling->setTranslation(0.0f, 11.0f, 0.0f);
 	ceiling->setTransform(translate(0.0f, 11.0f, 0.0f));
 
 	auto leftWall = createPlane();
 
 	leftWall->material = Material();
 	leftWall->material.color = color(1.0f, 0.9f, 0.9f);
+	leftWall->setTranslation(0.0f, 0.0f, 5.0f);
+	leftWall->setRotation(PI / 2.0f, -PI / 4.0f, 0.0f);
 	leftWall->setTransform(translate(0.0f, 0.0f, 5.0f) * rotateY(-PI / 4.0f) * rotateX(PI / 2.0f));
 
 	auto rightWall = createPlane();
 
 	rightWall->material = Material();
 	rightWall->material.color = color(1.0f, 0.9f, 0.9f);
+	rightWall->setRotation(PI / 2.0f, PI / 4.0f, 0.0f);
+	rightWall->setTranslation(0.0f, 0.0f, 5.0f);;
 	rightWall->setTransform(translate(0.0f, 0.0f, 5.0f) * rotateY(PI / 4.0f) * rotateX(PI / 2.0f));
 
 	auto left = createSphere();
+	left->setScale(0.33f, 0.33f, 0.33f);
+	left->setTranslation(-1.5f, 0.33f, -0.75f);
 	left->setTransform(translate(-1.5f, 0.33f, -0.75f) * scale(0.33f));
 	left->material = Material();
 	left->material.color = color(1.0f, 0.8f, 0.1f);
@@ -237,10 +280,13 @@ World reflectionAndRefractionTest()
 
 	auto middle = createSphere();
 	auto transform = translate(-0.5f, 1.0f, 0.5f);
+	middle->setTranslation(-0.5f, 1.0f, 0.5f);
 	middle->setTransform(transform);
 	middle->material = Materials::Mirror;
 
 	auto right = createSphere();
+	right->setScale(0.5f, 0.5f, 0.5f);
+	right->setTranslation(1.5f, 0.5f, -0.5f);
 	right->setTransform(translate(1.5f, 0.5f, -0.5f) * scale(0.5f));
 	right->material = Materials::Glass;
 
@@ -269,6 +315,8 @@ World poolScene()
 
 	auto wall = createPlane();
 
+	wall->setRotation(PI / 2.0f, 0.0f, 0.0f);
+	wall->setTranslation(0.0f, 0.0f, -20.0f);
 	wall->setTransform(translate(0.0f, 0.0f, -20.0f) * rotateX(PI / 2.0f));
 	wall->material.pattern = createCheckerPattern(Color::Grey, Color::White);
 	wall->material.pattern->setTransform(scale(0.25f));
@@ -276,6 +324,7 @@ World poolScene()
 
 	auto floor = createPlane();
 
+	floor->setTranslation(0.0f, -5.0f, 0.0f);
 	floor->setTransform(translate(0.0f, -5.0f, 0.0f));
 	//floor->material.pattern = createCheckerPattern(Color::RGB(196, 156, 92), Color::RGB(126, 193, 89));
 	floor->material.pattern = createCheckerPattern();
@@ -284,6 +333,8 @@ World poolScene()
 
 	auto middle = createSphere();
 	auto transform = translate(0.0f, -0.5f, 0.5f) * scale(0.5f);
+	middle->setScale(0.5f, 0.5f, 0.5f);
+	middle->setTranslation(0.0f, -0.5f, 0.5f);
 	middle->setTransform(transform);
 	middle->material = Material();
 	middle->material.color = color(1.0f, 0.0f, 0.0f);
@@ -296,13 +347,15 @@ World poolScene()
 	world.addObject(middle);
 
 	auto window = createPlane(1.0f, 1.0f);
+	window->setRotation(PI / 2.0f, 0.0f, 0.0f);
+	window->setTranslation(0.0f, 0.5f, 0.0f);
 	window->setTransform(translate(0.0f, 0.5f, 0.0f) * rotateX(PI / 2.0f));
 	window->material = Material();
 	window->material = Materials::Glass;
 	//world.addObject(window);
 
 	auto water = createPlane();
-
+	water->setTranslation(0.0f, 0.0f, 0.0f);
 	water->setTransform(translate(0.0f, 0.0f, 0.0f));
 	water->material = Materials::Water;
 
@@ -328,12 +381,16 @@ World glassCubeTest()
 	world.addObject(floor);
 
 	auto cube = createCube();
+	cube->setRotation(0.0f, PI / 1.0f, 0.0f);
+	cube->setTranslation(-1.5f, 1.0f, 0.0f);
 	cube->setTransform(translate(-1.5f, 1.0f, 0.0f) * rotateY(PI / 1.0f));
 	cube->material = Materials::Glass;
 
 	world.addObject(cube);
 
 	auto sphere = createSphere();
+	sphere->setRotation(0.0f, PI / 4.0f, 0.0f);
+	sphere->setTranslation(1.5f, 1.0f, 0.0f);
 	sphere->setTransform(translate(1.5f, 1.0f, 0.0f) * rotateY(PI / 4.0f));
 	sphere->material = Materials::Glass;
 
@@ -359,6 +416,8 @@ World cubeTest()
 	world.addObject(floor);
 
 	auto cube = createCube();
+	cube->setScale(0.0f, PI / 4.0f, 0.0f);
+	cube->setTranslation(-1.5f, 1.0f, 0.0f);
 	cube->setTransform(translate(-1.5f, 1.0f, 0.0f) * rotateY(PI / 4.0f));
 	cube->material = Materials::Glass;
 	cube->material.reflective = 0.0f;
@@ -366,6 +425,8 @@ World cubeTest()
 	world.addObject(cube);
 
 	auto sphere = createSphere();
+	sphere->setRotation(0.0f, PI / 4.0f, 0.0f);
+	sphere->setTranslation(1.5f, 1.0f, 0.0f);
 	sphere->setTransform(translate(1.5f, 1.0f, 0.0f) * rotateY(PI / 4.0f));
 	sphere->material = Materials::Red;
 
@@ -389,6 +450,8 @@ Scene blenderScene(const std::string& path)
 void renderScene(const std::string& path)
 {
 	auto scene = blenderScene(path);
+
+	std::shared_ptr<Shape> bvhNode = std::make_shared<BVHNode>(scene.world.getObjects(), 0.0f, 0.0f);
 
 	auto camera = Camera(1280, 720, radians(60.0f));
 	camera.transform = viewTransform(point(0.0f, 1.0f, -10.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));

@@ -35,9 +35,14 @@ public:
 		return { { t, shape }};
 	}
 
-	tuple localNormalAt(const tuple& localPosition) override
+	tuple localNormalAt(const tuple& localPosition) const override
 	{
 		return vector(0.0f, 1.0f, 0.0f);
+	}
+
+	virtual bool boundingBox(float time0, float time1, AABB& outputBox) override
+	{
+		return true;
 	}
 
 	float extentX = std::numeric_limits<float>::max();

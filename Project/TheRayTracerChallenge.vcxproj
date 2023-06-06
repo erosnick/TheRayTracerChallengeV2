@@ -187,6 +187,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\src\YAMLLoader.h" />
+    <ClInclude Include="..\src\aabb.h" />
+    <ClInclude Include="..\src\bvh.h" />
     <ClInclude Include="..\src\camera.h" />
     <ClInclude Include="..\src\canvas.h" />
     <ClInclude Include="..\src\colors.h" />

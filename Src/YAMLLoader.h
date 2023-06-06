@@ -215,11 +215,15 @@ namespace YAML
 			rhs.radius = node["radius"].as<float>();
 			rhs.material = node["material"].as<Material>();
 
-			auto translation = node["transform"]["translation"].as<tuple>();
-			auto rotation = node["transform"]["rotation"].as<tuple>();
-			auto scaleFactor = node["transform"]["scale"].as<tuple>();
+			rhs.translation = node["transform"]["translation"].as<tuple>();
+			rhs.rotation = node["transform"]["rotation"].as<tuple>();
+			rhs.scale = node["transform"]["scale"].as<tuple>();
 
-			rhs.transform = translate(translation) * rotateZ(rotation.z) * rotateY(rotation.y) * rotateX(rotation.x) * scale(scaleFactor);
+			rhs.transform = translate(rhs.translation) * 
+							 rotateZ(rhs.rotation.z) * 
+							 rotateY(rhs.rotation.y) * 
+				             rotateX(rhs.rotation.x) * 
+						     scale(rhs.scale);
 
 			return true;
 		}
@@ -245,11 +249,15 @@ namespace YAML
 			rhs.extentZ = node["extent"].as<float>();
 			rhs.material = node["material"].as<Material>();
 
-			auto translation = node["transform"]["translation"].as<tuple>();
-			auto rotation = node["transform"]["rotation"].as<tuple>();
-			auto scaleFactor = node["transform"]["scale"].as<tuple>();
+			rhs.translation = node["transform"]["translation"].as<tuple>();
+			rhs.rotation = node["transform"]["rotation"].as<tuple>();
+			rhs.scale = node["transform"]["scale"].as<tuple>();
 
-			rhs.transform = translate(translation) * rotateZ(rotation.z) * rotateY(rotation.y) * rotateX(rotation.x) * scale(scaleFactor);
+			rhs.transform = translate(rhs.translation) * 
+							 rotateZ(rhs.rotation.z) * 
+				             rotateY(rhs.rotation.y) * 
+							 rotateX(rhs.rotation.x) * 
+							 scale(rhs.scale);
 
 			return true;
 		}
@@ -271,11 +279,15 @@ namespace YAML
 
 			rhs.material = node["material"].as<Material>();
 
-			auto translation = node["transform"]["translation"].as<tuple>();
-			auto rotation = node["transform"]["rotation"].as<tuple>();
-			auto scaleFactor = node["transform"]["scale"].as<tuple>();
+			rhs.translation = node["transform"]["translation"].as<tuple>();
+			rhs.rotation = node["transform"]["rotation"].as<tuple>();
+			rhs.scale = node["transform"]["scale"].as<tuple>();
 
-			rhs.transform = translate(translation) * rotateZ(rotation.z) * rotateY(rotation.y) * rotateX(rotation.x) * scale(scaleFactor);
+			rhs.transform = translate(rhs.translation) * 
+							 rotateZ(rhs.rotation.z) * 
+							 rotateY(rhs.rotation.y) * 
+							 rotateX(rhs.rotation.x) * 
+							 scale(rhs.scale);
 
 			return true;
 		}

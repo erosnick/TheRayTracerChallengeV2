@@ -47,3 +47,10 @@ inline float randomFloat()
 	static std::mt19937_64 generator;
 	return distribution(generator);
 }
+
+inline int32_t randomInt(int32_t min, int32_t max)
+{
+	static std::uniform_int_distribution<int32_t> distribution(min, max);
+	static std::mt19937_64 generator;
+	return distribution(generator);
+}

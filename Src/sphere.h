@@ -41,11 +41,21 @@ public:
 				 { t2, shape, object } };
 	}
 
-	virtual tuple localNormalAt(const tuple& localPosition) override 
+	virtual tuple localNormalAt(const tuple& localPosition) const override 
 	{ 
 		auto localNormal = localPosition - center;
 
 		return  localNormal;
+	}
+
+	virtual bool boundingBox(float time0, float time1, AABB& outputBox) override
+	{
+		auto a = translation - vector(scale.x, scale.y, scale.z);
+		auto b = translation + vector(scale.x, scale.y, scale.z);
+
+		outputBox = AABB(a, b);
+
+		return true;
 	}
 
 	tuple center{ 0.0f, 0.0f, 0.0f, 1.0f };
