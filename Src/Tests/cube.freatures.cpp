@@ -39,14 +39,14 @@ SCENARIO("A ray intersects a cube", "[cube]")
 			directions.emplace_back(vector( 0.0f,  0.0f,  1.0f));
 			directions.emplace_back(vector( 0.0f,  0.0f,  1.0f));
 
-			std::vector<std::tuple<float, float>> t;
-			t.push_back({  4.0f, 6.0f });
-			t.push_back({  4.0f, 6.0f });
-			t.push_back({  4.0f, 6.0f });
-			t.push_back({  4.0f, 6.0f });
-			t.push_back({  4.0f, 6.0f });
-			t.push_back({  4.0f, 6.0f });
-			t.push_back({ -1.0f, 1.0f });
+			std::vector<std::tuple<float, float>> times;
+			times.push_back({  4.0f, 6.0f });
+			times.push_back({  4.0f, 6.0f });
+			times.push_back({  4.0f, 6.0f });
+			times.push_back({  4.0f, 6.0f });
+			times.push_back({  4.0f, 6.0f });
+			times.push_back({  4.0f, 6.0f });
+			times.push_back({ -1.0f, 1.0f });
 
 			for (size_t i = 0; i < origins.size(); i++)
 			{
@@ -57,8 +57,8 @@ SCENARIO("A ray intersects a cube", "[cube]")
 					"And xs[1].t = <t2>" + std::to_string(i))
 				{
 					REQUIRE(xs.size() == 2);
-					REQUIRE(xs[0].t == std::get<0>(t[i]));
-					REQUIRE(xs[1].t == std::get<1>(t[i]));
+					REQUIRE(xs[0].t == std::get<0>(times[i]));
+					REQUIRE(xs[1].t == std::get<1>(times[i]));
 				}
 			}
 		}

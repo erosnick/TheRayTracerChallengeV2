@@ -13,6 +13,7 @@
 #include "sphere.h"
 #include "plane.h"
 #include "cube.h"
+#include "cylinder.h"
 #include "bvh.h"
 
 #include "YAMLLoader.h"
@@ -439,6 +440,48 @@ World cubeTest()
 	return world;
 }
 
+Scene cylinderTest()
+{
+	Scene scene;
+
+	scene.camera = Camera(1280, 720, radians(60.0f));
+	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -10.0f), 
+										      point(0.0f, 0.0f, 0.0f), 
+											  vector(0.0f, 1.0f, 0.0f));
+
+	auto world = World();
+	world.setName("CylinderTest");
+
+	auto floor = createPlane();
+	floor->material.pattern = createCheckerPattern();
+
+	world.addObject(floor);
+
+	auto cylinderLeft = createCylinder();
+	cylinderLeft->setTransform(translate(-1.5f, 0.0f, 0.0f));
+	cylinderLeft->material = Materials::Glass;
+	//world.addObject(cylinderLeft);
+
+	auto cylinderMiddle = createCylinder(1.0f, 2.0f, true);
+	//cylinderMiddle->setTransform(translate(0.0f, 0.0f, -3.0f) * scale(0.5f));
+	cylinderMiddle->material = Materials::Red;
+	world.addObject(cylinderMiddle);
+
+	auto cylinderRight = createCylinder();
+	cylinderRight->setTransform(translate(1.5f, 0.0f, 0.0f));
+	cylinderRight->material = Materials::Mirror;
+
+	//world.addObject(cylinderRight);
+
+	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Color::White);
+
+	world.addLight(light);
+
+	scene.world = world;
+
+	return scene;
+}
+
 Scene blenderScene(const std::string& path)
 {
 	Scene scene = loadScene(path);
@@ -474,15 +517,17 @@ int main(int argc, char* argv[])
 	//camera.transform = viewTransform(point(0.0f, 2.0f, -10.0f), point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
 	////world.addObject(scene.world.getObject(0));
 
-	//AriaCore::Timer timer("Rendering");
-	//auto canvas = render(camera, world, true, 5);
-	//timer.PrintElaspedMillis();
+	auto scene = cylinderTest();
 
-	//canvas.writeToPPM(world.getName());
-	//canvas.writeToPNG(world.getName());
+	AriaCore::Timer timer("Rendering");
+	auto canvas = render(scene.camera, scene.world, true, 5);
+	timer.PrintElaspedMillis();
+
+	canvas.writeToPPM(scene.world.getName());
+	canvas.writeToPNG(scene.world.getName());
 
 	//renderScene("Assets/Scenes/BlenderCornelBox.yaml");
-	renderScene("Assets/Scenes/House.yaml");
+	//renderScene("Assets/Scenes/House.yaml");
 
 	const std::string SceneBase = "./Assets/Scenes/";
 

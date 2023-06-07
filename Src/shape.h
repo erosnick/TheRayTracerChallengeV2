@@ -73,8 +73,6 @@ public:
 
 	virtual tuple localNormalAt(const tuple& localPosition) const { return {}; }
 
-	bool transparent() { return material.transparency > 0.0f; }
-
 	virtual bool boundingBox(float time0, float time1, AABB& outputBox) = 0;
 
 	matrix4 transform;
