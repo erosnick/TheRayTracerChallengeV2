@@ -12,8 +12,11 @@ public:
 
 	virtual std::vector<Intersection> localIntersect(const Ray& transformedRay)
 	{
-		auto a = std::powf(transformedRay.direction.x, 2.0f) + 
-					  std::powf(transformedRay.direction.z, 2.0f);
+		auto origin = transformedRay.origin;
+		auto direction = transformedRay.direction;
+
+		auto a = std::powf(direction.x, 2.0f) + 
+					  std::powf(direction.z, 2.0f);
 
 		// Ray is parallel to the y axis
 		if (equal(a, 0.0f))
@@ -23,11 +26,11 @@ public:
 			return result;
 		}
 
-		auto b = 2.0f * transformedRay.origin.x * transformedRay.direction.x +
-					  2.0f * transformedRay.origin.z * transformedRay.direction.z;
+		auto b = 2.0f * origin.x * direction.x +
+					  2.0f * origin.z * direction.z;
 
-		auto c = std::powf(transformedRay.origin.x, 2.0f) +
-					  std::powf(transformedRay.origin.z, 2.0f) - 1.0f;
+		auto c = std::powf(origin.x, 2.0f) +
+					  std::powf(origin.z, 2.0f) - 1.0f;
 
 		auto discriminant = b * b - 4 * a * c;
 
@@ -47,14 +50,14 @@ public:
 
 		std::vector<Intersection> result;
 
-		auto y0 = transformedRay.origin.y + t0 * transformedRay.direction.y;
+		auto y0 = origin.y + t0 * direction.y;
 
 		if (y0 > minimum && y0 < maximum)
 		{
 			result.push_back({ t0, shared_from_this() });
 		}
 
-		auto y1 = transformedRay.origin.y + t1 * transformedRay.direction.y;
+		auto y1 = origin.y + t1 * direction.y;
 
 		if (y1 > minimum && y1 < maximum)
 		{

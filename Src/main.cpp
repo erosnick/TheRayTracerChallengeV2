@@ -14,6 +14,7 @@
 #include "plane.h"
 #include "cube.h"
 #include "cylinder.h"
+#include "cone.h"
 #include "bvh.h"
 
 #include "YAMLLoader.h"
@@ -108,7 +109,7 @@ World shadowTest()
 	return world;
 }
 
-World planeTest()
+Scene planeTest()
 {
 	auto floor = createPlane();
 
@@ -229,10 +230,16 @@ World planeTest()
 	world.addObject(right);
 	world.addObject(topRight);
 
-	return world;
+	Scene scene;
+	scene.world = world;
+
+	scene.camera = Camera(1280, 720, radians(60.0f));
+	scene.camera.transform = viewTransform(point(0.0f, 2.0f, -10.0f), point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
+
+	return scene;
 }
 
-World reflectionAndRefractionTest()
+Scene reflectionTest()
 {
 	auto floor = createPlane();
 
@@ -306,7 +313,13 @@ World reflectionAndRefractionTest()
 	world.addObject(middle);
 	world.addObject(right);
 
-	return world;
+	Scene scene;
+	scene.world = world;
+
+	scene.camera = Camera(1280, 720, radians(60.0f));
+	scene.camera.transform = viewTransform(point(0.0f, 2.0f, -10.0f), point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
+
+	return scene;
 }
 
 World poolScene()
@@ -454,6 +467,7 @@ Scene cylinderTest()
 
 	auto floor = createPlane();
 	floor->material.pattern = createCheckerPattern();
+	//floor->material.pattern = createStripPattern();
 
 	world.addObject(floor);
 
@@ -465,7 +479,12 @@ Scene cylinderTest()
 	auto cylinderMiddle = createCylinder(1.0f, 2.0f, true);
 	//cylinderMiddle->setTransform(translate(0.0f, 0.0f, -3.0f) * scale(0.5f));
 	cylinderMiddle->material = Materials::Red;
-	world.addObject(cylinderMiddle);
+	//world.addObject(cylinderMiddle);
+
+	auto cone = createCone(0.0f, 1.0f, true);
+	cone->setTransform(translate(0.0f, 1.0f, 0.0f) * rotateZ(PI) * scale(1.0f, 2.0f, 1.0f));
+	cone->material = Materials::Red;
+	world.addObject(cone);
 
 	auto cylinderRight = createCylinder();
 	cylinderRight->setTransform(translate(1.5f, 0.0f, 0.0f));
@@ -509,21 +528,23 @@ void renderScene(const std::string& path)
 
 int main(int argc, char* argv[])
 {
-	//auto world = glassCubeTest();
+	auto world = glassCubeTest();
+
+	auto scene = cylinderTest();
 
 	//auto [world, camera] = cornelBox();
 
-	//auto camera = Camera(1280, 720, radians(60.0f));
-	//camera.transform = viewTransform(point(0.0f, 2.0f, -10.0f), point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
+	auto camera = Camera(1280, 720, radians(60.0f));
+	camera.transform = viewTransform(point(0.0f, 2.0f, -10.0f), point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
 	////world.addObject(scene.world.getObject(0));
 
-	auto scene = cylinderTest();
+	//auto scene = cylinderTest();
 
 	AriaCore::Timer timer("Rendering");
 	auto canvas = render(scene.camera, scene.world, true, 5);
 	timer.PrintElaspedMillis();
 
-	canvas.writeToPPM(scene.world.getName());
+	////canvas.writeToPPM(scene.world.getName());
 	canvas.writeToPNG(scene.world.getName());
 
 	//renderScene("Assets/Scenes/BlenderCornelBox.yaml");
