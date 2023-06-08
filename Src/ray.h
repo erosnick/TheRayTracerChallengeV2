@@ -9,11 +9,15 @@ struct Ray
 
 	Ray(const tuple& inOrigin, const tuple& inDirection)
 		: origin(inOrigin), direction(inDirection)
-	{}
+	{
+		count++;
+	}
 
 	tuple at(float t) const { return origin + direction * t; }
 	tuple origin{ 0.0f, 0.0f, 0.0f, 1.0f };
 	tuple direction;
+
+	static int32_t count;
 };
 
 inline Ray transformRay(const Ray& ray, const matrix4& m)

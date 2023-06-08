@@ -20,6 +20,8 @@
 
 #include "YAMLLoader.h"
 
+int32_t Ray::count = 0;
+
 World shadowTest()
 {
 	auto floor = createSphere();
@@ -616,6 +618,7 @@ int main(int argc, char* argv[])
 
 	AriaCore::Timer timer("Rendering");
 	auto canvas = render(scene.camera, scene.world, true, 5);
+	std::cout << "Rays: " << Ray::count << std::endl;
 	timer.PrintElaspedMillis();
 
 	////canvas.writeToPPM(scene.world.getName());

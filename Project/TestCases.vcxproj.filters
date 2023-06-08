@@ -6,6 +6,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Tests\boundingbox.features.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Tests\camera.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
