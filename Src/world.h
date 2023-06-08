@@ -51,7 +51,7 @@ inline static World defaultWorld()
 {
 	World world;
 
-	world.addLight(pointLight(point(-10.0f, 10.0f, -10.0f), Color::White));
+	world.addLight(pointLight(point(-10.0f, 10.0f, -10.0f), Colors::White));
 
 	auto sphere1 = createSphere();
 

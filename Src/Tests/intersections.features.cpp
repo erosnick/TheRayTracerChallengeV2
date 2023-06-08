@@ -377,7 +377,7 @@ SCENARIO("The refracted color with an opaque surface", "[intersections]")
 			auto c = refractedColor(w, comps, 5);
 			THEN("c == color(0.0f, 0.0f, 0.0f)")
 			{
-				REQUIRE(c == Color::Black);
+				REQUIRE(c == Colors::Black);
 			}
 		}
 	}
@@ -406,7 +406,7 @@ SCENARIO("The refracted color at the maximum recursive depth", "[intersections]"
 			auto c = refractedColor(w, comps, 0);
 			THEN("c == color(0.0f, 0.0f, 0.0f)")
 			{
-				REQUIRE(c == Color::Black);
+				REQUIRE(c == Colors::Black);
 			}
 		}
 	}
@@ -437,7 +437,7 @@ SCENARIO("The refracted color under total internal reflection", "[intersections]
 			auto c = refractedColor(w, comps, 5);
 			THEN("c == color(0.0f, 0.0f, 0.0f")
 			{
-				REQUIRE(c == Color::Black);
+				REQUIRE(c == Colors::Black);
 			}
 		}
 	}

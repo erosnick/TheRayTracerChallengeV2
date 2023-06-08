@@ -7,12 +7,20 @@
 struct tuple
 {
 	tuple()
-		: data{ 0.0f }, x(0.0f), y(0.0f), z(0.0f), w(0.0f), red(0.0f), green(0.0f), blue(0.0f), alpha(0.0f)
-	{}
+	{
+		x = 0.0f;
+		y = 0.0f;
+		z = 0.0f; 
+		w = 0.0f;
+	}
 
 	tuple(float inX, float inY, float inZ, float inW)
-		: data{ inX, inY, inZ, inW }, x(inX), y(inY), z(inZ), w(inW), red(x), green(y), blue(z), alpha(w)
-	{}
+	{
+		x = inX;
+		y = inY;
+		z = inZ;
+		w = inW;
+	}
 
 	float operator[](int32_t index) const
 	{

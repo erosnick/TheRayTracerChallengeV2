@@ -16,9 +16,31 @@
 #include "cylinder.h"
 #include "cone.h"
 #include "group.h"
+#include "triangle.h"
 #include "bvh.h"
 
 #include "YAMLLoader.h"
+
+Scene createDefaultScene()
+{
+	Scene scene;
+
+	auto floor = createPlane();
+	floor->material.pattern = createCheckerPattern();
+
+	scene.world.addObject(floor);
+
+	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Colors::White);
+
+	scene.world.addLight(light);
+
+	scene.camera = Camera(1280, 720, radians(60.0f));
+	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -10.0f),
+											  point(0.0f, 0.0f, 0.0f),
+											  vector(0.0f, 1.0f, 0.0f));
+
+	return scene;
+}
 
 World shadowTest()
 {
@@ -93,7 +115,7 @@ World shadowTest()
 	topRight->material.diffuse = 0.7f;
 	topRight->material.specular = 0.3f;
 
-	auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Color::White);
+	auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Colors::White);
 
 	auto world = World();
 	world.setName("ShadowTest");
@@ -126,12 +148,12 @@ Scene planeTest()
 	////floor->material.pattern->setTransform(rotateY(PI / 2.0f));
 	//floor->material.pattern = createGradientPattern();
 	//floor->material.pattern->setTransform(scale(5.0f, 5.0f, 5.0f));
-	auto pattern1 = createStripPattern(Color::DarkGreen, Color::White);
+	auto pattern1 = createStripPattern(Colors::DarkGreen, Colors::White);
 	pattern1->setTransform(rotateY(PI / 2.0f));
-	auto pattern2 = createStripPattern(Color::DarkGreen, Color::White);
+	auto pattern2 = createStripPattern(Colors::DarkGreen, Colors::White);
 	floor->material.pattern = createBlendPattern(pattern1, pattern2);
 
-	pattern1 = createStripPattern(Color::RGB(146, 216, 250), Color::RGB(239, 134, 198));
+	pattern1 = createStripPattern(Colors::RGB(146, 216, 250), Colors::RGB(239, 134, 198));
 	pattern1->setTransform(rotateY(PI / 6.0f) * scale(0.25f));
 	pattern2 = createStripPattern();
 	pattern2->setTransform(rotateY(-PI / 6.0f) * scale(0.25f));
@@ -186,7 +208,7 @@ Scene planeTest()
 	middle->setTranslation(-0.5f, 1.0f, 0.5f);
 	middle->setTransform(transform);
 	middle->material = Material();
-	middle->material.pattern = createStripPattern(Color::RGB(14, 142, 71), Color::RGB(19, 192, 96));
+	middle->material.pattern = createStripPattern(Colors::RGB(14, 142, 71), Colors::RGB(19, 192, 96));
 	middle->material.pattern->setTransform(translate(0.3f, 0.0f, 0.0f) * scale(0.125f));
 	middle->material.color = color(0.1f, 1.0f, 0.5f);
 	middle->material.diffuse = 0.7f;
@@ -200,7 +222,7 @@ Scene planeTest()
 	right->material.color = color(0.5f, 1.0f, 0.1f);
 	right->material.diffuse = 0.7f;
 	right->material.specular = 0.3f;
-	right->material.pattern = createGradientPattern(Color::RGB(146, 216, 250), Color::RGB(239, 134, 198));
+	right->material.pattern = createGradientPattern(Colors::RGB(146, 216, 250), Colors::RGB(239, 134, 198));
 	right->material.pattern->setTransform(scale(1.0f));
 
 	auto topRight = createSphere();
@@ -214,7 +236,7 @@ Scene planeTest()
 	topRight->material.diffuse = 0.7f;
 	topRight->material.specular = 0.3f;
 
-	auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Color::White);
+	auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Colors::White);
 
 	auto world = World();
 
@@ -299,7 +321,7 @@ Scene reflectionTest()
 	right->setTransform(translate(1.5f, 0.5f, -0.5f) * scale(0.5f));
 	right->material = Materials::Glass;
 
-	auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Color::White);
+	auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Colors::White);
 
 	auto world = World();
 	world.setName("ReflectionTest");
@@ -333,7 +355,7 @@ World poolScene()
 	wall->setRotation(PI / 2.0f, 0.0f, 0.0f);
 	wall->setTranslation(0.0f, 0.0f, -20.0f);
 	wall->setTransform(translate(0.0f, 0.0f, -20.0f) * rotateX(PI / 2.0f));
-	wall->material.pattern = createCheckerPattern(Color::Grey, Color::White);
+	wall->material.pattern = createCheckerPattern(Colors::Grey, Colors::White);
 	wall->material.pattern->setTransform(scale(0.25f));
 	world.addObject(wall);
 
@@ -341,7 +363,7 @@ World poolScene()
 
 	floor->setTranslation(0.0f, -5.0f, 0.0f);
 	floor->setTransform(translate(0.0f, -5.0f, 0.0f));
-	//floor->material.pattern = createCheckerPattern(Color::RGB(196, 156, 92), Color::RGB(126, 193, 89));
+	//floor->material.pattern = createCheckerPattern(Colors::RGB(196, 156, 92), Colors::RGB(126, 193, 89));
 	floor->material.pattern = createCheckerPattern();
 	floor->material.pattern->setTransform(scale(0.5f));
 	world.addObject(floor);
@@ -376,7 +398,7 @@ World poolScene()
 
 	world.addObject(water);
 
-	auto light = pointLight(point(0.0f, 30.0f, 20.0f), Color::White);
+	auto light = pointLight(point(0.0f, 30.0f, 20.0f), Colors::White);
 
 	world.addLight(light);
 
@@ -411,7 +433,7 @@ World glassCubeTest()
 
 	world.addObject(sphere);
 
-	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Color::White);
+	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Colors::White);
 
 	world.addLight(light);
 
@@ -447,7 +469,7 @@ World cubeTest()
 
 	world.addObject(sphere);
 
-	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Color::White);
+	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Colors::White);
 
 	world.addLight(light);
 
@@ -494,7 +516,7 @@ Scene cylinderTest()
 
 	//world.addObject(cylinderRight);
 
-	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Color::White);
+	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Colors::White);
 
 	world.addLight(light);
 
@@ -562,7 +584,7 @@ Scene groupTest()
 	hex->setTransform(translate(0.0f, 1.0f, 0.0f));
 	world.addObject(hex);
 
-	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Color::White);
+	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Colors::White);
 
 	world.addLight(light);
 
@@ -573,6 +595,23 @@ Scene groupTest()
 	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -10.0f),
 											  point(0.0f, 0.0f, 0.0f),
 											  vector(0.0f, 1.0f, 0.0f));
+
+	return scene;
+}
+
+Scene triangleTest()
+{
+	Scene scene = createDefaultScene();
+
+	scene.world.setName("TriangleTest");
+
+	auto triangle = createTriangle(point(-1.0f, 0.0f, 0.0f),
+													 point(1.0f, 0.0f, 0.0f),
+													 point(0.0f, 1.0f, 0.0f));
+
+	triangle->material = Materials::Red;
+
+	scene.world.addObject(triangle);
 
 	return scene;
 }
@@ -604,7 +643,7 @@ void renderScene(const std::string& path)
 
 int main(int argc, char* argv[])
 {
-	auto scene = groupTest();
+	auto scene = triangleTest();
 
 	//auto [world, camera] = cornelBox();
 

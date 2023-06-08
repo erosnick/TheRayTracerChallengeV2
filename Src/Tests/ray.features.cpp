@@ -129,7 +129,7 @@ SCENARIO("Render test", "[ray]")
 
 				if (result.t > 0.0)
 				{
-					canvas.writePixel(x, y, Color::Red);
+					canvas.writePixel(x, y, Colors::Red);
 				}
 			}
 		}

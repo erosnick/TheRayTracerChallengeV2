@@ -2,7 +2,7 @@
 workspace "TheRayTracerChallenge"
     configurations { "Debug", "Release" }    --解决方案配置项，Debug和Release默认配置
     location "."                             --解决方案文件夹，这是我自己喜欢用的project简写
-    cppdialect "c++17"    
+    cppdialect "c++20"    
     startproject "TheRayTracerChallenge"
     -- Turn on DPI awareness
     dpiawareness "High"

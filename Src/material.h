@@ -28,10 +28,10 @@ inline static bool operator==(const Material& a, const Material& b)
 
 namespace Materials
 {
-	const Material White{ Color::White, 0.1f, 0.9f, 0.3f, 300.0f, 0.0f, 0.0f, 1.0f };
-	const Material Red{ Color::Red, 0.1f, 0.9f, 0.3f, 300.0f, 0.0f, 0.0f, 1.0f };
-	const Material Glass{ Color::Dark, 0.1f, 0.9f, 1.0f, 300.0f, 1.0f, 1.0f, 1.52f, false };
-	const Material Water{ Color::Dark, 0.1f, 0.9f, 1.0f, 200.0f, 1.0f, 1.0f, 1.33f, false };
-	const Material Diamond{ Color::Dark, 0.1f, 0.9f, 1.0f, 200.0f, 1.0f, 1.0f, 2.417f, false };
-	const Material Mirror{ Color::Black, 0.1f, 0.9f, 1.0f, 200.0f, 1.0f, 0.0f, 1.0f };
+	const Material White{ Colors::White, 0.1f, 0.9f, 0.3f, 300.0f, 0.0f, 0.0f, 1.0f };
+	const Material Red{ Colors::Red, 0.1f, 0.9f, 0.3f, 300.0f, 0.0f, 0.0f, 1.0f };
+	const Material Glass{ Colors::Dark, 0.1f, 0.9f, 1.0f, 300.0f, 1.0f, 1.0f, 1.52f, false };
+	const Material Water{ Colors::Dark, 0.1f, 0.9f, 1.0f, 200.0f, 1.0f, 1.0f, 1.33f, false };
+	const Material Diamond{ Colors::Dark, 0.1f, 0.9f, 1.0f, 200.0f, 1.0f, 1.0f, 2.417f, false };
+	const Material Mirror{ Colors::Black, 0.1f, 0.9f, 1.0f, 200.0f, 1.0f, 0.0f, 1.0f };
 }

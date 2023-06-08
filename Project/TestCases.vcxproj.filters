@@ -60,6 +60,9 @@
     <ClCompile Include="..\src\Tests\transformations.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Tests\triangle.features.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Tests\tuple.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>

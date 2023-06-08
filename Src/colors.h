@@ -2,7 +2,7 @@
 
 #include "tuple.h"
 
-namespace Color
+namespace Colors
 {
 	inline static tuple RGB(int32_t red, int32_t green, int32_t blue)
 	{

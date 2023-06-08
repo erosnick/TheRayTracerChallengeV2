@@ -115,7 +115,7 @@ inline R subMatrix(const T& m, int32_t row, int32_t column)
 		for (int32_t j = 0; j < D; j++)
 		{
 			if (j == column) continue;
-			sub.push_back(m(i, j));
+			subRow.push_back(m(i, j));
 		}
 
 		for (int k = 0; k < D - 1; k++)

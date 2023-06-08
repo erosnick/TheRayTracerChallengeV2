@@ -38,7 +38,7 @@ public:
 
 	virtual tuple colorAt(const tuple& worldPosition)
 	{
-		return Color::White;
+		return Colors::White;
 	}
 
 	tuple colorAt(const tuple& worldPosition, const matrix4& objectTransform)
@@ -49,8 +49,8 @@ public:
 		return colorAt(patternPosition);
 	}
 
-	tuple color1 = Color::Black;
-	tuple color2 = Color::White;
+	tuple color1 = Colors::Black;
+	tuple color2 = Colors::White;
 
 	std::shared_ptr<Pattern> pattern1;
 	std::shared_ptr<Pattern> pattern2;
@@ -90,7 +90,7 @@ public:
 	}
 };
 
-inline static std::shared_ptr<Pattern> createStripPattern(const tuple& color1 = Color::White, const tuple& color2 = Color::Black)
+inline static std::shared_ptr<Pattern> createStripPattern(const tuple& color1 = Colors::White, const tuple& color2 = Colors::Black)
 {
 	return std::make_shared<StripPattern>(color1, color2);
 }
@@ -113,7 +113,7 @@ public:
 	}
 };
 
-inline static std::shared_ptr<Pattern> createGradientPattern(const tuple& color1 = Color::White, const tuple& color2 = Color::Black)
+inline static std::shared_ptr<Pattern> createGradientPattern(const tuple& color1 = Colors::White, const tuple& color2 = Colors::Black)
 {
 	return std::make_shared<GradientPattern>(color1, color2);
 }
@@ -137,7 +137,7 @@ public:
 	}
 };
 
-inline static std::shared_ptr<Pattern> createRingPattern(const tuple& color1 = Color::White, const tuple& color2 = Color::Black)
+inline static std::shared_ptr<Pattern> createRingPattern(const tuple& color1 = Colors::White, const tuple& color2 = Colors::Black)
 {
 	return std::make_shared<RingPattern>(color1, color2);
 }
@@ -168,7 +168,7 @@ public:
 	}
 };
 
-inline static std::shared_ptr<Pattern> createCheckerPattern(const tuple& color1 = Color::White, const tuple& color2 = Color::Black)
+inline static std::shared_ptr<Pattern> createCheckerPattern(const tuple& color1 = Colors::White, const tuple& color2 = Colors::Black)
 {
 	return std::make_shared<CheckerPattern>(color1, color2);
 }
@@ -195,7 +195,7 @@ public:
 	}
 };
 
-inline static std::shared_ptr<Pattern> createRadialGradientPattern(const tuple& color1 = Color::White, const tuple& color2 = Color::Black)
+inline static std::shared_ptr<Pattern> createRadialGradientPattern(const tuple& color1 = Colors::White, const tuple& color2 = Colors::Black)
 {
 	return std::make_shared<RadialGradientPattern>(color1, color2);
 }
@@ -252,7 +252,7 @@ public:
 			return pattern1->colorAt(patternPosition1) * 0.5f + pattern2->colorAt(patternPosition2) * 0.5f;
 		}
 
-		return Color::Black;
+		return Colors::Black;
 	}
 };
 
@@ -286,7 +286,7 @@ public:
 			return pattern1->colorAt(newPosition);
 		}
 
-		return Color::Black;
+		return Colors::Black;
 	}
 };
 

@@ -29,7 +29,7 @@ SCENARIO("The default world", "[world]")
 		"And s2 = Sphere() with :"
 		"| transform | scale(0.5f, 0.5f, 0.5f) | ")
 	{
-		auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Color::White);
+		auto light = pointLight(point(-10.0f, 10.0f, -10.0f), Colors::White);
 		auto s1 = createSphere();
 		s1->material.color = color(0.8f, 1.0f, 0.6f);
 		s1->material.diffuse = 0.7f;
@@ -380,7 +380,7 @@ SCENARIO("colorAt() with mutually reflective surfaces", "[world]")
 		"And r = ray(point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f))")
 	{
 		auto w = World();
-		w.addLight(pointLight(point(0.0f, 0.0f, 0.0f), Color::White));
+		w.addLight(pointLight(point(0.0f, 0.0f, 0.0f), Colors::White));
 		auto lower = createPlane();
 		lower->material.reflective = 1.0f;
 		lower->setTransform(translate(0.0f, -1.0f, 0.0f));

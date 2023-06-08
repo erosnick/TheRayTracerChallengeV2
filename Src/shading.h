@@ -51,13 +51,13 @@ tuple lighting(const Material& material, const PointLight& light, const tuple& p
 	// light is on the other side of the surface
 	auto lightDotNormal = dot(lightDirection, normal);
 
-	auto diffuse = Color::Black;
-	auto specular = Color::Black;
+	auto diffuse = Colors::Black;
+	auto specular = Colors::Black;
 
 	if (lightDotNormal < 0.0f)
 	{
-		diffuse = Color::Black;
-		specular = Color::Black;
+		diffuse = Colors::Black;
+		specular = Colors::Black;
 	}
 	else
 	{
@@ -72,7 +72,7 @@ tuple lighting(const Material& material, const PointLight& light, const tuple& p
 
 		if (reflectDotEye <= 0.0f)
 		{
-			specular = Color::Black;
+			specular = Colors::Black;
 		}
 		else
 		{
@@ -113,13 +113,13 @@ tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, co
 	// light is on the other side of the surface
 	auto lightDotNormal = dot(lightDirection, normal);
 
-	auto diffuse = Color::Black;
-	auto specular = Color::Black;
+	auto diffuse = Colors::Black;
+	auto specular = Colors::Black;
 
 	if (lightDotNormal < 0.0f)
 	{
-		diffuse = Color::Black;
-		specular = Color::Black;
+		diffuse = Colors::Black;
+		specular = Colors::Black;
 	}
 	else
 	{
@@ -134,7 +134,7 @@ tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, co
 
 		if (reflectDotEye <= 0.0f)
 		{
-			specular = Color::Black;
+			specular = Colors::Black;
 		}
 		else
 		{
@@ -189,7 +189,7 @@ tuple colorAt(const World& world, const Ray& ray, int32_t depth)
 
 	auto intersection = hit(intersections);
 
-	auto backgroundColor = Color::Background;// computeBackgroundColor(ray);
+	auto backgroundColor = Colors::Background;// computeBackgroundColor(ray);
 
 	if (intersection.t > 0.0f)
 	{
@@ -243,12 +243,12 @@ Canvas render(const Camera& camera, const World& world, bool useBackgroundColor,
 		std::for_each(std::execution::par, imageHorizontalIterator.begin(), imageHorizontalIterator.end(),
 		[&, y](int32_t x)
 			{
-				auto finalColor = Color::Black;
+				auto finalColor = Colors::Black;
 				for (auto sample = 0; sample < samplesPerPixel; sample++)
 				{
 					if (x == 403 && y == 718)
 					{
-						finalColor = Color::Green;
+						finalColor = Colors::Green;
 					}
 					auto rx = randomFloat();
 					auto ry = randomFloat();
@@ -297,7 +297,7 @@ tuple reflectedColor(const World& world, const HitResult& hitResult, int32_t dep
 {
 	if (equal(hitResult.shape->material.reflective, 0.0f) || depth == 0)
 	{
-		return Color::Black;
+		return Colors::Black;
 	}
 
 	auto reflectedRay = Ray(hitResult.overPosition, hitResult.reflectVector);
@@ -310,7 +310,7 @@ tuple refractedColor(const World& world, const HitResult& hitResult, int32_t dep
 {
 	if (equal(hitResult.shape->material.transparency, 0.0f) || depth == 0)
 	{
-		return Color::Black;
+		return Colors::Black;
 	}
 
 	// Find the ratio of first index of refraction to the second.
@@ -325,7 +325,7 @@ tuple refractedColor(const World& world, const HitResult& hitResult, int32_t dep
 
 	if (sin2T > 1.0f)
 	{
-		return Color::Black;
+		return Colors::Black;
 	}
 
 	// Find cos(thetaT) via trigonometric identity

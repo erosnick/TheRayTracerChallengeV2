@@ -9,8 +9,8 @@
 
 SCENARIO("Creating a stripe pattern", "[patterns]")
 {
-	auto black = Color::Black;
-	auto white = Color::White;
+	auto black = Colors::Black;
+	auto white = Colors::White;
 
 	GIVEN("pattern = createStripPattern(white, black)")
 	{
@@ -26,8 +26,8 @@ SCENARIO("Creating a stripe pattern", "[patterns]")
 
 SCENARIO("A stripe pattern is constant in y", "[patterns]")
 {
-	auto black = Color::Black;
-	auto white = Color::White;
+	auto black = Colors::Black;
+	auto white = Colors::White;
 
 	GIVEN("pattern = createStripPattern(white, black)")
 	{
@@ -45,8 +45,8 @@ SCENARIO("A stripe pattern is constant in y", "[patterns]")
 
 SCENARIO("A stripe pattern is constant in z", "[patterns]")
 {
-	auto black = Color::Black;
-	auto white = Color::White;
+	auto black = Colors::Black;
+	auto white = Colors::White;
 
 	GIVEN("pattern = stripePattern(white, black)")
 	{
@@ -64,8 +64,8 @@ SCENARIO("A stripe pattern is constant in z", "[patterns]")
 
 SCENARIO("A stripe pattern is constant in x", "[patterns]")
 {
-	auto black = Color::Black;
-	auto white = Color::White;
+	auto black = Colors::Black;
+	auto white = Colors::White;
 
 	GIVEN("pattern = createStripPattern(white, black)")
 	{
@@ -98,7 +98,7 @@ SCENARIO("Lighting with a pattern applied", "[patterns]")
 		"And light = pointLight(point(0.0f, 0.0f, -10.0f), color(1.0f, 1.0f, 1.0f))")
 	{
 		auto m = Material();
-		m.pattern = createStripPattern(Color::White, Color::Black);
+		m.pattern = createStripPattern(Colors::White, Colors::Black);
 		m.ambient = 1.0f;
 		m.diffuse = 0.0f;
 		m.specular = 0.0f;
@@ -113,8 +113,8 @@ SCENARIO("Lighting with a pattern applied", "[patterns]")
 			THEN("c1 == color(1.0f, 1.0f, 1.0f)"
 				"And c2 == color(0.0f, 0.0f, 0.0f)")
 			{
-				REQUIRE(c1 == Color::White);
-				REQUIRE(c2 == Color::Black);
+				REQUIRE(c1 == Colors::White);
+				REQUIRE(c2 == Colors::Black);
 			}
 		}
 	}
@@ -122,8 +122,8 @@ SCENARIO("Lighting with a pattern applied", "[patterns]")
 
 SCENARIO("Stripes with an object transformation", "[patterns]")
 {
-	auto black = Color::Black;
-	auto white = Color::White;
+	auto black = Colors::Black;
+	auto white = Colors::White;
 
 	GIVEN("object = Sphere()"
 		"And setTransform(object, scale(2.0f, 2.0f, 2.0f))"
@@ -145,8 +145,8 @@ SCENARIO("Stripes with an object transformation", "[patterns]")
 
 SCENARIO("Stripes with a pattern transformation", "[patterns]")
 {
-	auto black = Color::Black;
-	auto white = Color::White;
+	auto black = Colors::Black;
+	auto white = Colors::White;
 
 	GIVEN("object = Sphere()"
 		"And setTransform(object, scale(2.0f, 2.0f, 2.0f))"
@@ -168,8 +168,8 @@ SCENARIO("Stripes with a pattern transformation", "[patterns]")
 
 SCENARIO("Stripes with both an object and a pattern transformation", "[patterns]")
 {
-	auto black = Color::Black;
-	auto white = Color::White;
+	auto black = Colors::Black;
+	auto white = Colors::White;
 
 	GIVEN("object = Sphere()"
 		"And setTransform(object, scale(2.0f, 2.0f, 2.0f))"
@@ -192,8 +192,8 @@ SCENARIO("Stripes with both an object and a pattern transformation", "[patterns]
 
 SCENARIO("A gradient linearly interpolates between colors", "[patterns]")
 {
-	auto black = Color::Black;
-	auto white = Color::White;
+	auto black = Colors::Black;
+	auto white = Colors::White;
 
 	GIVEN("pattern = gradientPattern(white, black)")
 	{
@@ -213,8 +213,8 @@ SCENARIO("A gradient linearly interpolates between colors", "[patterns]")
 
 SCENARIO("A ring should extend in both x and z", "[patterns]")
 {
-	auto black = Color::Black;
-	auto white = Color::White;
+	auto black = Colors::Black;
+	auto white = Colors::White;
 
 	GIVEN("pattern = ringPattern(white, black)")
 	{
@@ -235,8 +235,8 @@ SCENARIO("A ring should extend in both x and z", "[patterns]")
 
 SCENARIO("Checkers should repeat in x", "[patterns]")
 {
-	auto black = Color::Black;
-	auto white = Color::White;
+	auto black = Colors::Black;
+	auto white = Colors::White;
 
 	GIVEN("pattern = checkersPattern(white, black)")
 	{
@@ -254,8 +254,8 @@ SCENARIO("Checkers should repeat in x", "[patterns]")
 
 SCENARIO("Checkers should repeat in y", "[patterns]")
 {
-	auto black = Color::Black;
-	auto white = Color::White;
+	auto black = Colors::Black;
+	auto white = Colors::White;
 
 	GIVEN("pattern = checkersPattern(white, black)")
 	{
@@ -273,8 +273,8 @@ SCENARIO("Checkers should repeat in y", "[patterns]")
 
 SCENARIO("Checkers should repeat in z", "[patterns]")
 {
-	auto black = Color::Black;
-	auto white = Color::White;
+	auto black = Colors::Black;
+	auto white = Colors::White;
 
 	GIVEN("pattern = checkersPattern(white, black)")
 	{

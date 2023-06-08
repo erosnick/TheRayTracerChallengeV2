@@ -606,7 +606,7 @@ SCENARIO("Draw a clock face", "[matrix]")
 				auto rotation = rotateZ(PI / 6.0f);
 				p = rotation * p;
 
-				c.writePixel(static_cast<int32_t>(p.x + 100.0f), static_cast<int32_t>(p.y + 100.0f), Color::White);
+				c.writePixel(static_cast<int32_t>(p.x + 100.0f), static_cast<int32_t>(p.y + 100.0f), Colors::White);
 			}
 
 			c.writeToPPM("clock.ppm");
