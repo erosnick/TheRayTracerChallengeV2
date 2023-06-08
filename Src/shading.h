@@ -246,6 +246,10 @@ Canvas render(const Camera& camera, const World& world, bool useBackgroundColor,
 				auto finalColor = Color::Black;
 				for (auto sample = 0; sample < samplesPerPixel; sample++)
 				{
+					if (x == 403 && y == 718)
+					{
+						finalColor = Color::Green;
+					}
 					auto rx = randomFloat();
 					auto ry = randomFloat();
 					auto ray = camera.rayForPixel(static_cast<float>(x), static_cast<float>(y));

@@ -469,7 +469,7 @@ Scene cylinderTest()
 	floor->material.pattern = createCheckerPattern();
 	//floor->material.pattern = createStripPattern();
 
-	world.addObject(floor);
+	//world.addObject(floor);
 
 	auto cylinderLeft = createCylinder();
 	cylinderLeft->setTransform(translate(-1.5f, 0.0f, 0.0f));
@@ -481,8 +481,9 @@ Scene cylinderTest()
 	cylinderMiddle->material = Materials::Red;
 	//world.addObject(cylinderMiddle);
 
-	auto cone = createCone(0.0f, 1.0f, true);
-	cone->setTransform(translate(0.0f, 1.0f, 0.0f) * rotateZ(PI) * scale(1.0f, 2.0f, 1.0f));
+	auto cone = createCone(-1.0f, 0.0f, true);
+	cone->setScale(1.0f, 1.5f, 1.0f);
+	cone->setTransform(translate(0.0f, 1.0f, 0.0f) * scale(1.0f, 1.5f, 1.0f));
 	cone->material = Materials::Red;
 	world.addObject(cone);
 

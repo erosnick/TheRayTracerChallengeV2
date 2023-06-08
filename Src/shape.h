@@ -76,9 +76,9 @@ public:
 	virtual bool boundingBox(float time0, float time1, AABB& outputBox) = 0;
 
 	matrix4 transform;
-	tuple scale;
-	tuple rotation;
-	tuple translation;
+	tuple scale{ 1.0f, 1.0f, 1.0f, 1.0f };
+	tuple rotation{ 0.0f, 0.0f, 0.0f, 1.0f };
+	tuple translation{ 0.0f, 0.0f, 0.0f, 1.0f };
 	Material material;
 };
 

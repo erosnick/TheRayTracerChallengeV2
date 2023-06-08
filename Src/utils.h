@@ -17,6 +17,11 @@ inline static bool isZero(float a)
 	return std::fabsf(a) <= EPSILON;
 }
 
+inline static bool isZeroHighPrecision(float a)
+{
+	return std::fabsf(a) <= EPSILON_HIGH_PRECISION;
+}
+
 inline static bool between(float a, float left, float right)
 {
 	return a > left && a < right;

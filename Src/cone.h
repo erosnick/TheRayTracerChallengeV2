@@ -30,17 +30,18 @@ public:
 
 		std::vector<Intersection> result;
 
-		if (equal(a, 0.0) && !equal(b, 0.0f))
+		if (isZeroHighPrecision(a) && !isZeroHighPrecision(b))
 		{
 			auto t = -c / (2.0f * b);
+
 			result.push_back({ t, shared_from_this() });
 		}
 
-		if (a > EPSILON)
+		if (a > EPSILON_HIGH_PRECISION)
 		{
 			auto discriminant = b * b - 4 * a * c;
 
-			const auto realEpsilon = 0.000001f * max(std::fabsf(a), std::fabsf(b), std::fabsf(c));
+			const auto realEpsilon = EPSILON_HIGH_PRECISION * max(std::fabsf(a), std::fabsf(b), std::fabsf(c));
 
 			if (discriminant >= -realEpsilon)
 			{
@@ -123,7 +124,7 @@ public:
 
 		//intersectCaps(transformedRay, result);
 
-		return result;
+		//return result;
 	}
 
 	virtual tuple localNormalAt(const tuple& localPosition) const override
