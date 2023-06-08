@@ -10,7 +10,9 @@ enum class ShapeType : uint8_t
 {
 	Sphere,
 	Plane,
-	Cube
+	Cube,
+	Cylinder,
+	Cone
 };
 
 class Shape : public std::enable_shared_from_this<Shape>
@@ -63,12 +65,18 @@ public:
 
 	tuple normalAt(const tuple& worldPosition)
 	{ 
-		auto localPosition = inverse(transform) * worldPosition;
-		auto localNormal = localNormalAt(localPosition);
-		auto worldNormal = transpose(inverse(transform)) * localNormal;
-		worldNormal.w = 0.0f;
+		// Before Chapter 14 Groups
+		//auto localPosition = inverse(transform) * worldPosition;
+		//auto localNormal = localNormalAt(localPosition);
+		//auto worldNormal = transpose(inverse(transform)) * localNormal;
+		//worldNormal.w = 0.0f;
 
-		return normalize(worldNormal);
+		//return normalize(worldNormal);
+		// 
+		// Chapter 14 Groups
+		auto localPosition = worldToObject(worldPosition);
+		auto localNormal = localNormalAt(localPosition);
+		return normalToWorld(localNormal);
 	}
 
 	virtual tuple localNormalAt(const tuple& localPosition) const { return {}; }
@@ -80,6 +88,33 @@ public:
 	tuple rotation{ 0.0f, 0.0f, 0.0f, 1.0f };
 	tuple translation{ 0.0f, 0.0f, 0.0f, 1.0f };
 	Material material;
+
+	std::shared_ptr<Shape> parent;
+
+	tuple worldToObject(const tuple& worldPosition)
+	{
+		auto localPosition = worldPosition;
+
+		if (parent != nullptr)
+		{
+			localPosition = parent->worldToObject(localPosition);
+		}
+		return inverse(transform) * localPosition;
+	}
+
+	tuple normalToWorld(const tuple& localNormal)
+	{
+		auto worldNormal = transpose(inverse(transform)) * localNormal;
+		worldNormal.w = 0.0f;
+		worldNormal = normalize(worldNormal);
+
+		if (parent != nullptr)
+		{
+			worldNormal = parent->normalToWorld(worldNormal);
+		}
+
+		return worldNormal;
+	}
 };
 
 class TestShape : public Shape

@@ -15,6 +15,7 @@
 #include "cube.h"
 #include "cylinder.h"
 #include "cone.h"
+#include "group.h"
 #include "bvh.h"
 
 #include "YAMLLoader.h"
@@ -502,6 +503,80 @@ Scene cylinderTest()
 	return scene;
 }
 
+std::shared_ptr<Shape> hexagonCorner()
+{
+	auto corner = createSphere();
+	
+	corner->setTransform(translate(0.0f, 0.0f, -1.0f) * scale(0.25f));
+
+	return corner;
+}
+
+std::shared_ptr<Shape> hexagonEdge()
+{
+	auto edge = createCylinder(0.0f, 1.0f);
+
+	edge->setTransform(translate(0.0f, 0.0f, -1.0f) *
+								  rotateY(-PI / 6.0f) *
+								  rotateZ(-PI / 2.0f) *
+								  scale(0.25f, 1.0f, 0.25f));
+
+	return edge;
+}
+
+std::shared_ptr<Shape> hexagonSide()
+{
+	auto side = createGroup();
+
+	side->addChild(hexagonCorner());
+	side->addChild(hexagonEdge());
+
+	return side;
+}
+
+std::shared_ptr<Shape> hexagon()
+{
+	auto hex = createGroup();
+
+	for (int i = 0; i < 6; i++)
+	{
+		auto side = hexagonSide();
+		side->setTransform(rotateY(i * PI / 3.0f));
+		hex->addChild(side);
+	}
+
+	return hex;
+}
+
+Scene groupTest()
+{
+	World world;
+	world.setName("GroupTest");
+
+	auto floor = createPlane();
+	floor->material.pattern = createCheckerPattern();
+
+	world.addObject(floor);
+
+	auto hex = hexagon();
+	hex->setTransform(translate(0.0f, 1.0f, 0.0f));
+	world.addObject(hex);
+
+	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Color::White);
+
+	world.addLight(light);
+
+	Scene scene;
+	scene.world = world;
+
+	scene.camera = Camera(1280, 720, radians(60.0f));
+	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -10.0f),
+											  point(0.0f, 0.0f, 0.0f),
+											  vector(0.0f, 1.0f, 0.0f));
+
+	return scene;
+}
+
 Scene blenderScene(const std::string& path)
 {
 	Scene scene = loadScene(path);
@@ -529,9 +604,7 @@ void renderScene(const std::string& path)
 
 int main(int argc, char* argv[])
 {
-	auto world = glassCubeTest();
-
-	auto scene = cylinderTest();
+	auto scene = groupTest();
 
 	//auto [world, camera] = cornelBox();
 

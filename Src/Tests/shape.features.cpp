@@ -1,7 +1,8 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <shape.h>
-
+#include <group.h>
+#include <sphere.h>
 #include <transforms.h>
 
 // Chapter 9 Planes
@@ -147,6 +148,122 @@ SCENARIO("Computing the normal on a transformed shape", "[shape]")
 			THEN("n == vector(0.0f, 0.97014f, -0.24254f)")
 			{
 				REQUIRE(n == vector(0.0f, 0.97014f, -0.24254f));
+			}
+		}
+	}
+}
+
+// Chapter 14 Groups
+
+SCENARIO("Creating a new group", "[shape]")
+{
+	GIVEN("g = Group()")
+	{
+		THEN("g.transform == identityMatrix"
+			"And g is empty")
+		{
+			REQUIRE(true);
+		}
+	}
+}
+
+SCENARIO("A shape has a parent attribute", "[shape]")
+{
+	GIVEN("s = testShape()")
+	{
+		auto s = testShape();
+		THEN("s.parent is nothing")
+		{
+			REQUIRE(s->parent == nullptr);
+		}
+	}
+}
+
+SCENARIO("Converting a point from world to object space", "[shape]")
+{
+	GIVEN("g1 = Group()"
+		"And setTransform(g1, rotation_y(¦Ð / 2.0f))"
+		"And g2 = Group()"
+		"And setTransform(g2, scaling(2.0f, 2.0f, 2.0f))"
+		"And addChild(g1, g2)"
+		"And s = Sphere()"
+		"And setTransform(s, translation(5.0f, 0.0f, 0.0f))"
+		"And addChild(g2, s)")
+	{
+		auto g1 = createGroup();
+		g1->setTransform(rotateY(PI / 2.0f));
+		auto g2 = createGroup();
+		g2->setTransform(scale(2.0f));
+		g1->addChild(g2);
+		auto s = createSphere();
+		s->setTransform(translate(5.0f, 0.0f, 0.0f));
+		g2->addChild(s);
+		WHEN("p = worldToObject(s, point(-2.0f, 0.0f, -10.0f))")
+		{
+			auto p = s->worldToObject(point(-2.0f, 0.0f, -10.0f));
+			THEN("p == point(0.0f, 0.0f, -1.0f)")
+			{
+				REQUIRE(p == point(0.0f, 0.0f, -1.0f));
+			}
+		}
+	}
+}
+
+SCENARIO("Converting a normal from object to world space", "[shape]")
+{
+	GIVEN("g1 = Group()"
+		"And setTransform(g1, rotation_y(¦Ð / 2.0f))"
+		"And g2 = Group()"
+		"And setTransform(g2, scaling(1.0f, 2.0f, 3.0f))"
+		"And addChild(g1, g2)"
+		"And s = Sphere()"
+		"And setTransform(s, translation(5.0f, 0.0f, 0.0f))"
+		"And addChild(g2, s)")
+	{
+		auto g1 = createGroup();
+		g1->setTransform(rotateY(PI / 2.0f));
+		auto g2 = createGroup();
+		g2->setTransform(scale(1.0f, 2.0f, 3.0f));
+		g1->addChild(g2);
+		auto s = createSphere();
+		s->setTransform(translate(5.0f, 0.0f, 0.0f));
+		g2->addChild(s);
+		WHEN("n = normalToWorld(s, vector(¡Ì3/3, ¡Ì3/3, ¡Ì3/3))")
+		{
+			auto n = s->normalToWorld(vector(SQRT3 / 3, SQRT3 / 3, SQRT3 / 3));
+			THEN("n == vector(0.2857f, 0.4286f, -0.8571f)")
+			{
+				REQUIRE(n == vector(0.2857f, 0.4286f, -0.8571f));
+			}
+		}
+	}
+}
+
+SCENARIO("Finding the normal on a child object", "[shape]")
+{
+	GIVEN("g1 = Group()"
+		"And setTransform(g1, rotation_y(¦Ð / 2.0f))"
+		"And g2 = Group()"
+		"And setTransform(g2, scaling(1.0f, 2.0f, 3.0f))"
+		"And addChild(g1, g2)"
+		"And s = Sphere()"
+		"And setTransform(s, translation(5.0f, 0.0f, 0.0f))"
+		"And addChild(g2, s)")
+	{
+		auto g1 = createGroup();
+		g1->setTransform(rotateY(PI / 2.0f));
+		auto g2 = createGroup();
+		g2->setTransform(scale(1.0f, 2.0f, 3.0f));
+		g1->addChild(g2);
+		auto s = createSphere();
+		s->setTransform(translate(5.0f, 0.0f, 0.0f));
+		g2->addChild(s);
+		WHEN("n = normalAat(s, point(1.7321f, 1.1547f, -5.5774f))")
+		{
+			auto n = s->normalToWorld(vector(SQRT3 / 3, SQRT3 / 3, SQRT3 / 3));
+			THEN("n = vector(0.2857f, 0.4286f, -0.8571f)")
+			{
+				REQUIRE(n == vector(0.2857f, 0.4286f, -0.8571f));
 			}
 		}
 	}

@@ -105,6 +105,11 @@ public:
 		return result;
 	}
 
+	virtual tuple localNormalAt(const tuple& localPosition) const override
+	{
+		return {};
+	}
+
 	virtual bool boundingBox(float time0, float time1, AABB& outputBox) override
 	{
 		outputBox = box;

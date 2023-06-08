@@ -26,32 +26,23 @@ tuple normalAt(const std::shared_ptr<Shape>& shape, const tuple& worldPoint)
 	return shape->normalAt(worldPoint);
 }
 
-std::vector<Intersection> intersections(const std::initializer_list<Intersection>& intersectionList)
+std::vector<Intersection> sortIntersections(const std::initializer_list<Intersection>& intersectionList)
 {
 	std::vector<Intersection> result;
 
 	std::for_each(intersectionList.begin(), intersectionList.end(), [&](const Intersection& intersection)
-		{
-			result.emplace_back(intersection);
-		});
+	{
+		result.emplace_back(intersection);
+	});
 
 	std::sort(result.begin(), result.end(), compare);
 
 	return result;
 }
 
-std::vector<Intersection> intersections(const std::vector<Intersection>& intersectionList)
+void sortIntersections(std::vector<Intersection>& intersectionList)
 {
-	std::vector<Intersection> result;
-
-	std::for_each(intersectionList.begin(), intersectionList.end(), [&](const Intersection& intersection)
-		{
-			result.emplace_back(intersection);
-		});
-
-	std::sort(result.begin(), result.end(), compare);
-
-	return result;
+	std::sort(intersectionList.begin(), intersectionList.end(), compare);
 }
 
 Intersection hit(const std::vector<Intersection>& intersections)
@@ -75,12 +66,14 @@ std::vector<Intersection> intersectWorld(const World& world, const Ray& ray)
 	{
 		// Old method
 		//auto intersection = intersect(object, ray);
-		auto intersection = shape->intersect(ray);
+		auto intersections= shape->intersect(ray);
 
-		result.insert(result.end(), intersection.begin(), intersection.end());
+		result.insert(result.end(), intersections.begin(), intersections.end());
 	}
 
-	return intersections(result);
+	sortIntersections(result);
+
+	return result;
 }
 
 HitResult prepareComputations(const Intersection& intersection, const Ray& ray, const std::vector<Intersection>& intersections)

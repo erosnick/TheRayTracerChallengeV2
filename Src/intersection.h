@@ -44,9 +44,9 @@ inline static bool compare(const Intersection& a, const Intersection& b)
 	return a.t < b.t;
 }
 
-std::vector<Intersection> intersections(const std::initializer_list<Intersection>& intersectionList);
+std::vector<Intersection> sortIntersections(const std::initializer_list<Intersection>& intersectionList);
 
-std::vector<Intersection> intersections(const std::vector<Intersection>& intersectionList);
+void sortIntersections(std::vector<Intersection>& intersectionList);
 
 Intersection hit(const std::vector<Intersection>& intersections);
 

@@ -21,6 +21,9 @@
     <ClCompile Include="..\src\Tests\cylinder.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Tests\group.features.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Tests\intersections.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
