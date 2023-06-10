@@ -19,26 +19,74 @@
 #include "triangle.h"
 #include "bvh.h"
 
+#include "objLoader.h"
 #include "YAMLLoader.h"
 
-Scene createDefaultScene()
+Scene createDefaultScene(int32_t imageWidth = 320, int32_t imageHeight = 180)
 {
 	Scene scene;
 
 	auto floor = createPlane();
 	floor->material.pattern = createCheckerPattern();
 
-	scene.world.addObject(floor);
+	//scene.world.addObject(floor);
 
 	auto light = pointLight(point(10.0f, 10.0f, -10.0f), Colors::White);
 
 	scene.world.addLight(light);
 
-	scene.camera = Camera(1280, 720, radians(60.0f));
-	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -10.0f),
+	scene.camera = Camera(imageWidth, imageHeight, radians(60.0f));
+	scene.camera.transform = viewTransform(point(0.0f, 0.0f, -1.25f),
 											  point(0.0f, 0.0f, 0.0f),
 											  vector(0.0f, 1.0f, 0.0f));
 
+	return scene;
+}
+
+Scene emptyCornelBox(int32_t imageWidth = 320, int32_t imageHeight = 180)
+{
+	Scene scene;
+
+	auto floor = createPlane(0.5f, 0.5f);
+	floor->setTransform(translate(0.0f, -0.5f, -1.0f) * scale(1.0f, 1.0f, 3.0f));
+	floor->material.specular = 0.0f;
+
+	scene.world.addObject(floor);
+
+	auto ceiling = createPlane(0.5f, 0.5f);
+	ceiling->setTransform(translate(0.0f, 0.5f, -1.0f) * scale(1.0f, 1.0f, 3.0f));
+	ceiling->material.specular = 0.0f;
+
+	scene.world.addObject(ceiling);
+
+	auto leftWall = createPlane(0.5f, 0.5f);
+	leftWall->setTransform(translate(-0.5f, 0.0f, -1.0f) * rotateZ(PI / 2.0f) * scale(1.0f, 1.0f, 3.0f));
+	leftWall->material.color = color(0.75f, 0.25f, -1.25f);
+	leftWall->material.specular = 0.0f;
+
+	scene.world.addObject(leftWall);
+
+	auto middleWall = createPlane(0.5f, 0.5f);
+	middleWall->setTransform(translate(0.0f, 0.0f, 0.5f) * rotateX(PI / 2.0f));
+	middleWall->material.specular = 0.0f;
+
+	scene.world.addObject(middleWall);
+
+	auto rightWall = createPlane(0.5f, 0.5f);
+	rightWall->setTransform(translate(0.5f, 0.0f, -1.0f) * rotateZ(PI / 2.0f) * scale(1.0f, 1.0f, 3.0f));
+	rightWall->material.color = color(0.25f, 0.75f, 0.25f);
+	rightWall->material.specular = 0.0f;
+
+	scene.world.addObject(rightWall);
+
+	auto light = pointLight(point(0.0f, 0.0f, -0.5f), Colors::HalfWhite);
+
+	scene.world.addLight(light);
+
+	scene.camera = Camera(imageWidth, imageHeight, radians(60.0f));
+	scene.camera.transform = viewTransform(point(0.0f, 0.0f, -1.25f),
+											      point(0.0f, 0.0f, 0.0f),
+											      vector(0.0f, 1.0f, 0.0f));
 	return scene;
 }
 
@@ -616,6 +664,52 @@ Scene triangleTest()
 	return scene;
 }
 
+Scene objLoaderTest()
+{
+	Scene scene = emptyCornelBox(1024, 1024);
+
+	scene.world.setName("ObjLoaderTest");
+
+	auto parser = parseObjFile("Assets/Models/teapot.obj");
+
+	auto teapot = objToGroup(parser);
+	teapot->setTransform(translate(0.0f, -0.5f, 0.25f) * rotateY(PI / 6.0f) * scale(0.13f));
+	teapot->material.color = Colors::RGB(229, 171, 168) * 0.2f;
+	teapot->material.reflective = 1.0f;
+
+	scene.world.addObject(teapot);
+
+	parser = parseObjFile("Assets/Models/low-poly teddy bear.obj");
+
+	auto bear = objToGroup(parser);
+	bear->setTransform(translate(-0.25f, -0.4f, -0.24f) * rotateY(PI / 6.0f) * scale(0.2f));
+	bear->material.specular = 0.0f;
+	bear->material.color = Colors::Purple;
+
+	scene.world.addObject(bear);
+
+	parser = parseObjFile("Assets/Models/cow.obj");
+
+	auto cow = objToGroup(parser);
+	cow->setTransform(translate(0.25f, -0.385f, -0.2f) * rotateY(-PI / 6.0f) * scale(0.16f));
+	cow->material.specular = 0.0f;
+	cow->material.color = Colors::RGB(99, 99, 247);
+
+	scene.world.addObject(cow);
+
+	auto sphere = createSphere(translate(0.0f, -0.25f, 0.0f) * scale(0.125f));
+	sphere->material.color = Colors::Pink * 0.5f;
+	sphere->material.reflective = 0.5f;
+	//scene.world.addObject(sphere);
+
+	auto cube = createCube();
+	cube->setTransform(translate(0.0f, 3.0f, 0.0f) * scale(3.0f));
+
+	//scene.world.addObject(cube);
+
+	return scene;
+}
+
 Scene blenderScene(const std::string& path)
 {
 	Scene scene = loadScene(path);
@@ -628,7 +722,7 @@ void renderScene(const std::string& path)
 {
 	auto scene = blenderScene(path);
 
-	std::shared_ptr<Shape> bvhNode = std::make_shared<BVHNode>(scene.world.getObjects(), 0.0f, 0.0f);
+	//std::shared_ptr<Shape> bvhNode = std::make_shared<BVHNode>(scene.world.getObjects(), 0.0f, 0.0f);
 
 	auto camera = Camera(1280, 720, radians(60.0f));
 	camera.transform = viewTransform(point(0.0f, 1.0f, -10.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
@@ -643,7 +737,7 @@ void renderScene(const std::string& path)
 
 int main(int argc, char* argv[])
 {
-	auto scene = triangleTest();
+	auto scene = objLoaderTest();
 
 	//auto [world, camera] = cornelBox();
 

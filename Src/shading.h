@@ -160,13 +160,13 @@ tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth)
 	for (int32_t i = 0; i < world.lightCount(); i++)
 	{
 		//finalColor += lighting(hitResult.shape->material, world.getLights()[i], hitResult.position, hitResult.viewDirection, hitResult.normal, shadowResult[i]);
-		finalColor += lighting(hitResult.shape->material, hitResult.shape, world.getLights()[i], hitResult.position, hitResult.viewDirection, hitResult.normal, shadowResult[i]);
+		finalColor += lighting(hitResult.shape->getMaterial(), hitResult.shape, world.getLights()[i], hitResult.position, hitResult.viewDirection, hitResult.normal, shadowResult[i]);
 	}
 
 	auto reflected = reflectedColor(world, hitResult, depth);
 	auto refracted = refractedColor(world, hitResult, depth);
 
-	auto material = hitResult.shape->material;
+	auto material = hitResult.shape->getMaterial();
 
 	if (material.reflective > 0.0f && material.transparency > 0.0f)
 	{
@@ -189,7 +189,7 @@ tuple colorAt(const World& world, const Ray& ray, int32_t depth)
 
 	auto intersection = hit(intersections);
 
-	auto backgroundColor = Colors::Background;// computeBackgroundColor(ray);
+	auto backgroundColor = Colors::Black;// computeBackgroundColor(ray);
 
 	if (intersection.t > 0.0f)
 	{
@@ -246,14 +246,14 @@ Canvas render(const Camera& camera, const World& world, bool useBackgroundColor,
 				auto finalColor = Colors::Black;
 				for (auto sample = 0; sample < samplesPerPixel; sample++)
 				{
-					if (x == 403 && y == 718)
-					{
-						finalColor = Colors::Green;
-					}
 					auto rx = randomFloat();
 					auto ry = randomFloat();
 					auto ray = camera.rayForPixel(static_cast<float>(x), static_cast<float>(y));
 					finalColor += colorAt(world, ray, maxDepth);
+					if (x == 0 && y == 2)
+					{
+						//finalColor = Colors::Green;
+					}
 				}
 				image.writePixel(x, y, finalColor / static_cast<float>(samplesPerPixel));
 			});
@@ -283,7 +283,7 @@ inline std::vector<bool> isShadowed(const World & world, const tuple & position)
 		{
 			shadowResult[i] = true;
 
-			if (!intersection.shape->material.castShadow)
+			if (!intersection.shape->getMaterial().castShadow)
 			{
 				shadowResult[i] = false;
 			}
@@ -295,7 +295,7 @@ inline std::vector<bool> isShadowed(const World & world, const tuple & position)
 
 tuple reflectedColor(const World& world, const HitResult& hitResult, int32_t depth)
 {
-	if (equal(hitResult.shape->material.reflective, 0.0f) || depth == 0)
+	if (equal(hitResult.shape->getMaterial().reflective, 0.0f) || depth == 0)
 	{
 		return Colors::Black;
 	}
@@ -303,12 +303,12 @@ tuple reflectedColor(const World& world, const HitResult& hitResult, int32_t dep
 	auto reflectedRay = Ray(hitResult.overPosition, hitResult.reflectVector);
 	auto color = colorAt(world, reflectedRay, depth - 1);
 
-	return color * hitResult.shape->material.reflective;
+	return color * hitResult.shape->getMaterial().reflective;
 }
 
 tuple refractedColor(const World& world, const HitResult& hitResult, int32_t depth)
 {
-	if (equal(hitResult.shape->material.transparency, 0.0f) || depth == 0)
+	if (equal(hitResult.shape->getMaterial().transparency, 0.0f) || depth == 0)
 	{
 		return Colors::Black;
 	}
@@ -341,7 +341,7 @@ tuple refractedColor(const World& world, const HitResult& hitResult, int32_t dep
 	// by the transparency value to account for any opacity
 	auto color = colorAt(world, refractedRay, depth - 1);
 
-	return color * hitResult.shape->material.transparency;
+	return color * hitResult.shape->getMaterial().transparency;
 }
 
 float schlick(const HitResult& hitResult)

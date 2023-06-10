@@ -36,6 +36,9 @@
     <ClCompile Include="..\src\Tests\matrix.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Tests\objfile.features.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Tests\patterns.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
@@ -52,6 +55,9 @@
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Tests\shape.features.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Tests\smoothtriangle.features.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Tests\spheres.features.cpp">

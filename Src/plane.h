@@ -35,12 +35,12 @@ public:
 		return { { t, shape }};
 	}
 
-	tuple localNormalAt(const tuple& localPosition) const override
+	tuple localNormalAt(const tuple& localPosition, const Intersection intersection = {}) const override
 	{
 		return vector(0.0f, 1.0f, 0.0f);
 	}
 
-	virtual bool boundingBox(float time0, float time1, AABB& outputBox) override
+	virtual bool boundingBox(BoundingBox& outputBox) override
 	{
 		return true;
 	}

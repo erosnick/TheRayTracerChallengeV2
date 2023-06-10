@@ -88,7 +88,7 @@ public:
 		return vector(localPosition.x, 0.0f, localPosition.z);
 	}
 
-	virtual bool boundingBox(float time0, float time1, AABB& outputBox) override
+	virtual bool boundingBox(BoundingBox& outputBox) override
 	{
 		return true;
 	}

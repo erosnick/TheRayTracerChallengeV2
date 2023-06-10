@@ -7,6 +7,7 @@
 #include <tuple>
 #include <world.h>
 #include <shading.h>
+#include <triangle.h>
 
 // Chapter 5 Ray-Sphere intersections
 
@@ -41,7 +42,7 @@ SCENARIO("Aggregating intersections", "[intersection]")
 
 		WHEN("xs = intersections(i1, i2)")
 		{
-			auto xs = intersections({ i1, i2 });
+			auto xs = sortIntersections({ i1, i2 });
 
 			THEN("xs.count == 2.0f"
 				"And xs[0].t == 1.0f"
@@ -65,7 +66,7 @@ SCENARIO("The hit, when all intersections have positive t", "[intersection]")
 		auto s = std::make_shared<Sphere>();
 		auto i1 = Intersection{ 1.0f, s };
 		auto i2 = Intersection{ 2.0f, s };
-		auto xs = intersections({ i2, i1 });
+		auto xs = sortIntersections({ i2, i1 });
 
 		WHEN("i = hit(xs)")
 		{
@@ -89,7 +90,7 @@ SCENARIO("The hit, when some intersections have negative t", "[intersection]")
 		auto s = std::make_shared<Sphere>();
 		auto i1 = Intersection{ -1.0f, s };
 		auto i2 = Intersection{ 1.0f, s };
-		auto xs = intersections({ i2, i1 });
+		auto xs = sortIntersections({ i2, i1 });
 
 		WHEN("i = hit(xs)")
 		{
@@ -113,7 +114,7 @@ SCENARIO("The hit, when all intersections have negative t", "[intersection]")
 		auto s = std::make_shared<Sphere>();
 		auto i1 = Intersection{ -2.0f, s };
 		auto i2 = Intersection{ -1.0f, s };
-		auto xs = intersections({ i2, i1 });
+		auto xs = sortIntersections({ i2, i1 });
 
 		WHEN("i = hit(xs)")
 		{
@@ -141,7 +142,7 @@ SCENARIO("The hit is always the lowest nonnegative intersection", "[intersection
 		auto i2 = Intersection{ 7.0f, s };
 		auto i3 = Intersection{ -3.0f, s };
 		auto i4 = Intersection{ 2.0f, s };
-		auto xs = intersections({ i1, i2, i3, i4 });
+		auto xs = sortIntersections({ i1, i2, i3, i4 });
 
 		WHEN("i = hit(xs)")
 		{
@@ -299,7 +300,7 @@ SCENARIO("Finding n1 and n2 at various intersections", "[intersections]")
 		C->setTransform(translate(0.0f, 0.0f, 0.25f));
 		C->material.refractiveIndex = 2.5f;
 		auto r = Ray(point(0.0f, 0.0f, -4.0f), vector(0.0f, 0.0f, 1.0f));
-		auto xs = intersections({ { 2.0f, A }, { 2.75f, B }, { 3.25f, C }, { 4.75f, B }, { 5.25f, C }, { 6.0f, A } });
+		auto xs = sortIntersections({ { 2.0f, A }, { 2.75f, B }, { 3.25f, C }, { 4.75f, B }, { 5.25f, C }, { 6.0f, A } });
 		WHEN("comps = preparecomputations(xs[<index>], r, xs)"
 			"Examples:"
 			"| index | n1  | n2  |"
@@ -345,7 +346,7 @@ SCENARIO("The under point is offset below the surface", "[intersections]")
 		auto shape = createGlassSphere();
 		shape->setTransform(translate(0.0f, 0.0f, 1.0f));
 		auto i = Intersection{ 5.0f, shape };
-		auto xs = intersections({ {5.0f, shape } });
+		auto xs = sortIntersections({ {5.0f, shape } });
 		WHEN("comps = prepareComputations(i, r, xs)")
 		{
 			auto comps = prepareComputations(i, r, xs);
@@ -369,7 +370,7 @@ SCENARIO("The refracted color with an opaque surface", "[intersections]")
 		auto w = defaultWorld();
 		auto shape = w.getObject(0);
 		auto r = Ray(point(0.0f, 0.0f, -5.0f), vector(0.0f, 0.0f, 1.0f));
-		auto xs = intersections({ { 4.0f, shape }, { 6.0f, shape } });
+		auto xs = sortIntersections({ { 4.0f, shape }, { 6.0f, shape } });
 		WHEN("comps = prepareComputations(xs[0], r, xs)"
 			"And c = refractedColor(w, comps, 5.0f)")
 		{
@@ -398,7 +399,7 @@ SCENARIO("The refracted color at the maximum recursive depth", "[intersections]"
 		shape->material.transparency = 1.0f;
 		shape->material.refractiveIndex = 1.5f;
 		auto r = Ray(point(0.0f, 0.0f, -5.0f), vector(0.0f, 0.0f, 1.0f));
-		auto xs = intersections({ { 4.0f, shape }, { 6.0f, shape } });
+		auto xs = sortIntersections({ { 4.0f, shape }, { 6.0f, shape } });
 		WHEN("comps = prepareComputations(xs[0], r, xs)"
 			"And c = refractedColor(w, comps, 0)")
 		{
@@ -427,7 +428,7 @@ SCENARIO("The refracted color under total internal reflection", "[intersections]
 		shape->material.transparency = 1.0f;
 		shape->material.refractiveIndex = 1.5f;
 		auto r = Ray(point(0.0f, 0.0f, SQRT2 / 2.0f), vector(0.0f, 1.0f, 0.0f));
-		auto xs = intersections({ { -SQRT2 / 2.0f, shape}, {SQRT2 / 2.0f, shape } });
+		auto xs = sortIntersections({ { -SQRT2 / 2.0f, shape}, {SQRT2 / 2.0f, shape } });
 		// NOTE: this time you're inside the sphere, so you need
 		// to look at the second intersection, xs[1], not xs[0]
 		WHEN("comps = preparecomputations(xs[1], r, xs)"
@@ -452,7 +453,7 @@ SCENARIO("The Schlick approximation under total internal reflection", "[intersec
 	{
 		auto shape = createGlassSphere();
 		auto r = Ray(point(0.0f, 0.0f, SQRT2 / 2.0f), vector(0.0f, 1.0f, 0.0f));
-		auto xs = intersections({ { -SQRT2 / 2.0f, shape }, { SQRT2 / 2.0f, shape } });
+		auto xs = sortIntersections({ { -SQRT2 / 2.0f, shape }, { SQRT2 / 2.0f, shape } });
 		WHEN("comps = prepareComputations(xs[1], r, xs)"
 			"And reflectance = schlick(comps)")
 		{
@@ -474,7 +475,7 @@ SCENARIO("The Schlick approximation with a perpendicular viewing angle", "[inter
 	{
 		auto shape = createGlassSphere();
 		auto r = Ray(point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
-		auto xs = intersections({ { -1.0f, shape }, { 1.0f, shape } });
+		auto xs = sortIntersections({ { -1.0f, shape }, { 1.0f, shape } });
 		WHEN("comps = prepareComputations(xs[1], r, xs)"
 			"And reflectance = schlick(comps)")
 		{
@@ -496,7 +497,7 @@ SCENARIO("The Schlick approximation with small angle and n2 > n1", "[intersectio
 	{
 		auto shape = createGlassSphere();
 		auto r = Ray(point(0.0f, 0.99f, -2.0f), vector(0.0f, 0.0f, 1.0f));
-		auto xs = intersections({ { 1.8589f, shape } });
+		auto xs = sortIntersections({ { 1.8589f, shape } });
 		WHEN("comps = prepareComputations(xs[1], r, xs)"
 			"And reflectance = schlick(comps)")
 		{
@@ -505,6 +506,26 @@ SCENARIO("The Schlick approximation with small angle and n2 > n1", "[intersectio
 			THEN("reflectance == 0.48873f;")
 			{
 				REQUIRE(equal(reflectance, 0.48873f));
+			}
+		}
+	}
+}
+
+// Chapter 15 Triangles
+
+SCENARIO("An intersection can encapsulate `u` and `v`", "[intersections]")
+{
+	GIVEN("s = Triangle(point(0.0f, 1.0f, 0.0f), point(-1.0f, 0.0f, 0.0f), point(1.0f, 0.0f, 0.0f))")
+	{
+		auto s = createTriangle(point(0.0f, 1.0f, 0.0f), point(-1.0f, 0.0f, 0.0f), point(1.0f, 0.0f, 0.0f));
+		WHEN("i = intersectionWithUV(3.5f, s, 0.2f, 0.4f)")
+		{
+			auto i = intersectionWithUV(3.5f, s, 0.2f, 0.4f);
+			THEN("i.u == 0.2f"
+				"And i.v == 0.4f")
+			{
+				REQUIRE(i.u == 0.2f);
+				REQUIRE(i.v == 0.4f);
 			}
 		}
 	}

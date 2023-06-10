@@ -37,23 +37,23 @@ public:
 		// https://blog.csdn.net/u013745174/article/details/52900870
 		auto object = std::dynamic_pointer_cast<Sphere>(shared_from_this());
 
-		return { { t1, shape, object },
-				 { t2, shape, object } };
+		return { { t1, shape, object, 0.0f, 0.0f },
+				 { t2, shape, object, 0.0f, 0.0f } };
 	}
 
-	virtual tuple localNormalAt(const tuple& localPosition) const override 
+	virtual tuple localNormalAt(const tuple& localPosition, const Intersection intersection = {}) const override
 	{ 
 		auto localNormal = localPosition - center;
 
 		return  localNormal;
 	}
 
-	virtual bool boundingBox(float time0, float time1, AABB& outputBox) override
+	virtual bool boundingBox(BoundingBox& outputBox) override
 	{
 		auto a = translation - vector(scale.x, scale.y, scale.z);
 		auto b = translation + vector(scale.x, scale.y, scale.z);
 
-		outputBox = AABB(a, b);
+		outputBox = BoundingBox(a, b);
 
 		return true;
 	}

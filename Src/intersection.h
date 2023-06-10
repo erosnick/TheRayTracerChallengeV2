@@ -7,6 +7,8 @@ struct Intersection
 	float t = 0.0f;
 	std::shared_ptr<class Shape> shape;
 	std::shared_ptr<class Sphere> object;
+	float u = 0.0f;
+	float v = 0.0f;
 };
 
 struct HitResult
@@ -53,3 +55,5 @@ Intersection hit(const std::vector<Intersection>& intersections);
 std::vector<Intersection> intersectWorld(const class World& world, const Ray& ray);
 
 HitResult prepareComputations(const Intersection& intersection, const Ray& ray, const std::vector<Intersection>& intersections = {});
+
+Intersection intersectionWithUV(float t, const std::shared_ptr<Shape>& shape, float u, float v);

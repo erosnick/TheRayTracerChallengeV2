@@ -20,4 +20,6 @@ namespace Colors
 	const tuple DarkGreen = RGB(29, 72, 29);
 	const tuple Blue{ 0.0f, 0.0f, 1.0f, 0.0f };
 	const tuple Background{ 0.235294f, 0.67451f, 0.843137f, 0.0f };
+	const tuple Pink = RGB(255, 174, 201);
+	const tuple Purple = RGB(220, 154, 238);
 }

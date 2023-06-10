@@ -188,6 +188,7 @@
   <ItemGroup>
     <ClInclude Include="..\src\YAMLLoader.h" />
     <ClInclude Include="..\src\aabb.h" />
+    <ClInclude Include="..\src\boundingbox.h" />
     <ClInclude Include="..\src\bvh.h" />
     <ClInclude Include="..\src\camera.h" />
     <ClInclude Include="..\src\canvas.h" />
@@ -201,6 +202,7 @@
     <ClInclude Include="..\src\light.h" />
     <ClInclude Include="..\src\material.h" />
     <ClInclude Include="..\src\matrix.h" />
+    <ClInclude Include="..\src\objLoader.h" />
     <ClInclude Include="..\src\pattern.h" />
     <ClInclude Include="..\src\pch.h" />
     <ClInclude Include="..\src\perlin.h" />

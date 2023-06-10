@@ -4,7 +4,7 @@
 #include "matrix.h"
 #include "material.h"
 #include "intersection.h"
-#include "aabb.h"
+#include "boundingbox.h"
 
 enum class ShapeType : uint8_t
 {
@@ -50,7 +50,7 @@ public:
 		translation = inTranslation;
 	}
 
-	void setTransform(const matrix4& inTransform)
+	virtual void setTransform(const matrix4& inTransform)
 	{
 		transform = inTransform;
 	}
@@ -63,7 +63,7 @@ public:
 
 	virtual std::vector<Intersection> localIntersect(const Ray& transformedRay) { return {}; }
 
-	tuple normalAt(const tuple& worldPosition)
+	tuple normalAt(const tuple& worldPosition, const Intersection intersection = {})
 	{ 
 		// Before Chapter 14 Groups
 		//auto localPosition = inverse(transform) * worldPosition;
@@ -75,21 +75,13 @@ public:
 		// 
 		// Chapter 14 Groups
 		auto localPosition = worldToObject(worldPosition);
-		auto localNormal = localNormalAt(localPosition);
+		auto localNormal = localNormalAt(localPosition, intersection);
 		return normalToWorld(localNormal);
 	}
 
-	virtual tuple localNormalAt(const tuple& localPosition) const { return {}; }
+	virtual tuple localNormalAt(const tuple& localPosition, const Intersection intersection = {}) const { return {}; }
 
-	virtual bool boundingBox(float time0, float time1, AABB& outputBox) = 0;
-
-	matrix4 transform;
-	tuple scale{ 1.0f, 1.0f, 1.0f, 1.0f };
-	tuple rotation{ 0.0f, 0.0f, 0.0f, 1.0f };
-	tuple translation{ 0.0f, 0.0f, 0.0f, 1.0f };
-	Material material;
-
-	std::shared_ptr<Shape> parent;
+	virtual bool boundingBox(BoundingBox& outputBox) = 0;
 
 	tuple worldToObject(const tuple& worldPosition)
 	{
@@ -115,6 +107,24 @@ public:
 
 		return worldNormal;
 	}
+
+	auto getMaterial() const
+	{
+		if (parent != nullptr)
+		{
+			return parent->material;
+		}
+		return material;
+	}
+
+	matrix4 transform;
+	tuple scale{ 1.0f, 1.0f, 1.0f, 1.0f };
+	tuple rotation{ 0.0f, 0.0f, 0.0f, 1.0f };
+	tuple translation{ 0.0f, 0.0f, 0.0f, 1.0f };
+	Material material;
+	BoundingBox aabb;
+
+	std::shared_ptr<Shape> parent;
 };
 
 class TestShape : public Shape
@@ -126,12 +136,12 @@ public:
 		return {}; 
 	}
 
-	virtual tuple localNormalAt(const tuple& localPosition) const override 
+	virtual tuple localNormalAt(const tuple& localPosition, const Intersection intersection = {}) const override
 	{ 
 		return localPosition; 
 	}
 
-	virtual bool boundingBox(float time0, float time1, AABB& outputBox) override
+	virtual bool boundingBox(BoundingBox& outputBox) override
 	{
 		return true;
 	}
@@ -144,36 +154,19 @@ inline static std::shared_ptr<TestShape> testShape()
 	return std::make_shared<TestShape>();
 }
 
-inline static AABB surroundingBox(const AABB& box0, const AABB& box1)
-{
-	auto minX = std::fminf(box0.min().x, box1.min().x);
-	auto minY = std::fminf(box0.min().y, box1.min().y);
-	auto minZ = std::fminf(box0.min().z, box1.min().z);
-
-	tuple min = point(minX, minY, minZ);
-
-	auto maxX = std::fmaxf(box0.max().x, box1.max().x);
-	auto maxY = std::fmaxf(box0.max().y, box1.max().y);
-	auto maxZ = std::fmaxf(box0.max().z, box1.max().z);
-
-	tuple max = point(maxX, maxY, maxZ);
-
-	return AABB(min, max);
-}
-
-inline static bool boundingBox(float time0, float time1, const std::vector<std::shared_ptr<Shape>>& objects, AABB& outputBox)
+inline static bool boundingBoxOfShapes(const std::vector<std::shared_ptr<Shape>>& objects, BoundingBox& outputBox)
 {
 	if (objects.empty())
 	{
 		return false;
 	}
 
-	AABB tempBox;
+	BoundingBox tempBox;
 	bool firstBox = true;
 
 	for (const auto& object : objects)
 	{
-		if (!object->boundingBox(time0, time1, tempBox))
+		if (!object->boundingBox(tempBox))
 		{
 			return false;
 		}

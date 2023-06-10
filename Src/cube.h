@@ -24,7 +24,7 @@ public:
 		return { { tMin, shared_from_this() }, { tMax, shared_from_this() } };
 	}
 
-	virtual tuple localNormalAt(const tuple& localPosition) const override
+	virtual tuple localNormalAt(const tuple& localPosition, const Intersection intersection = {}) const override
 	{
 		auto absX = std::fabsf(localPosition.x);
 		auto absY = std::fabsf(localPosition.y);
@@ -43,7 +43,7 @@ public:
 		return vector(0.0f, 0.0f, localPosition.z);
 	}
 
-	virtual bool boundingBox(float time0, float time1, AABB& outputBox) override
+	virtual bool boundingBox(BoundingBox& outputBox) override
 	{
 		return true;
 	}

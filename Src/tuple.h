@@ -65,9 +65,19 @@ inline tuple point(float x, float y, float z)
 	return tuple(x, y, z, 1.0f);
 }
 
+inline tuple point(float value)
+{
+	return tuple(value, value, value, 1.0f);
+}
+
 inline tuple vector(float x, float y, float z)
 {
 	return tuple(x, y, z, 0.0f);
+}
+
+inline tuple vector(float value)
+{
+	return tuple(value, value, value, 0.0f);
 }
 
 inline tuple operator+(const tuple& a, const tuple& b)

@@ -127,7 +127,7 @@ public:
 		//return result;
 	}
 
-	virtual tuple localNormalAt(const tuple& localPosition) const override
+	virtual tuple localNormalAt(const tuple& localPosition, const Intersection intersection = {}) const override
 	{
 		// compute the square of the distance from the y axis
 		auto distance = std::powf(localPosition.x, 2.0f) + std::powf(localPosition.z, 2.0f);
@@ -150,7 +150,7 @@ public:
 		return vector(localPosition.x, y, localPosition.z);
 	}
 
-	virtual bool boundingBox(float time0, float time1, AABB& outputBox) override
+	virtual bool boundingBox(BoundingBox& outputBox) override
 	{
 		return true;
 	}

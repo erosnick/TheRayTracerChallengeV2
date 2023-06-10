@@ -38,7 +38,7 @@ namespace AriaCore
 		void PrintElaspedMillis()
 		{
 			float time = ElapsedMillis();
-			std::cout << "[TIMER] " << m_Name << " - " << time << "ms\n";
+			std::cout << "[TIMER] " << m_Name << " - " << time << "ms(" << time / 1000.0f << "s)\n";
 		}
 
 	private:

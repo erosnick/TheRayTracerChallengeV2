@@ -91,7 +91,7 @@ HitResult prepareComputations(const Intersection& intersection, const Ray& ray, 
 
 	// Old method
 	//hitResult.normal = normalAt(hitResult.object, hitResult.position);
-	hitResult.normal = hitResult.shape->normalAt(hitResult.position);
+	hitResult.normal = hitResult.shape->normalAt(hitResult.position, intersection);
 
 	if (dot(hitResult.normal, hitResult.viewDirection) < 0.0f)
 	{
@@ -108,6 +108,7 @@ HitResult prepareComputations(const Intersection& intersection, const Ray& ray, 
 	hitResult.underPosition = hitResult.position - hitResult.normal * EPSILON;
 	hitResult.reflectVector = reflect(ray.direction, hitResult.normal);
 
+	// For refractive material
 	auto containers = std::vector<std::shared_ptr<Shape>>();
 
 	for (const auto& i : intersections)
@@ -150,4 +151,14 @@ HitResult prepareComputations(const Intersection& intersection, const Ray& ray, 
 	}
 
 	return hitResult;
+}
+
+Intersection intersectionWithUV(float t, const std::shared_ptr<Shape>& shape, float u, float v)
+{
+	Intersection intersection;
+	intersection.t = t;
+	intersection.shape = shape;
+	intersection.u = u;
+	intersection.v = v;
+	return intersection;
 }

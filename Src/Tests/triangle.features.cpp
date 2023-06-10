@@ -4,6 +4,8 @@
 
 #include <tuple.h>
 
+// Chapter 15 Triangles
+
 SCENARIO("Constructing a triangle", "[triangle]")
 {
 	GIVEN("p0 = point(0.0f, 1.0f, 0.0f)"
