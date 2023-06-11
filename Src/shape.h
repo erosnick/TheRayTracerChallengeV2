@@ -79,9 +79,19 @@ public:
 		return normalToWorld(localNormal);
 	}
 
-	virtual tuple localNormalAt(const tuple& localPosition, const Intersection intersection = {}) const { return {}; }
+	virtual tuple localNormalAt(const tuple& localPosition, const Intersection intersection = {}) const 
+	{
+		return {}; 
+	}
 
 	virtual bool boundingBox(BoundingBox& outputBox) = 0;
+
+	virtual bool contains(const std::shared_ptr<Shape>& shape)
+	{
+		// Chapter 16 Constructive Solid Geometry (CSG)
+		// If A is any other shape, the includes operator should return true if A is equal to B.
+		return (this == shape.get());
+	}
 
 	tuple worldToObject(const tuple& worldPosition)
 	{
@@ -100,6 +110,7 @@ public:
 		worldNormal.w = 0.0f;
 		worldNormal = normalize(worldNormal);
 
+		// Group and CSG
 		if (parent != nullptr)
 		{
 			worldNormal = parent->normalToWorld(worldNormal);
@@ -110,7 +121,7 @@ public:
 
 	auto getMaterial() const
 	{
-		if (parent != nullptr)
+		if (parent != nullptr && useParentMaterial)
 		{
 			return parent->material;
 		}
@@ -125,6 +136,7 @@ public:
 	BoundingBox aabb;
 
 	std::shared_ptr<Shape> parent;
+	bool useParentMaterial = false;
 };
 
 class TestShape : public Shape

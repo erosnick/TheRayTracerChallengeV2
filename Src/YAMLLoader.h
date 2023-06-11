@@ -128,7 +128,7 @@ namespace YAML
 			node["diffuse"] = rhs.diffuse;
 			node["specular"] = rhs.specular;
 			node["shininess"] = rhs.shininess;
-			node["reflective"] = rhs.reflective;
+			node["metallic"] = rhs.metallic;
 			node["transparency"] = rhs.transparency;
 			node["refractiveIndex"] = rhs.refractiveIndex;
 
@@ -144,7 +144,7 @@ namespace YAML
 			rhs.diffuse = node["diffuse"].as<float>();
 			rhs.specular = node["specular"].as<float>();
 			rhs.shininess = node["shininess"].as<float>();
-			rhs.reflective = node["reflective"].as<float>();
+			rhs.metallic = node["metallic"].as<float>();
 			rhs.transparency = node["transparency"].as<float>();
 			rhs.refractiveIndex = node["refractiveIndex"].as<float>();
 			rhs.castShadow = node["castShadow"].as<bool>();

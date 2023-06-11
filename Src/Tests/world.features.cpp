@@ -317,7 +317,7 @@ SCENARIO("The reflected color for a reflective material", "[world]")
 {
 	GIVEN("w = defaultWorld()"
 			"And shape = Plane() with:"
-			"| material.reflective | 0.5 |"
+			"| material.metallic | 0.5 |"
 			"| transform | translation(0.0f, -1.0f, 0.0f) |"
 			"And shape is added to w"
 			"And r = Ray(point(0.0f, 0.0f, -3.0f), vector(0.0f, -¡Ì2 / 2.0f, ¡Ì2 / 2.0f))"
@@ -343,7 +343,7 @@ SCENARIO("shadeHit() with a reflective material", "[world]")
 {
 	GIVEN("w = defaultWorld()"
 		"And shape = Plane() with:"
-		"| material.reflective | 0.5 |"
+		"| material.metallic | 0.5 |"
 		"| transform | translation(0.0f, -1.0f, 0.0f) |"
 		"And shape is added to w"
 		"And r = Ray(point(0.0f, 0.0f, -3.0f), vector(0.0f, -¡Ì2 / 2.0f, ¡Ì2 / 2.0f))"
@@ -370,11 +370,11 @@ SCENARIO("colorAt() with mutually reflective surfaces", "[world]")
 	GIVEN("w = World()"
 		"And w.light = pointLight(point(0.0f, 0.0f, 0.0f), color(1.0f, 1.0f, 1.0f))"
 		"And lower = Plane() with:"
-		"| material.reflective | 1.0f |"
+		"| material.metallic | 1.0f |"
 		"| transform | translation(0.0f, -1.0f, 0.0f) |"
 		"And lower is added to w"
 		"And upper = Plane() with :"
-		"| material.reflective | 1.0 |"
+		"| material.metallic | 1.0 |"
 		"| transform | translation(0.0f, 1.0f, 0.0f) |"
 		"And upper is added to w"
 		"And r = ray(point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f))")
@@ -382,11 +382,11 @@ SCENARIO("colorAt() with mutually reflective surfaces", "[world]")
 		auto w = World();
 		w.addLight(pointLight(point(0.0f, 0.0f, 0.0f), Colors::White));
 		auto lower = createPlane();
-		lower->material.reflective = 1.0f;
+		lower->material.metallic = 1.0f;
 		lower->setTransform(translate(0.0f, -1.0f, 0.0f));
 		w.addObject(lower);
 		auto upper = createPlane();
-		upper->material.reflective = 1.0f;
+		upper->material.metallic = 1.0f;
 		upper->setTransform(translate(0.0f, 1.0f, 0.0f));
 		auto r = Ray(point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
 		THEN("colorAt(w, r) should terminate successfull")
@@ -401,7 +401,7 @@ SCENARIO("The reflected color at the maximum recursive depth", "[world]")
 {
 	GIVEN("w = defaultWorld()"
 		"And shape = Plane() with:"
-		"| material.reflective | 0.5 |"
+		"| material.metallic | 0.5 |"
 		"| transform | translation(0.0f, -1.0f, 0.0f) |"
 		"And shape is added to w"
 		"And r = Ray(point(0.0f, 0.0f, -3.0f), vector(0.0f, -¡Ì2 / 2.0f, ¡Ì2 / 2.0f))"
@@ -487,7 +487,7 @@ SCENARIO("shadeHit() with a transparent material", "[world]")
 		ball->setTransform(translate(0.0f, -3.5f, -0.5f));
 		w.addObject(ball);
 		auto r = Ray(point(0.0f, 0.0f, -3.0f), vector(0.0f, -SQRT2 / 2.0f, SQRT2 / 2.0f));
-		auto xs = intersections({ { SQRT2, floor } });
+		auto xs = sortIntersections({ { SQRT2, floor } });
 		WHEN("comps = prepareComputations(xs[0], r, xs)"
 			"And c = shadeHit(w, comps, 5)")
 		{
@@ -507,7 +507,7 @@ SCENARIO("shadeHit() with a reflective, transparent material", "[world]")
 		"And r = Ray(point(0.0f, 0.0f, -3.0f), vector(0.0f, -¡Ì2 / 2.0f, ¡Ì2 / 2.0f))"
 		"And floor = Plane() with:"
 		"| transform | translation(0.0f, -1.0f, 0.0f) |"
-		"| material.reflective | 0.5f |"
+		"| material.metallic | 0.5f |"
 		"| material.transparency | 0.5f |"
 		"| material.refractiveIndex | 1.5f |"
 		"And floor is added to w"
@@ -522,7 +522,7 @@ SCENARIO("shadeHit() with a reflective, transparent material", "[world]")
 		auto r = Ray(point(0.0f, 0.0f, -3.0f), vector(0.0f, -SQRT2 / 2.0f, SQRT2 / 2.0f));
 		auto floor = createPlane();
 		floor->setTransform(translate(0.0f, -1.0f, 0.0f));
-		floor->material.reflective = 0.5f;
+		floor->material.metallic = 0.5f;
 		floor->material.transparency = 0.5f;
 		floor->material.refractiveIndex = 1.5f;
 		w.addObject(floor);
@@ -531,7 +531,7 @@ SCENARIO("shadeHit() with a reflective, transparent material", "[world]")
 		ball->material.ambient = 0.5f;
 		ball->setTransform(translate(0.0f, -3.5f, -0.5f));
 		w.addObject(ball);
-		auto xs = intersections({ { SQRT2, floor } });
+		auto xs = sortIntersections({ { SQRT2, floor } });
 		WHEN("comps = prepareComputations(xs[0], r, xs)"
 			"And color = shadeHit(w, comps, 5)")
 		{

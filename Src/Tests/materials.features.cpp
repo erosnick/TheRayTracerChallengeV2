@@ -179,9 +179,9 @@ SCENARIO("Reflectivity for the default material", "[materials]")
 	GIVEN("m = Material()")
 	{
 		auto m = Material();
-		THEN("m.reflective == 0.0")
+		THEN("m.metallic == 0.0")
 		{
-			REQUIRE(m.reflective == 0.0f);
+			REQUIRE(m.metallic == 0.0f);
 		}
 	}
 }

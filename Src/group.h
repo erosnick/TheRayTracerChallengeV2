@@ -87,7 +87,7 @@ public:
 		return shapes[index];
 	}
 
-	bool contains(const std::shared_ptr<Shape>& shape)
+	virtual bool contains(const std::shared_ptr<Shape>& shape) override
 	{
 		return std::find(shapes.begin(), 
 						  shapes.end(), 

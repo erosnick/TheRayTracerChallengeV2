@@ -13,9 +13,9 @@ SCENARIO("A ray misses a cylinder", "[cylinder]")
 		auto cylinder = createCylinder();
 
 		std::vector<tuple> origins;
-		origins.emplace_back(point(1.0f, 0.0f,	0.0f));
-		origins.emplace_back(point(0.0f, 0.0f,	0.0f));
-		origins.emplace_back(point(1.0f, 0.0f,  -5.0f));
+		origins.emplace_back(point(1.0f, 0.0f, 0.0f));
+		origins.emplace_back(point(0.0f, 0.0f, 0.0f));
+		origins.emplace_back(point(1.0f, 0.0f, -5.0f));
 
 		std::vector<tuple> directions;
 		directions.emplace_back(vector(0.0f, 1.0f, 0.0f));
@@ -79,8 +79,8 @@ SCENARIO("A ray strikes a cylinder", "[cylinder]")
 				auto r = Ray(origins[i], direction);
 				auto xs = cylinder->localIntersect(r);
 				THEN("xs.count == 2"
-					 "xs[0].t = <t0>" 
-					 "xs[1].t = <t1>" + std::to_string(i))
+					"xs[0].t = <t0>"
+					"xs[1].t = <t1>" + std::to_string(i))
 				{
 					REQUIRE(xs.size() == 2);
 					REQUIRE(equal(xs[0].t, std::get<0>(times[i])));
@@ -100,16 +100,16 @@ SCENARIO("Normal vector on a cylinder", "[cylinder]")
 		auto cylinder = createCylinder();
 
 		std::vector<tuple> positions;
-		positions.emplace_back(point( 1.0f,  0.0f,  0.0f));
-		positions.emplace_back(point( 0.0f,  5.0f, -1.0f));
-		positions.emplace_back(point( 0.0f, -2.0f,  1.0f));
-		positions.emplace_back(point(-1.0f,  1.0f,  0.0f));
+		positions.emplace_back(point(1.0f, 0.0f, 0.0f));
+		positions.emplace_back(point(0.0f, 5.0f, -1.0f));
+		positions.emplace_back(point(0.0f, -2.0f, 1.0f));
+		positions.emplace_back(point(-1.0f, 1.0f, 0.0f));
 
 		std::vector<tuple> normals;
-		normals.emplace_back(vector( 1.0f, 0.0f,  0.0f));
-		normals.emplace_back(vector( 0.0f, 0.0f, -1.0f));
-		normals.emplace_back(vector( 0.0f, 0.0f,  1.0f));
-		normals.emplace_back(vector(-1.0f, 0.0f,  0.0f));
+		normals.emplace_back(vector(1.0f, 0.0f, 0.0f));
+		normals.emplace_back(vector(0.0f, 0.0f, -1.0f));
+		normals.emplace_back(vector(0.0f, 0.0f, 1.0f));
+		normals.emplace_back(vector(-1.0f, 0.0f, 0.0f));
 
 		WHEN("n = localNormalAt(cylinder, <point>)"
 			"Examples:"
@@ -137,7 +137,7 @@ SCENARIO("The default minimum and maximum for a cylinder", "[cylinder]")
 	{
 		auto cylinder = Cylinder();
 		THEN("cylinder.minimum == -infinity"
-			 "And cyl.maximum == infinity")
+			"And cyl.maximum == infinity")
 		{
 			REQUIRE(cylinder.minimum == -std::numeric_limits<float>::max());
 			REQUIRE(cylinder.maximum == std::numeric_limits<float>::max());
@@ -148,15 +148,15 @@ SCENARIO("The default minimum and maximum for a cylinder", "[cylinder]")
 SCENARIO("Intersecting a constrained cylinder", "[cylinder]")
 {
 	GIVEN("cylinder = Cylinder()"
-		  "cylinder.minimum = 1.0f"
-		  "And cylinder.maximum = 2.0f"
-		  "And direction = normalize(<direction>)"
-		  "And r = Ray(<point>, direction)")
+		"cylinder.minimum = 1.0f"
+		"And cylinder.maximum = 2.0f"
+		"And direction = normalize(<direction>)"
+		"And r = Ray(<point>, direction)")
 	{
 		auto cylinder = createCylinder(1.0f, 2.0f);
 
 		std::vector<tuple> origins;
-		origins.emplace_back(point(0.0f, 1.5f,  0.0f));
+		origins.emplace_back(point(0.0f, 1.5f, 0.0f));
 		origins.emplace_back(point(0.0f, 3.0f, -5.0f));
 		origins.emplace_back(point(0.0f, 0.0f, -5.0f));
 		origins.emplace_back(point(0.0f, 2.0f, -5.0f));
@@ -221,18 +221,18 @@ SCENARIO("Intersecting the caps of a closed cylinder", "[cylinder]")
 		auto cylinder = createCylinder(1.0f, 2.0f, true);
 
 		std::vector<tuple> origins;
-		origins.emplace_back(point(0.0f,  3.0f,  0.0f));
-		origins.emplace_back(point(0.0f,  3.0f, -2.0f));
-		origins.emplace_back(point(0.0f,  4.0f, -2.0f));
-		origins.emplace_back(point(0.0f,  0.0f, -2.0f));
+		origins.emplace_back(point(0.0f, 3.0f, 0.0f));
+		origins.emplace_back(point(0.0f, 3.0f, -2.0f));
+		origins.emplace_back(point(0.0f, 4.0f, -2.0f));
+		origins.emplace_back(point(0.0f, 0.0f, -2.0f));
 		origins.emplace_back(point(0.0f, -1.0f, -2.0f));
 
 		std::vector<tuple> directions;
 		directions.emplace_back(vector(0.0f, -1.0f, 0.0f));
 		directions.emplace_back(vector(0.0f, -1.0f, 2.0f));
 		directions.emplace_back(vector(0.0f, -1.0f, 1.0f));
-		directions.emplace_back(vector(0.0f,  1.0f, 2.0f));
-		directions.emplace_back(vector(0.0f,  1.0f, 1.0f));
+		directions.emplace_back(vector(0.0f, 1.0f, 2.0f));
+		directions.emplace_back(vector(0.0f, 1.0f, 1.0f));
 
 		std::vector<size_t> counts = { 2, 2, 2, 2, 2 };
 
@@ -245,7 +245,7 @@ SCENARIO("Intersecting the caps of a closed cylinder", "[cylinder]")
 			"| 4 | point(0.0f,  0.0f, -2.0f) | vector(0.0f,  1.0f, 2.0f) | 2	 |"
 			"| 5 | point(0.0f, -1.0f, -2.0f) | vector(0.0f,  1.0f, 1.0f) | 2	 |")
 		{
-			for (size_t i = 2; i < origins.size(); i++)
+			for (size_t i = 0; i < origins.size(); i++)
 			{
 				auto direction = normalize(directions[i]);
 				auto r = Ray(origins[i], direction);

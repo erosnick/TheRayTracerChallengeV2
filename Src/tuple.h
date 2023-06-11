@@ -100,9 +100,14 @@ inline tuple operator+=(tuple& a, const tuple& b)
 inline tuple operator-(const tuple& a, const tuple& b)
 {
 	return tuple(a.x - b.x,
-		a.y - b.y,
-		a.z - b.z,
-		a.w - b.w);
+				 a.y - b.y,
+				 a.z - b.z,
+				 a.w - b.w);
+}
+
+inline tuple operator-(float a, const tuple& b)
+{
+	return point(a) - b;
 }
 
 inline tuple operator-(const tuple& a)
@@ -137,6 +142,11 @@ inline tuple operator*=(tuple& a, float b)
 inline tuple operator/(const tuple& a, float b)
 {
 	return tuple(a.x / b, a.y / b, a.z / b, a.w / b);
+}
+
+inline tuple operator/(const tuple& a, const tuple& b)
+{
+	return tuple(a.x / b.x, a.y / b.y, a.z / b.y, a.w / b.w);
 }
 
 inline bool equal(const tuple& a, const tuple& b)
@@ -182,4 +192,21 @@ inline tuple reflect(const tuple& in, const tuple& normal)
 inline tuple color(float red, float green, float blue)
 {
 	return tuple(red, green, blue, 0.0f);
+}
+
+inline tuple color(float value)
+{
+	return tuple(value, value, value, 0.0f);
+}
+
+inline tuple lerp(const tuple& a, const tuple& b, float alpha)
+{
+	return (1.0f - alpha) * a + alpha * b;
+}
+
+inline tuple pow(const tuple& a, const tuple& b)
+{
+	return tuple(std::pow(a.x, b.x), 
+				 std::pow(a.y, b.y), 
+				 std::pow(a.z, b.z), 1.0f);
 }

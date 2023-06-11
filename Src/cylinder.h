@@ -71,7 +71,7 @@ public:
 		return result;
 	}
 
-	virtual tuple localNormalAt(const tuple& localPosition) const
+	virtual tuple localNormalAt(const tuple& localPosition, const Intersection intersection = {}) const
 	{
 		// Compute the square of the distance from the y axis
 		auto distance = std::powf(localPosition.x, 2.0f) +

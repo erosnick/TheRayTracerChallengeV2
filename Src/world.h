@@ -67,7 +67,7 @@ inline static World defaultWorld()
 
 	auto plane = createPlane();
 
-	plane->material.reflective = 0.5f;
+	plane->material.metallic = 0.5f;
 	plane->setTransform(translate(0.0f, -1.0f, 0.0f));
 
 	world.addObject(plane);

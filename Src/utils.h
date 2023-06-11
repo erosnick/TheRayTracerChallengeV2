@@ -46,7 +46,7 @@ inline static float clamp(float value, float min, float max)
 
 inline static float radians(float angle)
 {
-	return (PI / 180.0f) * angle;
+	return (RTC_PI / 180.0f) * angle;
 }
 
 inline static double randomDouble()

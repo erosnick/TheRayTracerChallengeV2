@@ -16,6 +16,7 @@
 
 tuple lighting(const Material& material, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow = false);
 tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow);
+tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow);
 
 tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth = 1);
 tuple colorAt(const World& world, const Ray& ray, int32_t depth = 1);
@@ -24,6 +25,47 @@ std::vector<bool> isShadowed(const World& world, const tuple& position);
 tuple reflectedColor(const World& world, const HitResult& hitResult, int32_t depth);
 tuple refractedColor(const World& world, const HitResult& hitResult, int32_t depth);
 float schlick(const HitResult& hitResult);
+
+// ----------------------------------------------------------------------------
+float distributionGGX(tuple N, tuple H, float roughness)
+{
+	float a = roughness * roughness;
+	float a2 = a * a;
+	float NdotH = std::max(dot(N, H), 0.0f);
+	float NdotH2 = NdotH * NdotH;
+
+	float nom = a2;
+	float denom = (NdotH2 * (a2 - 1.0f) + 1.0f);
+	denom = RTC_PI * denom * denom;
+
+	return nom / denom;
+}
+// ----------------------------------------------------------------------------
+float geometrySchlickGGX(float NdotV, float roughness)
+{
+	float r = (roughness + 1.0f);
+	float k = (r * r) / 8.0f;
+
+	float nom = NdotV;
+	float denom = NdotV * (1.0f - k) + k;
+
+	return nom / denom;
+}
+// ----------------------------------------------------------------------------
+float geometrySmith(tuple N, tuple V, tuple L, float roughness)
+{
+	float NdotV = std::max(dot(N, V), 0.0f);
+	float NdotL = std::max(dot(N, L), 0.0f);
+	float ggx2 = geometrySchlickGGX(NdotV, roughness);
+	float ggx1 = geometrySchlickGGX(NdotL, roughness);
+
+	return ggx1 * ggx2;
+}
+// ----------------------------------------------------------------------------
+inline static tuple fresnelSchlick(float cosTheta, tuple F0)
+{
+	return F0 + (1.0 - F0) * pow(clamp(1.0f - cosTheta, 0.0f, 1.0f), 5.0f);
+}
 
 tuple lighting(const Material& material, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow)
 {
@@ -151,6 +193,123 @@ tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, co
 	return ambient + (diffuse + specular) * attenuation;
 }
 
+tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow)
+{
+	auto albedo = material.color;
+
+	if (material.pattern != nullptr)
+	{
+		albedo = material.pattern->colorAt(position, shape->transform);
+	}
+
+	//albedo = pow(albedo, point(2.2f));
+
+	// Compute the ambient contribution
+	auto ambient = albedo * material.ambient;
+
+	if (inShadow)
+	{
+		return ambient;
+	}
+
+	// calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
+	// of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
+	tuple F0 = color(0.04f);
+	F0 = lerp(F0, albedo, material.metallic);
+
+	// reflectance equation
+	tuple Lo = color(0.0f);
+
+	// calculate per-light radiance
+	tuple L = normalize(light.position - position);
+	tuple H = normalize(viewDirection + L);
+	//float distance = length(light.position - position);
+	//float attenuation = 1.0f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+	float distance = length(light.position - position);
+	float attenuation = 1.0f / (distance * distance);
+
+	tuple radiance = light.intensity * attenuation;
+
+	float roughness = 0.25f;
+
+	tuple N = normalize(normal);
+
+	// Cook-Torrance BRDF
+	float NDF = distributionGGX(N, H, roughness);
+	float G = geometrySmith(N, viewDirection, L, roughness);
+	tuple F = fresnelSchlick(clamp(dot(H, viewDirection), 0.0f, 1.0f), F0);
+
+	tuple numerator = NDF * G * F;
+	float denominator = 4.0f * std::max(dot(N, viewDirection), 0.0f) * std::max(dot(N, L), 0.0f) + 0.0001f; // + 0.0001 to prevent divide by zero
+	tuple specular = numerator / denominator;
+
+	// kS is equal to Fresnel
+	tuple kS = F;
+	// for energy conservation, the diffuse and specular light can't
+	// be above 1.0 (unless the surface emits light); to preserve this
+	// relationship the diffuse component (kD) should equal 1.0 - kS.
+	tuple kD = point(1.0) - kS;
+	// multiply kD by the inverse metalness such that only non-metals 
+	// have diffuse lighting, or a linear blend if partly metal (pure metals
+	// have no diffuse light).
+	kD *= 1.0f - material.metallic;
+
+	// scale light by NdotL
+	float NdotL = std::max(dot(N, L), 0.0f);
+
+	// add to outgoing radiance Lo
+	// note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+	Lo += (kD * albedo / RTC_PI + specular) * radiance * NdotL;
+
+	tuple finalColor = ambient + Lo;
+
+	// HDR tonemapping
+	finalColor = finalColor / (finalColor + point(1.0));
+
+	// gamma correct
+	//finalColor = pow(finalColor, point(1.0f / 2.2f));
+
+	return finalColor;
+
+	//// lightDotNormal represents the cosine of the angle between the
+	//// light vector and the normal vector.A negative number means the
+	//// light is on the other side of the surface
+	//auto lightDotNormal = dot(lightDirection, normal);
+
+	//auto diffuse = Colors::Black;
+
+	//if (lightDotNormal < 0.0f)
+	//{
+	//	diffuse = Colors::Black;
+	//	specular = Colors::Black;
+	//}
+	//else
+	//{
+	//	// Compute the diffuse contribution
+	//	diffuse = effectiveColor * material.diffuse * lightDotNormal;
+
+	//	// reflectDotEye represents the cosine of the angle between the
+	//	// reflection vector and the eye vector.A negative number means the
+	//	// light reflects away from the eye.
+	//	auto reflectVector = reflect(-lightDirection, normal);
+	//	auto reflectDotEye = dot(reflectVector, viewDirection);
+
+	//	if (reflectDotEye <= 0.0f)
+	//	{
+	//		specular = Colors::Black;
+	//	}
+	//	else
+	//	{
+	//		// Compute the specular contribution
+	//		auto factor = pow(reflectDotEye, material.shininess);
+	//		specular = light.intensity * material.specular * factor;
+	//	}
+	//}
+
+	// Add the three contributions together to get the final shading
+	//return ambient + (diffuse + specular) * attenuation;
+}
+
 tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth)
 {
 	tuple finalColor;
@@ -160,7 +319,8 @@ tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth)
 	for (int32_t i = 0; i < world.lightCount(); i++)
 	{
 		//finalColor += lighting(hitResult.shape->material, world.getLights()[i], hitResult.position, hitResult.viewDirection, hitResult.normal, shadowResult[i]);
-		finalColor += lighting(hitResult.shape->getMaterial(), hitResult.shape, world.getLights()[i], hitResult.position, hitResult.viewDirection, hitResult.normal, shadowResult[i]);
+		//finalColor += lighting(hitResult.shape->getMaterial(), hitResult.shape, world.getLights()[i], hitResult.position, hitResult.viewDirection, hitResult.normal, shadowResult[i]);
+		finalColor += lightingPBR(hitResult.shape->getMaterial(), hitResult.shape, world.getLights()[i], hitResult.position, hitResult.viewDirection, hitResult.normal, shadowResult[i]);
 	}
 
 	auto reflected = reflectedColor(world, hitResult, depth);
@@ -168,7 +328,7 @@ tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth)
 
 	auto material = hitResult.shape->getMaterial();
 
-	if (material.reflective > 0.0f && material.transparency > 0.0f)
+	if (material.metallic > 0.0f && material.transparency > 0.0f)
 	{
 		auto reflectance = schlick(hitResult);
 		return finalColor + reflected * reflectance + refracted * (1.0f - reflectance);
@@ -295,7 +455,7 @@ inline std::vector<bool> isShadowed(const World & world, const tuple & position)
 
 tuple reflectedColor(const World& world, const HitResult& hitResult, int32_t depth)
 {
-	if (equal(hitResult.shape->getMaterial().reflective, 0.0f) || depth == 0)
+	if (equal(hitResult.shape->getMaterial().metallic, 0.0f) || depth == 0)
 	{
 		return Colors::Black;
 	}
@@ -303,7 +463,7 @@ tuple reflectedColor(const World& world, const HitResult& hitResult, int32_t dep
 	auto reflectedRay = Ray(hitResult.overPosition, hitResult.reflectVector);
 	auto color = colorAt(world, reflectedRay, depth - 1);
 
-	return color * hitResult.shape->getMaterial().reflective;
+	return color * hitResult.shape->getMaterial().metallic;
 }
 
 tuple refractedColor(const World& world, const HitResult& hitResult, int32_t depth)
