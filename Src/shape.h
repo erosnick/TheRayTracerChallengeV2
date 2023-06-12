@@ -30,6 +30,11 @@ public:
 		setScale(point(x, y, z));
 	}
 
+	void setScale(float value)
+	{
+		setScale(point(value, value, value));
+	}
+
 	void setRotation(float pitch, float yaw, float roll)
 	{
 		setRotation(point(pitch, yaw, roll));
@@ -42,7 +47,7 @@ public:
 
 	void setTranslation(float x, float y, float z)
 	{
-		setRotation(point(x, y, z));
+		translation = point(x, y, z);
 	}
 
 	void setTranslation(const tuple& inTranslation)
@@ -58,7 +63,7 @@ public:
 	std::vector<Intersection> intersect(const Ray& ray)
 	{
 		auto localRay = transformRay(ray, inverse(transform));
-		return localIntersect(localRay); 
+		return localIntersect(localRay);
 	}
 
 	virtual std::vector<Intersection> localIntersect(const Ray& transformedRay) { return {}; }
@@ -136,6 +141,8 @@ public:
 	BoundingBox aabb;
 
 	std::shared_ptr<Shape> parent;
+
+protected:
 	bool useParentMaterial = false;
 };
 

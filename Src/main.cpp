@@ -46,7 +46,7 @@ Scene createDefaultScene(int32_t imageWidth = 320, int32_t imageHeight = 180)
 
 	scene.world.addObject(wall);
 
-	auto light = pointLight(point(0.0f, 10.0f, -10.0f), Colors::White);
+	auto light = pointLight(point(0.0f, 10.0f, -10.0f), Colors::White * 300.0f);
 
 	scene.world.addLight(light);
 
@@ -64,44 +64,39 @@ Scene emptyCornelBox(int32_t imageWidth = 320, int32_t imageHeight = 180)
 
 	auto floor = createPlane(0.5f, 0.5f);
 	floor->setTransform(T(0.0f, -0.5f, -1.0f) * S(1.0f, 1.0f, 3.0f));
-	floor->material.specular = 0.0f;
 
 	scene.world.addObject(floor);
 
 	auto ceiling = createPlane(0.5f, 0.5f);
 	ceiling->setTransform(T(0.0f, 0.5f, -1.0f) * S(1.0f, 1.0f, 3.0f));
-	ceiling->material.specular = 0.0f;
 
 	scene.world.addObject(ceiling);
 
 	auto leftWall = createPlane(0.5f, 0.5f);
 	leftWall->setTransform(T(-0.5f, 0.0f, -1.0f) * RZ(r(90.0f)) * S(1.0f, 1.0f, 3.0f));
-	leftWall->material.color = color(0.75f, 0.25f, -1.25f);
-	leftWall->material.specular = 0.0f;
+	leftWall->material.color = color(0.75f, 0.25f, 0.25f);
 
 	scene.world.addObject(leftWall);
 
 	auto middleWall = createPlane(0.5f, 0.5f);
 	middleWall->setTransform(T(0.0f, 0.0f, 0.5f) * RX(r(90.0f)));
-	middleWall->material.specular = 0.0f;
 
 	scene.world.addObject(middleWall);
 
 	auto rightWall = createPlane(0.5f, 0.5f);
 	rightWall->setTransform(T(0.5f, 0.0f, -1.0f) * RZ(r(90.0f)) * S(1.0f, 1.0f, 3.0f));
 	rightWall->material.color = color(0.25f, 0.75f, 0.25f);
-	rightWall->material.specular = 0.0f;
 
 	scene.world.addObject(rightWall);
 
-	auto light = pointLight(point(0.0f, 0.0f, -0.5f), Colors::HalfWhite);
+	auto light = pointLight(point(0.0f, 0.0f, -0.5f), Colors::White * 2.0f);
 
 	scene.world.addLight(light);
 
 	scene.camera = Camera(imageWidth, imageHeight, r(60.0f));
 	scene.camera.transform = viewTransform(point(0.0f, 0.0f, -1.25f),
-											      point(0.0f, 0.0f, 0.0f),
-											      vector(0.0f, 1.0f, 0.0f));
+											  point(0.0f, 0.0f, 0.0f),
+											  vector(0.0f, 1.0f, 0.0f));
 	return scene;
 }
 
@@ -689,8 +684,8 @@ Scene objLoaderTest()
 
 	auto teapot = objToGroup(parser);
 	teapot->setTransform(T(0.0f, -0.5f, 0.25f) * RY(r(30.0f)) * S(0.13f));
-	teapot->material.color = Colors::RGB(229, 171, 168) * 0.2f;
-	teapot->material.metallic = 1.0f;
+	teapot->material.color = Colors::Pink * 0.5f;
+	teapot->material.metallic = 0.8f;
 
 	scene.world.addObject(teapot);
 
@@ -698,7 +693,6 @@ Scene objLoaderTest()
 
 	auto bear = objToGroup(parser);
 	bear->setTransform(T(-0.25f, -0.4f, -0.24f) * RY(r(30.0f)) * S(0.2f));
-	bear->material.specular = 0.0f;
 	bear->material.color = Colors::Purple;
 
 	scene.world.addObject(bear);
@@ -707,7 +701,6 @@ Scene objLoaderTest()
 
 	auto cow = objToGroup(parser);
 	cow->setTransform(T(0.25f, -0.385f, -0.2f) * RY(-r(30.0f)) * S(0.16f));
-	cow->material.specular = 0.0f;
 	cow->material.color = Colors::RGB(99, 99, 247);
 
 	scene.world.addObject(cow);
@@ -810,11 +803,81 @@ Scene pbrTest()
 											  point(0.0f, 0.0f, 0.0f),
 											  vector(0.0f, 1.0f, 0.0f));
 
-	auto sphere = createSphere(T(0.0f, 1.0f, -3.0f));
-	sphere->material = Materials::Red;
-	sphere->material.metallic = 0.1f;
+	auto sphere1 = createSphere(T(-3.0f, 1.0f, -5.0f));
+	sphere1->material = Materials::Red;
+	sphere1->material.roughness = 0.25f;
 
-	scene.world.addObject(sphere);
+	scene.world.addObject(sphere1);
+
+	auto sphere2 = createSphere(T(0.0f, 1.0f, -5.0f));
+	sphere2->material = Materials::Red;
+	sphere2->material.color *= 0.5f;
+	sphere2->material.metallic = 0.5f;
+	sphere2->material.roughness = 0.25f;
+
+	scene.world.addObject(sphere2);
+
+	auto sphere3 = createSphere(T(3.0f, 1.0f, -5.0f));
+	sphere3->material = Materials::Glass;
+	sphere3->material.roughness = 0.25f;
+
+	scene.world.addObject(sphere3);
+
+	return scene;
+}
+
+Scene aabbTest()
+{
+	Scene scene;
+	scene.world.setName("AABBTest");
+
+	auto floor = createPlane();
+	floor->material.pattern = createCheckerPattern();
+
+	scene.world.addObject(floor);
+
+	auto wall = createPlane();
+	wall->setTransform(T(0.0f, 0.0f, 0.0f) * RX(r(90.0f)));
+	//wall->material = Materials::Grey;
+	wall->material.pattern = createCheckerPattern();
+
+	//scene.world.addObject(wall);
+
+	auto parser = parseObjFile("Assets/Models/suzanne.obj");
+
+	auto objModel = objToGroup(parser);
+	objModel->setScale(2.0f);
+	objModel->setTranslation(0.0f, 3.0f, 0.0f);
+	//objModel->setTransform(T(0.0f, 2.0f, -6.0f) * S(2.0f));
+	objModel->setTransform(T(0.0f, 3.0f, 0.0f) * S(2.0f));
+	objModel->material.color = Colors::Blue;
+
+	scene.world.addObject(objModel);
+
+	auto scaleX = (objModel->aabb.max.x - objModel->aabb.min.x) / objModel->scale.x;
+	auto scaleY = (objModel->aabb.max.y - objModel->aabb.min.y) / objModel->scale.y;
+	auto scaleZ = (objModel->aabb.max.z - objModel->aabb.min.z) / objModel->scale.z;
+
+	auto cube = createCube(scaleX * 0.5f);
+	cube->setTransform(T(objModel->translation) * S(objModel->scale));
+	cube->material = Materials::DarkRed;
+	cube->material.refractiveIndex = 1.0f;
+	cube->material.transparency = 1.0f;
+
+	//scene.world.addObject(cube);
+
+	auto light1 = pointLight(point(-5.0f, 10.0f, -10.0f), Colors::White * 300.0f);
+
+	scene.world.addLight(light1);
+
+	auto light2 = pointLight(point(5.0f, 10.0f, -10.0f), Colors::White * 300.0f);
+
+	scene.world.addLight(light2);
+
+	scene.camera = Camera(640, 360, r(60.0f));
+	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -20.0f),
+											  point(0.0f, 0.0f, 0.0f),
+											  vector(0.0f, 1.0f, 0.0f));
 
 	return scene;
 }
@@ -846,13 +909,15 @@ void renderScene(const std::string& path)
 
 int main(int argc, char* argv[])
 {
-	auto scene = pbrTest();
+	//auto scene = pbrTest();
+	//auto scene = objLoaderTest();
+	auto scene = aabbTest();
 
 	//auto [world, camera] = cornelBox();
 
-	auto camera = Camera(1280, 720, r(60.0f));
-	camera.transform = viewTransform(point(0.0f, 2.0f, -10.0f), point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
-	////world.addObject(scene.world.getObject(0));
+	//auto camera = Camera(1280, 720, r(60.0f));
+	//camera.transform = viewTransform(point(0.0f, 2.0f, -10.0f), point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
+	//world.addObject(scene.world.getObject(0));
 
 	//auto scene = cylinderTest();
 

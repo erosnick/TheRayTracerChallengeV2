@@ -7,8 +7,8 @@ class Triangle : public Shape
 public:
 	Triangle() = default;
 
-	Triangle(const tuple& inP0, const tuple& inP1, const tuple& inP2)
-	: p0(inP0), p1(inP1), p2(inP2)
+	Triangle(const tuple& inP0, const tuple& inP1, const tuple& inP2, bool inUseParentMaterial = true)
+		: p0(inP0), p1(inP1), p2(inP2)
 	{
 		e0 = p1 - p0;
 		e1 = p2 - p0;
@@ -17,15 +17,19 @@ public:
 		normal = normalize(cross(e1, e0));
 
 		n0 = n1 = n2 = normal;
+
+		useParentMaterial = inUseParentMaterial;
 	}
 
 	Triangle(const tuple& inP0, const tuple& inP1, const tuple& inP2,
-		     const tuple& inN0, const tuple& inN1, const tuple& inN2)
+		     const tuple& inN0, const tuple& inN1, const tuple& inN2, bool inUseParentMaterial = true)
 	: Triangle(inP0, inP1, inP2)
 	{
 		n0 = inN0;
 		n1 = inN1;
 		n2 = inN2;
+
+		useParentMaterial = inUseParentMaterial;
 	}
 
 	virtual std::vector<Intersection> localIntersect(const Ray& transformedRay) override
@@ -69,12 +73,12 @@ public:
 	virtual bool boundingBox(BoundingBox& outputBox) override
 	{
 		auto minX = min(p0.x, p1.x, p2.x);
-		auto minY = min(p0.x, p1.x, p2.x);
-		auto minZ = min(p0.x, p1.x, p2.x);
+		auto minY = min(p0.y, p1.y, p2.y);
+		auto minZ = min(p0.z, p1.z, p2.z);
 
 		auto maxX = max(p0.x, p1.x, p2.x);
-		auto maxY = max(p0.x, p1.x, p2.x);
-		auto maxZ = max(p0.x, p1.x, p2.x);
+		auto maxY = max(p0.y, p1.y, p2.y);
+		auto maxZ = max(p0.z, p1.z, p2.z);
 
 		tuple min = point(minX,  minY, minZ);
 		tuple max = point(maxX,  maxY, maxZ);

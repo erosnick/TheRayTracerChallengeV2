@@ -230,13 +230,11 @@ tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape,
 
 	tuple radiance = light.intensity * attenuation;
 
-	float roughness = 0.25f;
-
 	tuple N = normalize(normal);
 
 	// Cook-Torrance BRDF
-	float NDF = distributionGGX(N, H, roughness);
-	float G = geometrySmith(N, viewDirection, L, roughness);
+	float NDF = distributionGGX(N, H, material.roughness);
+	float G = geometrySmith(N, viewDirection, L, material.roughness);
 	tuple F = fresnelSchlick(clamp(dot(H, viewDirection), 0.0f, 1.0f), F0);
 
 	tuple numerator = NDF * G * F;
@@ -393,12 +391,14 @@ Canvas render(const Camera& camera, const World& world, bool useBackgroundColor,
 
 	std::cout << "Start Rendering...\n";
 
+	AriaCore::Timer timer("Counter");
+
 	std::for_each(std::execution::par, imageVerticalIterator.begin(), imageVerticalIterator.end(),
 	[&](int32_t y)
 	{
 		// Update completedIterations atomically
 		completedIterations.fetch_add(camera.imageWidth, std::memory_order_relaxed);
-		printf("\rScanlines remaining: %.0f%%",  completedIterations / static_cast<float>(pixelCount) * 100.0f);
+		printf("\rScanlines remaining: %.0f%%(%.0fs)",  completedIterations / static_cast<float>(pixelCount) * 100.0f, timer.Elapsed());
 
 		std::for_each(std::execution::par, imageHorizontalIterator.begin(), imageHorizontalIterator.end(),
 		[&, y](int32_t x)

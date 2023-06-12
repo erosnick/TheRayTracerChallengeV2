@@ -7,6 +7,11 @@
 class Cube : public Shape
 {
 public:
+	Cube(float inExtent = 1.0f)
+	: extent(inExtent)
+	{
+	}
+
 	virtual std::vector<Intersection> localIntersect(const Ray& transformedRay) override
 	{
 		auto [xTMin, xTMax] = checkAxis(transformedRay.origin.x, transformedRay.direction.x);
@@ -51,8 +56,8 @@ public:
 private:
 	std::tuple<float, float> checkAxis(float origin, float direction)
 	{
-		auto tMinNumerator = (-1.0f - origin);
-		auto tMaxNumerator = (1.0f - origin);
+		auto tMinNumerator = (-extent - origin);
+		auto tMaxNumerator = ( extent - origin);
 		auto tMin = INFINITY;
 		auto tMax = INFINITY;
 
@@ -75,9 +80,11 @@ private:
 
 		return { tMin, tMax };
 	}
+
+	float extent = 1.0f;
 };
 
-std::shared_ptr<Shape> createCube()
+std::shared_ptr<Shape> createCube(float extent = 1.0f)
 {
-	return std::make_shared<Cube>();
+	return std::make_shared<Cube>(extent);
 }
