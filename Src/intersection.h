@@ -29,7 +29,7 @@ struct HitResult
 
 inline static bool operator==(const Intersection& a, const Intersection& b)
 {
-	return equal(a.t, b.t) && (a.shape == b.shape);
+	return Math::equal(a.t, b.t) && (a.shape == b.shape);
 }
 
 // No long needed, just preserve for old test cases

@@ -72,13 +72,13 @@ public:
 
 	virtual bool boundingBox(BoundingBox& outputBox) override
 	{
-		auto minX = min(p0.x, p1.x, p2.x);
-		auto minY = min(p0.y, p1.y, p2.y);
-		auto minZ = min(p0.z, p1.z, p2.z);
+		auto minX = Math::min(p0.x, p1.x, p2.x);
+		auto minY = Math::min(p0.y, p1.y, p2.y);
+		auto minZ = Math::min(p0.z, p1.z, p2.z);
 
-		auto maxX = max(p0.x, p1.x, p2.x);
-		auto maxY = max(p0.y, p1.y, p2.y);
-		auto maxZ = max(p0.z, p1.z, p2.z);
+		auto maxX = Math::max(p0.x, p1.x, p2.x);
+		auto maxY = Math::max(p0.y, p1.y, p2.y);
+		auto maxZ = Math::max(p0.z, p1.z, p2.z);
 
 		tuple min = point(minX,  minY, minZ);
 		tuple max = point(maxX,  maxY, maxZ);

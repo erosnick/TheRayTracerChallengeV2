@@ -19,7 +19,7 @@ public:
 					  std::powf(direction.z, 2.0f);
 
 		// Ray is parallel to the y axis
-		if (equal(a, 0.0f))
+		if (Math::equal(a, 0.0f))
 		{
 			std::vector<Intersection> result;
 			intersectCaps(transformedRay, result);
@@ -114,7 +114,7 @@ private:
 	{
 		// Caps only matter if the cylinder is closed, and might possibly be
 		// intersected by the ray.
-		if (!closed || equal(std::fabsf(ray.direction.y), 0.0f))
+		if (!closed || Math::equal(std::fabsf(ray.direction.y), 0.0f))
 		{
 			return;
 		}

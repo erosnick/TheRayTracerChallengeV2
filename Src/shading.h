@@ -64,7 +64,7 @@ float geometrySmith(tuple N, tuple V, tuple L, float roughness)
 // ----------------------------------------------------------------------------
 inline static tuple fresnelSchlick(float cosTheta, tuple F0)
 {
-	return F0 + (1.0 - F0) * pow(clamp(1.0f - cosTheta, 0.0f, 1.0f), 5.0f);
+	return F0 + (1.0 - F0) * std::powf(Math::clamp(1.0f - cosTheta, 0.0f, 1.0f), 5.0f);
 }
 
 tuple lighting(const Material& material, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow)
@@ -235,7 +235,7 @@ tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape,
 	// Cook-Torrance BRDF
 	float NDF = distributionGGX(N, H, material.roughness);
 	float G = geometrySmith(N, viewDirection, L, material.roughness);
-	tuple F = fresnelSchlick(clamp(dot(H, viewDirection), 0.0f, 1.0f), F0);
+	tuple F = fresnelSchlick(Math::clamp(dot(H, viewDirection), 0.0f, 1.0f), F0);
 
 	tuple numerator = NDF * G * F;
 	float denominator = 4.0f * std::max(dot(N, viewDirection), 0.0f) * std::max(dot(N, L), 0.0f) + 0.0001f; // + 0.0001 to prevent divide by zero
@@ -406,8 +406,8 @@ Canvas render(const Camera& camera, const World& world, bool useBackgroundColor,
 				auto finalColor = Colors::Black;
 				for (auto sample = 0; sample < samplesPerPixel; sample++)
 				{
-					auto rx = randomFloat();
-					auto ry = randomFloat();
+					auto rx = Math::randomFloat();
+					auto ry = Math::randomFloat();
 					auto ray = camera.rayForPixel(static_cast<float>(x), static_cast<float>(y));
 					finalColor += colorAt(world, ray, maxDepth);
 					if (x == 0 && y == 2)
@@ -455,7 +455,7 @@ inline std::vector<bool> isShadowed(const World & world, const tuple & position)
 
 tuple reflectedColor(const World& world, const HitResult& hitResult, int32_t depth)
 {
-	if (equal(hitResult.shape->getMaterial().metallic, 0.0f) || depth == 0)
+	if (Math::equal(hitResult.shape->getMaterial().metallic, 0.0f) || depth == 0)
 	{
 		return Colors::Black;
 	}
@@ -468,7 +468,7 @@ tuple reflectedColor(const World& world, const HitResult& hitResult, int32_t dep
 
 tuple refractedColor(const World& world, const HitResult& hitResult, int32_t depth)
 {
-	if (equal(hitResult.shape->getMaterial().transparency, 0.0f) || depth == 0)
+	if (Math::equal(hitResult.shape->getMaterial().transparency, 0.0f) || depth == 0)
 	{
 		return Colors::Black;
 	}

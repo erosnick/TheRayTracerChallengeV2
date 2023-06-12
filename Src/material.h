@@ -21,10 +21,10 @@ struct Material
 inline static bool operator==(const Material& a, const Material& b)
 {
 	return a.color == b.color &&
-	equal(a.ambient, b.ambient) &&
-	equal(a.diffuse, b.diffuse) &&
-	equal(a.specular, b.specular) &&
-	equal(a.shininess, b.shininess);
+	Math::equal(a.ambient, b.ambient) &&
+	Math::equal(a.diffuse, b.diffuse) &&
+	Math::equal(a.specular, b.specular) &&
+	Math::equal(a.shininess, b.shininess);
 }
 
 namespace Materials

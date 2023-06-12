@@ -81,7 +81,7 @@ public:
 
 	tuple colorAt(const tuple& worldPosition) override
 	{
-		if (equal(std::fmodf(std::floor(worldPosition.x), 2.0f), 0.0f))
+		if (Math::equal(std::fmodf(std::floor(worldPosition.x), 2.0f), 0.0f))
 		{
 			return color1;
 		}
@@ -128,7 +128,7 @@ public:
 	tuple colorAt(const tuple& worldPosition) override
 	{
 		auto distance = std::sqrtf(worldPosition.x * worldPosition.x + worldPosition.z * worldPosition.z);
-		if (equal(std::fmodf(std::floorf(distance), 2.0f), 0.0f))
+		if (Math::equal(std::fmodf(std::floorf(distance), 2.0f), 0.0f))
 		{
 			return color1;
 		}
@@ -159,7 +159,7 @@ public:
 		}
 
 		auto sum = std::floorf(worldPosition.x) + std::floorf(y) + std::floorf(worldPosition.z);
-		if (equal(std::fmodf(sum, 2.0f), 0.0f))
+		if (Math::equal(std::fmodf(sum, 2.0f), 0.0f))
 		{
 			return color1;
 		}
@@ -221,7 +221,7 @@ public:
 
 		auto sum = std::floorf(worldPosition.x) + std::floorf(y) + std::floorf(worldPosition.z);
 
-		if (equal(std::fmodf(sum, 2.0f), 0.0f))
+		if (Math::equal(std::fmodf(sum, 2.0f), 0.0f))
 		{
 			return pattern1->colorAt(patternPosition1);
 		}

@@ -191,10 +191,10 @@ struct matrix4
 
 inline bool operator==(const matrix2& a, const matrix2& b)
 {
-	return equal(a(0, 0), b(0, 0)) &&
-		   equal(a(0, 1), b(0, 1)) &&
-		   equal(a(1, 0), b(1, 0)) &&
-		   equal(a(1, 1), b(1, 1));
+	return Math::equal(a(0, 0), b(0, 0)) &&
+		   Math::equal(a(0, 1), b(0, 1)) &&
+		   Math::equal(a(1, 0), b(1, 0)) &&
+		   Math::equal(a(1, 1), b(1, 1));
 }
 
 inline bool operator==(const matrix3& a, const matrix3& b)

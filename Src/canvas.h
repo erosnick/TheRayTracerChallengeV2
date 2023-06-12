@@ -20,9 +20,9 @@ public:
 
 		tuple result = color;
 
-		result.red = clamp(color.red, 0.0f, 1.0f);
-		result.green = clamp(color.green, 0.0f, 1.0f);
-		result.blue = clamp(color.blue, 0.0f, 1.0f);
+		result.red = Math::clamp(color.red, 0.0f, 1.0f);
+		result.green = Math::clamp(color.green, 0.0f, 1.0f);
+		result.blue = Math::clamp(color.blue, 0.0f, 1.0f);
 
 		pixels[y * width + x] = result;
 	}

@@ -7,7 +7,7 @@ class Camera
 {
 public:
 	Camera() 
-	: Camera(800, 600, radians(60.0f))
+	: Camera(800, 600, Math::radians(60.0f))
 	{}
 
 	Camera(int32_t inImageWidth, int32_t inImageHeight, float inFieldOfView)

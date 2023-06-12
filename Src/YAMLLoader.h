@@ -188,7 +188,10 @@ namespace YAML
 					break;
 				}
 
-				rhs.pattern->transform = translate(translation) * rotateZ(radians(rotation.z)) * rotateY(radians(rotation.y)) * rotateX(radians(rotation.x)) * scale(scaleFactor);
+				rhs.pattern->transform = translate(translation) * 
+										  rotateZ(Math::radians(rotation.z)) * 
+										  rotateY(Math::radians(rotation.y)) * 
+										  rotateX(Math::radians(rotation.x)) * scale(scaleFactor);
 			}
 
 			return true;

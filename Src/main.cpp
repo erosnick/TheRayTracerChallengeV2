@@ -19,11 +19,12 @@
 #include "triangle.h"
 #include "csg.h"
 #include "bvh.h"
+#include "torus.h"
 
 #include "objLoader.h"
 #include "YAMLLoader.h"
 
-#define r radians
+#define r Math::radians
 #define RX rotateX
 #define RY rotateY
 #define RZ rotateZ
@@ -46,9 +47,13 @@ Scene createDefaultScene(int32_t imageWidth = 320, int32_t imageHeight = 180)
 
 	scene.world.addObject(wall);
 
-	auto light = pointLight(point(0.0f, 10.0f, -10.0f), Colors::White * 300.0f);
+	auto light1 = pointLight(point(-5.0f, 10.0f, -10.0f), Colors::White * 300.0f);
 
-	scene.world.addLight(light);
+	scene.world.addLight(light1);
+
+	auto light2 = pointLight(point(5.0f, 10.0f, -10.0f), Colors::White * 300.0f);
+
+	scene.world.addLight(light2);
 
 	scene.camera = Camera(imageWidth, imageHeight, r(60.0f));
 	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -10.0f),
@@ -882,6 +887,36 @@ Scene aabbTest()
 	return scene;
 }
 
+Scene torusTest()
+{
+	Scene scene = createDefaultScene(1280, 720);
+	scene.world.setName("TorusTest");
+
+	auto torus = createTorus(1.0f, 0.4f);
+	torus->setTransform(T(0.0f, 1.0f, -5.0) * S(1.0f));
+	torus->material = Materials::Green;
+
+	scene.world.addObject(torus);
+
+	auto cone = createCone(-2.0f, 0.0f, true);
+	cone->setTransform(T(-5.0f, 2.0f, -5.0) * S(1.0f));
+	cone->material = Materials::Red;
+
+	scene.world.addObject(cone);
+
+	auto cylinder = createCylinder(0.0f, 2.0f, true);
+	cylinder->setTransform(T(5.0f, 0.0f, -5.0) * S(1.0f));
+	cylinder->material = Materials::Blue;
+
+	scene.world.addObject(cylinder);
+
+	scene.camera = Camera(1920, 1024, r(60.0f));
+	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -20.0f),
+											  point(0.0f, 0.0f, 0.0f),
+											  vector(0.0f, 1.0f, 0.0f));
+	return scene;
+}
+
 Scene blenderScene(const std::string& path)
 {
 	Scene scene = loadScene(path);
@@ -911,7 +946,8 @@ int main(int argc, char* argv[])
 {
 	//auto scene = pbrTest();
 	//auto scene = objLoaderTest();
-	auto scene = aabbTest();
+	//auto scene = aabbTest();
+	auto scene = torusTest();
 
 	//auto [world, camera] = cornelBox();
 

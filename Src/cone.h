@@ -30,7 +30,7 @@ public:
 
 		std::vector<Intersection> result;
 
-		if (isZeroHighPrecision(a) && !isZeroHighPrecision(b))
+		if (Math::isZeroHighPrecision(a) && !Math::isZeroHighPrecision(b))
 		{
 			auto t = -c / (2.0f * b);
 
@@ -41,7 +41,7 @@ public:
 		{
 			auto discriminant = b * b - 4 * a * c;
 
-			const auto realEpsilon = EPSILON_HIGH_PRECISION * max(std::fabsf(a), std::fabsf(b), std::fabsf(c));
+			const auto realEpsilon = EPSILON_HIGH_PRECISION * Math::max(std::fabsf(a), std::fabsf(b), std::fabsf(c));
 
 			if (discriminant >= -realEpsilon)
 			{
@@ -56,13 +56,13 @@ public:
 				}
 
 				auto y0 = origin.y + t0 * direction.y;
-				if (between(y0, minimum, maximum))
+				if (Math::between(y0, minimum, maximum))
 				{
 					result.push_back({ t0, shared_from_this() });
 				}
 
 				auto y1 = origin.y + t1 * direction.y;
-				if (between(y1, minimum, maximum))
+				if (Math::between(y1, minimum, maximum))
 				{
 					result.push_back({ t1, shared_from_this() });
 				}

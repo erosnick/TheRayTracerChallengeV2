@@ -18,8 +18,8 @@ public:
 		auto [yTMin, yTMax] = checkAxis(transformedRay.origin.y, transformedRay.direction.y);
 		auto [zTMin, zTMax] = checkAxis(transformedRay.origin.z, transformedRay.direction.z);
 
-		auto tMin = max(xTMin, yTMin, zTMin);
-		auto tMax = min(xTMax, yTMax, zTMax);
+		auto tMin = Math::max(xTMin, yTMin, zTMin);
+		auto tMax = Math::min(xTMax, yTMax, zTMax);
 
 		if (tMin > tMax)
 		{
@@ -34,13 +34,13 @@ public:
 		auto absX = std::fabsf(localPosition.x);
 		auto absY = std::fabsf(localPosition.y);
 		auto absZ = std::fabsf(localPosition.z);
-		auto maxComponent = max(absX, absY, absZ);
+		auto maxComponent = Math::max(absX, absY, absZ);
 
-		if (equal(maxComponent, absX))
+		if (Math::equal(maxComponent, absX))
 		{
 			return vector(localPosition.x, 0.0f, 0.0f);
 		}
-		else if (equal(maxComponent, absY))
+		else if (Math::equal(maxComponent, absY))
 		{
 			return vector(0.0f, localPosition.y, 0.0f);
 		}
