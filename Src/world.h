@@ -18,7 +18,7 @@ public:
 		name = inName;
 	}
 
-	void addLight(const PointLight& light)
+	void addLight(const Light& light)
 	{
 		lights.emplace_back(light);
 	}
@@ -43,7 +43,7 @@ public:
 	auto getName() const { return name; }
 private:
 	std::vector<std::shared_ptr<Shape>> objects;
-	std::vector<PointLight> lights;
+	std::vector<Light> lights;
 	std::string name;
 };
 

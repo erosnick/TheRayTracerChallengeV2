@@ -82,20 +82,20 @@ public:
 		auto localPosition = worldToObject(worldPosition);
 		auto localNormal = localNormalAt(localPosition, intersection);
 
-		//if (material.sinNormalPerturb)
-		//{
-		//	material.sinNormalPerturb(localNormal, localPosition, 0.1f, 50.0f, 0.0f);
-		//}
+		if (material.sinNormalPerturb)
+		{
+			material.sinNormalPerturb(localNormal, localPosition, 0.1f, 50.0f, 0.0f);
+		}
 
-		//if (material.cosNormalPerturb)
-		//{
-		//	material.cosNormalPerturb(localNormal, localPosition, 0.1f, 50.0f, RTC_PIDIV4);
-		//}
+		if (material.cosNormalPerturb)
+		{
+			material.cosNormalPerturb(localNormal, localPosition, 0.1f, 50.0f, RTC_PIDIV4);
+		}
 
-		//if (material.noiseNormalPerturb)
-		//{
-		//	material.noiseNormalPerturb(localNormal, localPosition, 0.1, 8, 1.0, 5.0);
-		//}
+		if (material.noiseNormalPerturb)
+		{
+			material.noiseNormalPerturb(localNormal, localPosition, 0.1, 8, 1.0, 5.0);
+		}
 
 		return normalToWorld(localNormal);
 	}

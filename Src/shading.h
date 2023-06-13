@@ -14,9 +14,9 @@
 #include <execution>
 #include <mutex>
 
-tuple lighting(const Material& material, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow = false);
-tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow);
-tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow);
+tuple lighting(const Material& material, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow = false);
+tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow);
+tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow);
 
 tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth = 1);
 tuple colorAt(const World& world, const Ray& ray, int32_t depth = 1);
@@ -67,7 +67,7 @@ inline static tuple fresnelSchlick(float cosTheta, tuple F0)
 	return F0 + (1.0 - F0) * std::powf(Math::clamp(1.0f - cosTheta, 0.0f, 1.0f), 5.0f);
 }
 
-tuple lighting(const Material& material, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow)
+tuple lighting(const Material& material, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow)
 {
 	// Combine the surface color with the light's color/intensity
 	auto effectiveColor = material.color * light.intensity;
@@ -128,7 +128,7 @@ tuple lighting(const Material& material, const PointLight& light, const tuple& p
 	return ambient + diffuse + specular;
 }
 
-tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow)
+tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow)
 {
 	// Combine the surface color with the light's color/intensity
 	auto effectiveColor = material.color * light.intensity;
@@ -193,7 +193,7 @@ tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, co
 	return ambient + (diffuse + specular) * attenuation;
 }
 
-tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const PointLight& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow)
+tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow)
 {
 	auto albedo = material.color;
 
@@ -228,7 +228,17 @@ tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape,
 	float distance = length(light.position - position);
 	float attenuation = 1.0f / (distance * distance);
 
-	tuple radiance = light.intensity * attenuation;
+	float intensity = 1.0f;
+
+	if (light.type == LightType::Spot)
+	{
+		// spotlight (soft edges)
+		float theta = dot(L, normalize(-light.direction));
+		float epsilon = (light.cutOff - light.outerCutOff);
+		intensity = Math::clamp((theta - light.outerCutOff) / epsilon, 0.0f, 1.0f);
+	}
+
+	tuple radiance = light.intensity * attenuation * intensity;
 
 	tuple N = normalize(normal);
 

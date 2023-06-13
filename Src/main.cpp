@@ -65,6 +65,30 @@ Scene createDefaultScene(int32_t imageWidth = 320, int32_t imageHeight = 180)
 	return scene;
 }
 
+Scene createDefaultSceneNoLight(int32_t imageWidth = 320, int32_t imageHeight = 180)
+{
+	Scene scene;
+
+	auto floor = createPlane();
+	floor->material.pattern = createCheckerPattern(Colors::Grey, Colors::White);
+
+	scene.world.addObject(floor);
+
+	auto wall = createPlane();
+	wall->setTransform(T(0.0f, 0.0f, 0.0f) * RX(r(90.0f)));
+
+	wall->material.pattern = createCheckerPattern(Colors::Grey, Colors::White);
+
+	scene.world.addObject(wall);
+
+	scene.camera = Camera(imageWidth, imageHeight, r(60.0f));
+	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -10.0f),
+											  point(0.0f, 0.0f, 0.0f),
+											  vector(0.0f, 1.0f, 0.0f));
+
+	return scene;
+}
+
 Scene emptyCornelBox(int32_t imageWidth = 320, int32_t imageHeight = 180)
 {
 	Scene scene;
@@ -954,6 +978,35 @@ Scene normalPerturbTest()
 	return scene;
 }
 
+Scene spotlightTest()
+{
+	Scene scene = createDefaultSceneNoLight(1280, 720);
+	scene.world.setName("SpotlightTest");
+
+	auto sphere = createSphere(T(0.0f, 1.0f, -5.0f));
+	sphere->material = Materials::Red;
+
+	scene.world.addObject(sphere);
+
+	auto eye = point(0.0f, 5.0f, -20.0f);
+	auto center = point(0.0f, 0.0f, 0.0f);
+
+	auto position = point(0.0f, 10.0f, -5.0f);
+	auto target = point(0.0f, 1.0f, -5.0f);
+	auto direction = normalize(target - position);
+
+	auto light = spotLight(position, direction, Colors::White * 300.0f);
+
+	scene.world.addLight(light);
+
+	scene.camera = Camera(1920, 1080, r(60.0f));
+	scene.camera.transform = viewTransform(eye,
+											  center,
+											  vector(0.0f, 1.0f, 0.0f));
+
+	return scene;
+}
+
 Scene blenderScene(const std::string& path)
 {
 	Scene scene = loadScene(path);
@@ -990,7 +1043,8 @@ int main(int argc, char* argv[])
 	//auto scene = objLoaderTest();
 	//auto scene = aabbTest();
 	//auto scene = torusTest();
-	auto scene = normalPerturbTest();
+	//auto scene = normalPerturbTest();
+	auto scene = spotlightTest();
 
 	//auto [world, camera] = cornelBox();
 
