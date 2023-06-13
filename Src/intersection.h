@@ -25,6 +25,7 @@ struct HitResult
 	float n1 = 1.0f;
 	float n2 = 1.0f;
 	tuple backgroundColor;
+	float time = 0.0f;
 };
 
 inline static bool operator==(const Intersection& a, const Intersection& b)

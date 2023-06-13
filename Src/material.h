@@ -41,6 +41,7 @@ namespace Materials
 	const Material Green{ Colors::Green, 0.1f, 0.9f, 0.3f, 300.0f, 0.0f, 0.0f, 0.0f, 1.0f };
 	const Material Blue{ Colors::Blue, 0.1f, 0.9f, 0.3f, 300.0f, 0.0f, 0.0f, 0.0f, 1.0f };
 	const Material Yellow{ Colors::Yellow, 0.1f, 0.9f, 0.3f, 300.0f, 0.0f, 0.0f, 0.0f, 1.0f };
+	const Material CornFlower{ Colors::CornFlower, 0.1f, 0.9f, 0.3f, 300.0f, 0.0f, 0.0f, 0.0f, 1.0f };
 	const Material DarkRed{ Colors::DarkRed, 0.1f, 0.9f, 0.3f, 300.0f, 0.0f, 0.0f, 0.0f, 1.0f };
 	const Material Glass{ Colors::Dark, 0.1f, 0.9f, 1.0f, 300.0f, 1.0f, 1.0f, 1.0f, 1.52f, false };
 	const Material Water{ Colors::Dark, 0.1f, 0.9f, 1.0f, 200.0f, 1.0f, 1.0f, 1.0f, 1.33f, false };

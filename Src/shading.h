@@ -21,7 +21,7 @@ tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape,
 tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth = 1);
 tuple colorAt(const World& world, const Ray& ray, int32_t depth = 1);
 Canvas render(const Camera& camera, const World& world, int32_t maxDepth, int32_t samplesPerPixel = 1);
-std::vector<bool> isShadowed(const World& world, const tuple& position);
+std::vector<bool> isShadowed(const World& world, const tuple& position, float time = 0.0f);
 tuple reflectedColor(const World& world, const HitResult& hitResult, int32_t depth);
 tuple refractedColor(const World& world, const HitResult& hitResult, int32_t depth);
 float schlick(const HitResult& hitResult);
@@ -284,7 +284,7 @@ tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth)
 {
 	tuple finalColor;
 
-	auto shadowResult = isShadowed(world, hitResult.overPosition);
+	auto shadowResult = isShadowed(world, hitResult.overPosition, hitResult.time);
 
 	for (int32_t i = 0; i < world.lightCount(); i++)
 	{
@@ -395,7 +395,7 @@ Canvas render(const Camera& camera, const World& world, int32_t maxDepth, int32_
 	return image;
 }
 
-inline std::vector<bool> isShadowed(const World & world, const tuple & position)
+inline std::vector<bool> isShadowed(const World & world, const tuple & position, float time)
 {
 	std::vector<bool> shadowResult(world.lightCount(), false);
 
@@ -406,7 +406,7 @@ inline std::vector<bool> isShadowed(const World & world, const tuple & position)
 		auto distance = length(toLight);
 		auto direction = normalize(toLight);
 
-		auto ray = Ray(position, direction);
+		auto ray = Ray(position, direction, time);
 		auto intersections = intersectWorld(world, ray);
 		auto intersection = hit(intersections);
 
@@ -431,7 +431,7 @@ tuple reflectedColor(const World& world, const HitResult& hitResult, int32_t dep
 		return Colors::Black;
 	}
 
-	auto reflectedRay = Ray(hitResult.overPosition, hitResult.reflectVector);
+	auto reflectedRay = Ray(hitResult.overPosition, hitResult.reflectVector, hitResult.time);
 	auto color = colorAt(world, reflectedRay, depth - 1);
 
 	return color * hitResult.shape->getMaterial().metallic;
@@ -466,7 +466,7 @@ tuple refractedColor(const World& world, const HitResult& hitResult, int32_t dep
 	auto direction = hitResult.normal * (nRatio * cosI - cosT) - hitResult.viewDirection * nRatio;
 
 	// Create the refracted ray
-	auto refractedRay = Ray(hitResult.underPosition, direction);
+	auto refractedRay = Ray(hitResult.underPosition, direction, hitResult.time);
 
 	// Find the color of the refracted ray, making sure to multiply
 	// by the transparency value to account for any opacity

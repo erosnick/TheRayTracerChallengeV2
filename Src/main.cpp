@@ -20,6 +20,7 @@
 #include "csg.h"
 #include "bvh.h"
 #include "torus.h"
+#include "movingsphere.h"
 
 #include "objLoader.h"
 #include "YAMLLoader.h"
@@ -32,6 +33,14 @@
 #define RZ rotateZ
 #define S scale
 #define T translate
+
+std::vector<Resolution> resolutions{ { 320,  180  }, 
+									  { 640,  360  }, 
+									  { 1280, 720  }, 
+									  { 1440, 960  },
+									  { 1920, 1080 },
+									  { 2560, 1600 },
+									  { 3840, 2160 }};
 
 Scene createDefaultScene(int32_t imageWidth = 320, int32_t imageHeight = 180)
 {
@@ -980,18 +989,20 @@ Scene normalPerturbTest()
 
 Scene spotlightTest()
 {
-	Scene scene = createDefaultSceneNoLight(1280, 720);
+	Scene scene = createDefaultSceneNoLight();
 	scene.world.setName("SpotlightTest");
 
 	auto sphere = createSphere(T(0.0f, 1.0f, -5.0f));
 	sphere->material = Materials::Red;
+	sphere->material.metallic = 0.1f;
+	sphere->material.roughness = 0.25f;
 
 	scene.world.addObject(sphere);
 
 	auto eye = point(0.0f, 5.0f, -20.0f);
 	auto center = point(0.0f, 0.0f, 0.0f);
 
-	auto position = point(0.0f, 10.0f, -5.0f);
+	auto position = point(-10.0f, 10.0f, -5.0f);
 	auto target = point(0.0f, 1.0f, -5.0f);
 	auto direction = normalize(target - position);
 
@@ -999,10 +1010,23 @@ Scene spotlightTest()
 
 	scene.world.addLight(light);
 
-	scene.camera = Camera(1920, 1080, r(60.0f));
+	scene.camera = Camera(3840, 2160, r(60.0f));
 	scene.camera.transform = viewTransform(eye,
 											  center,
 											  vector(0.0f, 1.0f, 0.0f));
+
+	return scene;
+}
+
+Scene motionBlurTest()
+{
+	Scene scene = createDefaultScene(1280, 720);
+	scene.world.setName("MotionBlurTest");
+
+	auto sphere = createMovingSphere(T(0.0f, 2.0f, -3.0f));
+	sphere->material = Materials::CornFlower;
+
+	scene.world.addObject(sphere);
 
 	return scene;
 }
@@ -1044,7 +1068,8 @@ int main(int argc, char* argv[])
 	//auto scene = aabbTest();
 	//auto scene = torusTest();
 	//auto scene = normalPerturbTest();
-	auto scene = spotlightTest();
+	//auto scene = spotlightTest();
+	auto scene = motionBlurTest();
 
 	//auto [world, camera] = cornelBox();
 
@@ -1056,7 +1081,7 @@ int main(int argc, char* argv[])
 
 	AriaCore::Timer timer("Rendering");
 
-	constexpr int32_t samplesPerPixel = 1;
+	constexpr int32_t samplesPerPixel = 8;
 	constexpr int32_t maxDepth = 5;
 
 	auto canvas = render(scene.camera, scene.world, maxDepth, samplesPerPixel);

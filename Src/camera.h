@@ -3,18 +3,33 @@
 #include "matrix.h"
 #include "ray.h"
 
+struct Resolution
+{
+	int32_t width;
+	int32_t height;
+};
+
 class Camera
 {
 public:
 	Camera() 
-	: Camera(800, 600, Math::radians(60.0f))
+	: Camera({ 800, 600 }, Math::radians(60.0f))
 	{}
 
-	Camera(int32_t inImageWidth, int32_t inImageHeight, float inFieldOfView)
-		: imageWidth(inImageWidth), imageHeight(inImageHeight), fieldOfView(inFieldOfView), pixelSize(0.0f)
+	Camera(int32_t imageWidth, int32_t imageHeight, float inFieldOfView, float inTime0 = 0.0f, float inTime1 = 0.5f)
+	: Camera({ imageWidth, imageHeight }, inFieldOfView, inTime0, inTime1)
+	{}
+
+	Camera(const Resolution& resolution, float inFieldOfView, float inTime0 = 0.0f, float inTime1 = 0.5f)
+	: imageWidth(resolution.width), 
+	  imageHeight(resolution.height), 
+	  fieldOfView(inFieldOfView),
+	  pixelSize(0.0f),
+	  time0(inTime0),
+	  time1(inTime1)
 	{
 		auto halfView = std::tan(fieldOfView / 2.0f);
-		auto aspect = static_cast<float>(inImageWidth) / imageHeight;
+		auto aspect = static_cast<float>(imageWidth) / imageHeight;
 
 		if (aspect >= 1.0f)
 		{
@@ -51,7 +66,7 @@ public:
 
 		auto direction = normalize(pixel - origin);
 
-		return { origin, direction };
+		return { origin, direction, Math::randomFloat(time0, time1) };
 	}
 
 	int32_t imageWidth;
@@ -61,4 +76,6 @@ public:
 	float fieldOfView = 0.0f;
 	matrix4 transform = matrix4(1.0f);
 	float pixelSize = 0.0f;
+	float time0 = 0.0f;
+	float time1 = 0.5f;
 };

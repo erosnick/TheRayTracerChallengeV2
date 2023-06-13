@@ -60,7 +60,7 @@ public:
 		transform = inTransform;
 	}
 
-	std::vector<Intersection> intersect(const Ray& ray)
+	virtual std::vector<Intersection> intersect(const Ray& ray)
 	{
 		auto localRay = transformRay(ray, inverse(transform));
 		return localIntersect(localRay);

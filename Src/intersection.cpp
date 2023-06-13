@@ -103,6 +103,8 @@ HitResult prepareComputations(const Intersection& intersection, const Ray& ray, 
 		hitResult.inside = false;
 	}
 
+	hitResult.time = ray.time;
+
 	// After computing and (if appropriate) negating the normal vector...
 	hitResult.overPosition = hitResult.position + hitResult.normal * EPSILON;
 	hitResult.underPosition = hitResult.position - hitResult.normal * EPSILON;

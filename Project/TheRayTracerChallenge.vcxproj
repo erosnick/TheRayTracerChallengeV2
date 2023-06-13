@@ -204,6 +204,7 @@
     <ClInclude Include="..\src\material.h" />
     <ClInclude Include="..\src\maths.h" />
     <ClInclude Include="..\src\matrix.h" />
+    <ClInclude Include="..\src\movingsphere.h" />
     <ClInclude Include="..\src\objLoader.h" />
     <ClInclude Include="..\src\pattern.h" />
     <ClInclude Include="..\src\pch.h" />
