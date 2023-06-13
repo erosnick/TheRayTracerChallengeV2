@@ -1031,6 +1031,36 @@ Scene motionBlurTest()
 	return scene;
 }
 
+Scene textureTest()
+{
+	Scene scene = createDefaultScene(1920, 1080);
+	scene.world.setName("TextureTest");
+
+	auto sun = createSphere(T(-5.0f, 3.0f, -5.0f) * RY(r(90.0f)) * S(2.0f));
+	sun->material.texture = createImageTexture("Assets/Textures/2k_sun.jpg");
+	sun->material.emission = Colors::RGB(255, 255, 139);
+
+	scene.world.addObject(sun);
+
+	auto earh = createSphere(T(1.0f, 3.0f, -5.0f) * RY(r(90.0f)));
+	earh->material.texture = createImageTexture("Assets/Textures/2k_earth_daymap.jpg");
+
+	scene.world.addObject(earh);
+
+	auto moon = createSphere(T(5.0f, 3.0f, -5.0f) * RY(r(90.0f)) * S(0.5f));
+	moon->material.texture = createImageTexture("Assets/Textures/2k_moon.jpg");
+
+	scene.world.addObject(moon);
+
+	auto eye = point(0.0f, 5.0f, -20.0f);
+	auto center = point(0.0f, 0.0f, 0.0f);
+
+	scene.camera.transform = viewTransform(eye,
+											  center,
+											  vector(0.0f, 1.0f, 0.0f));
+	return scene;
+}
+
 Scene blenderScene(const std::string& path)
 {
 	Scene scene = loadScene(path);
@@ -1050,7 +1080,7 @@ void renderScene(const std::string& path)
 
 	AriaCore::Timer timer("Rendering");
 
-	constexpr int32_t samplesPerPixel = 8;
+	constexpr int32_t samplesPerPixel = 1;
 	constexpr int32_t maxDepth = 5;
 
 	auto canvas = render(scene.camera, scene.world, maxDepth, samplesPerPixel);
@@ -1069,7 +1099,8 @@ int main(int argc, char* argv[])
 	//auto scene = torusTest();
 	//auto scene = normalPerturbTest();
 	//auto scene = spotlightTest();
-	auto scene = motionBlurTest();
+	//auto scene = motionBlurTest();
+	auto scene = textureTest();
 
 	//auto [world, camera] = cornelBox();
 
@@ -1081,7 +1112,7 @@ int main(int argc, char* argv[])
 
 	AriaCore::Timer timer("Rendering");
 
-	constexpr int32_t samplesPerPixel = 8;
+	constexpr int32_t samplesPerPixel = 1;
 	constexpr int32_t maxDepth = 5;
 
 	auto canvas = render(scene.camera, scene.world, maxDepth, samplesPerPixel);

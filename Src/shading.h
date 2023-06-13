@@ -16,7 +16,7 @@
 
 tuple lighting(const Material& material, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow = false);
 tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow);
-tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow);
+tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow, float u = 0.0f, float v = 0.0f);
 
 tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth = 1);
 tuple colorAt(const World& world, const Ray& ray, int32_t depth = 1);
@@ -193,13 +193,18 @@ tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, co
 	return ambient + (diffuse + specular) * attenuation;
 }
 
-tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow)
+tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow, float u, float v)
 {
 	auto albedo = material.color;
 
-	if (material.pattern != nullptr)
+	if (material.pattern)
 	{
 		albedo = material.pattern->colorAt(position, shape->transform);
+	}
+
+	if (material.texture)
+	{
+		albedo = material.texture->colorAt(position, u, v);
 	}
 
 	//albedo = pow(albedo, point(2.2f));
@@ -207,7 +212,7 @@ tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape,
 	// Compute the ambient contribution
 	auto ambient = albedo * material.ambient;
 
-	if (inShadow)
+	if (inShadow && material.emission == Colors::Black)
 	{
 		return ambient;
 	}
@@ -269,7 +274,7 @@ tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape,
 	// note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
 	Lo += (kD * albedo / RTC_PI + specular) * radiance * NdotL;
 
-	tuple finalColor = ambient + Lo;
+	tuple finalColor = ambient + Lo + material.emission;
 
 	// HDR tonemapping
 	finalColor = finalColor / (finalColor + point(1.0));
@@ -290,7 +295,11 @@ tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth)
 	{
 		//finalColor += lighting(hitResult.shape->material, world.getLights()[i], hitResult.position, hitResult.viewDirection, hitResult.normal, shadowResult[i]);
 		//finalColor += lighting(hitResult.shape->getMaterial(), hitResult.shape, world.getLights()[i], hitResult.position, hitResult.viewDirection, hitResult.normal, shadowResult[i]);
-		finalColor += lightingPBR(hitResult.shape->getMaterial(), hitResult.shape, world.getLights()[i], hitResult.position, hitResult.viewDirection, hitResult.normal, shadowResult[i]);
+		finalColor += lightingPBR(hitResult.shape->getMaterial(),
+								   hitResult.shape, world.getLights()[i],
+								   hitResult.position, 
+								   hitResult.viewDirection, 
+								   hitResult.normal, shadowResult[i], hitResult.u, hitResult.v);
 	}
 
 	auto reflected = reflectedColor(world, hitResult, depth);

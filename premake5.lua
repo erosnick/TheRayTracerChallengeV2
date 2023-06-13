@@ -78,7 +78,7 @@ project "TheRayTracerChallenge"
         includedirs 
         { 
             './src',
-            './ThirdParty/libnoise/include',
+            './ThirdParty/stb',
             './ThirdParty/yaml-cpp/include',
         }
 
@@ -104,6 +104,7 @@ project "TheRayTracerChallenge"
         includedirs 
         { 
             './src',
+            './ThirdParty/stb',
             './ThirdParty/Catch2/include',
             './ThirdParty/yaml-cpp/include',
         }

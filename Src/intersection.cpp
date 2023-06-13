@@ -85,6 +85,9 @@ HitResult prepareComputations(const Intersection& intersection, const Ray& ray, 
 	hitResult.t = intersection.t;
 	hitResult.shape = intersection.shape;
 
+	hitResult.u = intersection.u;
+	hitResult.v = intersection.v;
+
 	// Precompute some useful values
 	hitResult.position = ray.at(hitResult.t);
 	hitResult.viewDirection = -ray.direction;

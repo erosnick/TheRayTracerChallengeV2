@@ -2,6 +2,7 @@
 
 #include "tuple.h"
 #include "pattern.h"
+#include "texture.h"
 
 #include <functional>
 
@@ -17,7 +18,9 @@ struct Material
 	float transparency = 0.0f;
 	float refractiveIndex = 1.0f;
 	bool castShadow = true;
+	tuple emission = Colors::Black;
 	std::shared_ptr<Pattern> pattern;
+	std::shared_ptr<Texture> texture;
 	std::function<void(tuple& normal, const tuple& position, float amplitude, float frequency, float phase)> sinNormalPerturb;
 	std::function<void(tuple& normal, const tuple& position, float amplitude, float frequency, float phase)> cosNormalPerturb;
 	std::function<void(tuple& normal, const tuple& position, double scale, int octaves, double persistence, double lacunarity)> noiseNormalPerturb;
