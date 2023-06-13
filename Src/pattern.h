@@ -267,8 +267,6 @@ public:
 	PerturbedPattern(const std::shared_ptr<Pattern>& inPattern)
 		: Pattern(inPattern, inPattern)
 	{
-		//const siv::PerlinNoise::seed_type seed = 123456u;
-		//perlin = siv::PerlinNoise{ seed };
 	}
 
 	tuple colorAt(const tuple& worldPosition) override
@@ -278,8 +276,8 @@ public:
 		auto value = static_cast<float>(noise.noise(p)) * 0.5f;
 
 		tuple newPosition = { worldPosition.x + value,
-							  worldPosition.y + value,
-							  worldPosition.z + value, 1.0f };
+							   worldPosition.y + value,
+							   worldPosition.z + value, 1.0f };
 
 		if (pattern1 != nullptr)
 		{

@@ -24,6 +24,8 @@
 #include "objLoader.h"
 #include "YAMLLoader.h"
 
+#include "perlin.h"
+
 #define r Math::radians
 #define RX rotateX
 #define RY rotateY
@@ -894,7 +896,7 @@ Scene torusTest()
 
 	auto torus = createTorus(1.0f, 0.4f);
 	torus->setTransform(T(0.0f, 1.0f, -5.0) * S(1.0f));
-	torus->material = Materials::Green;
+	torus->material = Materials::Mirror;
 
 	scene.world.addObject(torus);
 
@@ -911,6 +913,41 @@ Scene torusTest()
 	scene.world.addObject(cylinder);
 
 	scene.camera = Camera(1920, 1024, r(60.0f));
+	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -20.0f),
+											  point(0.0f, 0.0f, 0.0f),
+											  vector(0.0f, 1.0f, 0.0f));
+	return scene;
+}
+
+Scene normalPerturbTest()
+{
+	Scene scene = createDefaultScene(1280, 720);
+	scene.world.setName("NormalPerturbTest");
+
+	auto sphere = createSphere(T(0.0f, 1.0f, -5.0f) * RZ(RTC_PIDIV2));
+	sphere->material = Materials::Red;
+	sphere->material.sinNormalPerturb =
+	[](tuple& normal, const tuple& position, float amplitude, float frequency, float phase)
+	{
+		auto perturbation = amplitude * std::sinf(frequency * (position.x + phase));
+		normal += vector(perturbation);
+	};
+
+	sphere->material.cosNormalPerturb =
+	[](tuple& normal, const tuple& position, float amplitude, float frequency, float phase)
+	{
+		auto perturbation = amplitude * std::cosf(frequency * (position.x + phase));
+		normal += vector(perturbation);
+	};
+
+	sphere->material.noiseNormalPerturb =
+	[](tuple& normal, const tuple& position, double scale, int octaves, double persistence, double lacunarity)
+	{
+	};
+
+	scene.world.addObject(sphere);
+
+	scene.camera = Camera(1920, 1080, r(60.0f));
 	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -20.0f),
 											  point(0.0f, 0.0f, 0.0f),
 											  vector(0.0f, 1.0f, 0.0f));
@@ -935,7 +972,12 @@ void renderScene(const std::string& path)
 	camera.transform = viewTransform(point(0.0f, 1.0f, -10.0f), point(0.0f, 1.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
 
 	AriaCore::Timer timer("Rendering");
-	auto canvas = render(scene.camera, scene.world, true, 5);
+
+	constexpr int32_t samplesPerPixel = 8;
+	constexpr int32_t maxDepth = 5;
+
+	auto canvas = render(scene.camera, scene.world, maxDepth, samplesPerPixel);
+	
 	timer.PrintElaspedMillis();
 
 	//canvas.writeToPPM(scene.world.getName());
@@ -947,7 +989,8 @@ int main(int argc, char* argv[])
 	//auto scene = pbrTest();
 	//auto scene = objLoaderTest();
 	//auto scene = aabbTest();
-	auto scene = torusTest();
+	//auto scene = torusTest();
+	auto scene = normalPerturbTest();
 
 	//auto [world, camera] = cornelBox();
 
@@ -958,7 +1001,12 @@ int main(int argc, char* argv[])
 	//auto scene = cylinderTest();
 
 	AriaCore::Timer timer("Rendering");
-	auto canvas = render(scene.camera, scene.world, true, 5);
+
+	constexpr int32_t samplesPerPixel = 1;
+	constexpr int32_t maxDepth = 5;
+
+	auto canvas = render(scene.camera, scene.world, maxDepth, samplesPerPixel);
+	
 	timer.PrintElaspedMillis();
 
 	////canvas.writeToPPM(scene.world.getName());

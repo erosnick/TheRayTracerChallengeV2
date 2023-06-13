@@ -34,9 +34,10 @@ namespace Math
 		return a > left && a < right;
 	}
 
-	inline static float clamp(float value, float min, float max)
+	template<typename T>
+	inline static T clamp(T value, T min, T max)
 	{
-		float result = value;
+		T result = value;
 
 		if (result < min)
 		{

@@ -41,6 +41,7 @@ project "TheRayTracerChallenge"
     { 
         "src/**.h", 
         "src/**.cpp",
+        "src/**.c"
     }                                       --指定加载哪些文件或哪些类型的文件
     
     excludes 
@@ -76,19 +77,22 @@ project "TheRayTracerChallenge"
 
         includedirs 
         { 
+            './src',
+            './ThirdParty/libnoise/include',
             './ThirdParty/Catch2/include',
             './ThirdParty/yaml-cpp/include',
-            './src'
         }
 
 		libdirs 
         { 
             './ThirdParty/Catch2/lib',
-            './ThirdParty/yaml-cpp/lib'
+            './ThirdParty/libnoise/lib',
+            './ThirdParty/yaml-cpp/lib',
         }
 
 		links 
         {
+            'noise.lib',
             'Catch2d.lib',
             'Catch2Maind.lib',
             'yaml-cppd.lib'
@@ -102,19 +106,22 @@ project "TheRayTracerChallenge"
 
         includedirs 
         { 
+            './src',
             './ThirdParty/Catch2/include',
+            './ThirdParty/libnoise/include',
             './ThirdParty/yaml-cpp/include',
-            './src'
         }
 
 		libdirs 
         { 
             './ThirdParty/Catch2/lib',
+            './ThirdParty/libnoise/lib',
             './ThirdParty/yaml-cpp/lib'
         }
 
 		links 
         { 
+            'noise.lib',
             'Catch2.lib',
             'Catch2Main.lib',
             'yaml-cpp.lib'

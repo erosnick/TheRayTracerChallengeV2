@@ -20,7 +20,7 @@ tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape,
 
 tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth = 1);
 tuple colorAt(const World& world, const Ray& ray, int32_t depth = 1);
-Canvas render(const Camera& camera, const World& world, bool useBackgroundColor, int32_t maxDepth);
+Canvas render(const Camera& camera, const World& world, int32_t maxDepth, int32_t samplesPerPixel = 1);
 std::vector<bool> isShadowed(const World& world, const tuple& position);
 tuple reflectedColor(const World& world, const HitResult& hitResult, int32_t depth);
 tuple refractedColor(const World& world, const HitResult& hitResult, int32_t depth);
@@ -268,44 +268,6 @@ tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape,
 	//finalColor = pow(finalColor, point(1.0f / 2.2f));
 
 	return finalColor;
-
-	//// lightDotNormal represents the cosine of the angle between the
-	//// light vector and the normal vector.A negative number means the
-	//// light is on the other side of the surface
-	//auto lightDotNormal = dot(lightDirection, normal);
-
-	//auto diffuse = Colors::Black;
-
-	//if (lightDotNormal < 0.0f)
-	//{
-	//	diffuse = Colors::Black;
-	//	specular = Colors::Black;
-	//}
-	//else
-	//{
-	//	// Compute the diffuse contribution
-	//	diffuse = effectiveColor * material.diffuse * lightDotNormal;
-
-	//	// reflectDotEye represents the cosine of the angle between the
-	//	// reflection vector and the eye vector.A negative number means the
-	//	// light reflects away from the eye.
-	//	auto reflectVector = reflect(-lightDirection, normal);
-	//	auto reflectDotEye = dot(reflectVector, viewDirection);
-
-	//	if (reflectDotEye <= 0.0f)
-	//	{
-	//		specular = Colors::Black;
-	//	}
-	//	else
-	//	{
-	//		// Compute the specular contribution
-	//		auto factor = pow(reflectDotEye, material.shininess);
-	//		specular = light.intensity * material.specular * factor;
-	//	}
-	//}
-
-	// Add the three contributions together to get the final shading
-	//return ambient + (diffuse + specular) * attenuation;
 }
 
 tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth)
@@ -359,10 +321,9 @@ tuple colorAt(const World& world, const Ray& ray, int32_t depth)
 	return backgroundColor;
 }
 
-Canvas render(const Camera& camera, const World& world, bool useBackgroundColor, int32_t maxDepth)
+Canvas render(const Camera& camera, const World& world, int32_t maxDepth, int32_t samplesPerPixel)
 {
 	auto image = Canvas(camera.imageWidth, camera.imageHeight);
-	constexpr int32_t samplesPerPixel = 1;
 
 	// Total number of iterations or tasks
 	int32_t pixelCount = camera.imageWidth * camera.imageHeight;
@@ -408,7 +369,7 @@ Canvas render(const Camera& camera, const World& world, bool useBackgroundColor,
 				{
 					auto rx = Math::randomFloat();
 					auto ry = Math::randomFloat();
-					auto ray = camera.rayForPixel(static_cast<float>(x), static_cast<float>(y));
+					auto ray = camera.rayForPixel(static_cast<float>(x + rx), static_cast<float>(y + ry));
 					finalColor += colorAt(world, ray, maxDepth);
 					if (x == 0 && y == 2)
 					{

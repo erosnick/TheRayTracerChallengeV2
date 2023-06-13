@@ -3,6 +3,8 @@
 #include "tuple.h"
 #include "pattern.h"
 
+#include <functional>
+
 struct Material
 {
 	tuple color{ 1.0f, 1.0f, 1.0f, 0.0f };
@@ -16,6 +18,9 @@ struct Material
 	float refractiveIndex = 1.0f;
 	bool castShadow = true;
 	std::shared_ptr<Pattern> pattern;
+	std::function<void(tuple& normal, const tuple& position, float amplitude, float frequency, float phase)> sinNormalPerturb;
+	std::function<void(tuple& normal, const tuple& position, float amplitude, float frequency, float phase)> cosNormalPerturb;
+	std::function<void(tuple& normal, const tuple& position, double scale, int octaves, double persistence, double lacunarity)> noiseNormalPerturb;
 };
 
 inline static bool operator==(const Material& a, const Material& b)
