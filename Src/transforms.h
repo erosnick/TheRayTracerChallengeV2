@@ -359,9 +359,10 @@ inline matrix4 viewTransform(const tuple& from, const tuple& to, const tuple& up
 								     -forward.x, -forward.y, -forward.z,  0.0f,
 									  0.0f,		  0.0f,       0.0f,       1.0f);
 
-	//orientation(0, 3) = -dot(left, from);
-	//orientation(1, 3) = -dot(trueUp, from);
-	//orientation(2, 3) =  dot(forward, from);
+	orientation(0, 3) = -dot(left, from);
+	orientation(1, 3) = -dot(trueUp, from);
+	orientation(2, 3) =  dot(forward, from);
 
-	return orientation * translate(-from.x, -from.y, -from.z);
+	return orientation;
+	//return orientation * translate(-from.x, -from.y, -from.z);
 }

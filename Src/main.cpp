@@ -1065,23 +1065,38 @@ Scene depthOfFieldTest()
 	Scene scene = createDefaultScene(1280, 720);
 	scene.world.setName("DepthOfFieldTest");
 
-	auto sphere1 = createSphere(T(0.0f, 1.0f, -5.0f));
+	auto sphere1 = createSphere(T(2.0f, 0.25f, -16.0f) * S(0.25f));
 	sphere1->material = Materials::Red;
 	sphere1->material.metallic = 0.1f;
 	sphere1->material.roughness = 0.25f;
 
 	scene.world.addObject(sphere1);
 
-	auto sphere2 = createSphere(T(0.0f, 1.0f, -11.0f));
-	sphere2->material = Materials::CornFlower;
+	auto sphere2 = createSphere(T(1.0f, 0.25f, -17.0f) * S(0.25f));
+	sphere2->material = Materials::Green;
 	sphere2->material.metallic = 0.1f;
 	sphere2->material.roughness = 0.25f;
 
 	scene.world.addObject(sphere2);
 
-	auto eye = point(0.0f, 5.0f, -20.0f);
-	auto center = point(0.0f, 0.0f, 0.0f);
+	auto sphere3 = createSphere(T(0.0f, 0.25f, -18.0f) * S(0.25f));
+	sphere3->material = Materials::CornFlower;
+	sphere3->material.metallic = 0.1f;
+	sphere3->material.roughness = 0.25f;
 
+	scene.world.addObject(sphere3);
+
+	auto sphere4 = createSphere(T(-0.6f, 0.25f, -18.6f) * S(0.2f));
+	sphere4->material = Materials::Blue;
+	sphere4->material.metallic = 0.1f;
+	sphere4->material.roughness = 0.25f;
+
+	scene.world.addObject(sphere4);
+
+	auto eye = point(0.0f, 1.0f, -20.0f);
+	auto center = point(0.0f, 0.25f, -18.0f);
+
+	scene.camera = Camera(1280, 720, r(60.0f));
 	scene.camera.transform = viewTransform(eye,
 											  center,
 											  vector(0.0f, 1.0f, 0.0f));
@@ -1109,7 +1124,7 @@ void renderScene(const std::string& path)
 
 	AriaCore::Timer timer("Rendering");
 
-	constexpr int32_t samplesPerPixel = 1;
+	constexpr int32_t samplesPerPixel = 8;
 	constexpr int32_t maxDepth = 5;
 
 	auto canvas = render(scene.camera, scene.world, maxDepth, samplesPerPixel);
