@@ -14,6 +14,7 @@ struct Parser
 		defaultGroup = createGroup();
 		vertices.emplace_back(point(0.0f, 0.0f, 0.0f));
 		normals.emplace_back(vector(0.0f, 0.0f, 0.0f));
+		texcoords.emplace_back(vector(0.0f, 0.0f, 0.0f));
 	}
 
 	void addGroup(const std::shared_ptr<Group>& group)
@@ -37,6 +38,7 @@ struct Parser
 
 	std::vector<tuple> vertices;
 	std::vector<tuple> normals;
+	std::vector<tuple> texcoords;
 	std::shared_ptr<Group> defaultGroup;
 	std::vector<std::shared_ptr<Group>> groups;
 	int32_t readLineCount = 0;
@@ -73,11 +75,16 @@ inline static std::vector<std::string> splitString(const std::string& str, const
 inline static tuple parseVector(const std::string& str)
 {
 	std::vector<std::string> components = splitString(str, L' ');
-	if (components.size() != 3)
+	if (components.size() != 2 && components.size() != 3)
 		throw std::invalid_argument("Invalid vector format");
 	float x = std::stof(components[0]);
 	float y = std::stof(components[1]);
-	float z = std::stof(components[2]);
+	float z = 0.0f;
+
+	if (components.size() > 2)
+	{
+		z = std::stof(components[2]);
+	}
 	return { x, y, z, 1.0f };
 }
 
@@ -114,7 +121,7 @@ inline static std::vector<uint32_t> parseIndices(const std::vector<std::string>&
 	return indices;
 }
 
-inline static auto fanTriangulation(const std::vector<tuple>& vertices, const std::vector<tuple>& normals = {})
+inline static auto fanTriangulation(const std::vector<tuple>& vertices, const std::vector<tuple>& normals = {}, const std::vector<tuple>& texcoords = {})
 {
 	std::vector<std::shared_ptr<Shape>> triangls;
 	
@@ -129,7 +136,8 @@ inline static auto fanTriangulation(const std::vector<tuple>& vertices, const st
 		else
 		{
 			triangle = createSmoothTriangle(vertices[1], vertices[index], vertices[index + 1],
-											 normals[1], normals[index], normals[index + 1]);
+											 normals[1], normals[index], normals[index + 1],
+											 texcoords[1], texcoords[index], texcoords[index + 1]);
 		}
 		triangls.emplace_back(triangle);
 	}
@@ -171,6 +179,9 @@ static Parser parseObjFile(const std::string& path)
 
 				if (line[1] == 't')
 				{
+					line = line.substr(3);
+					auto texcoord = parseVector(line);
+					parser.texcoords.emplace_back(texcoord);
 					continue;
 				}
 
@@ -203,13 +214,16 @@ static Parser parseObjFile(const std::string& path)
 
 					std::vector<uint32_t> vertexIndices;
 					std::vector<uint32_t> normalIndices;
+					std::vector<uint32_t> texcoordIndices;
 					std::vector<tuple> vertices(1);
 					std::vector<tuple> normals(1);
+					std::vector<tuple> texcoords(1);
 
 					for (size_t i = 0; i < indices.size(); i++)
 					{
 						auto index = parseIndices(indices[i]);
 						vertexIndices.emplace_back(index[0]);
+						texcoordIndices.emplace_back(index[1]);
 						normalIndices.emplace_back(index[2]);
 
 						auto position = parser.vertices[vertexIndices[i]];
@@ -217,11 +231,14 @@ static Parser parseObjFile(const std::string& path)
 
 						auto normal = parser.normals[normalIndices[i]];
 						normals.emplace_back(normal);
+
+						auto texcoord = parser.texcoords[texcoordIndices[i]];
+						texcoords.emplace_back(texcoord);
 					}
 
 					if (vertices.size() > 4)
 					{
-						auto triangles = fanTriangulation(vertices, normals);
+						auto triangles = fanTriangulation(vertices, normals, texcoords);
 
 						parser.defaultGroup->addChildren(triangles);
 
@@ -234,7 +251,8 @@ static Parser parseObjFile(const std::string& path)
 					}
 
 					auto triangle = createSmoothTriangle(vertices[1], vertices[2], vertices[3], 
-																			normals[1], normals[2], normals[3]);
+																			normals[1], normals[2], normals[3],
+																			texcoords[1], texcoords[2], texcoords[3]);
 
 					parser.defaultGroup->addChild(triangle);
 

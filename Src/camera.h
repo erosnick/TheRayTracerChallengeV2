@@ -87,8 +87,11 @@ public:
 	float pixelSize = 0.0f;
 	float time0 = 0.0f;
 	float time1 = 0.5f;
-	float aperture = 0.05f;
-	float focusDistance = 2.0f;
+	//float aperture = 0.05f;
+	//float focusDistance = 2.0f;
+	//float lensRadius = aperture * 0.5f;
+	float aperture = 0.0f;
+	float focusDistance = 1.0f;
 	float lensRadius = aperture * 0.5f;
 	float aspect = 0.0f;
 };

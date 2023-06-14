@@ -22,14 +22,16 @@ public:
 	}
 
 	Triangle(const tuple& inP0, const tuple& inP1, const tuple& inP2,
-		     const tuple& inN0, const tuple& inN1, const tuple& inN2, bool inUseParentMaterial = true)
-	: Triangle(inP0, inP1, inP2)
+		     const tuple& inN0, const tuple& inN1, const tuple& inN2, 
+			 const tuple& inT0 = {}, const tuple& inT1 = {}, const tuple& inT2 = {}, bool inUseParentMaterial = true)
+	: Triangle(inP0, inP1, inP2, inUseParentMaterial)
 	{
 		n0 = inN0;
 		n1 = inN1;
 		n2 = inN2;
-
-		useParentMaterial = inUseParentMaterial;
+		t0 = inT0;
+		t1 = inT1;
+		t2 = inT2;
 	}
 
 	virtual std::vector<Intersection> localIntersect(const Ray& transformedRay) override
@@ -62,12 +64,20 @@ public:
 
 		auto t = f * dot(e1, originCrossE0);
 
-		return { intersectionWithUV(t, shared_from_this(), u, v) };
+		a = u;
+		b = v;
+
+		auto c = 1.0f - a - b;
+
+		auto texcoordU = (a * t1.x + b * t2.x + c * t0.x);
+		auto texcoordV = (a * t1.y + b * t2.y + c * t0.y);
+
+		return { intersectionWithUV(t, shared_from_this(), a, b, texcoordU, texcoordV) };
 	}
 
 	virtual tuple localNormalAt(const tuple& localPosition, const Intersection intersection) const override
 	{
-		return n1 * intersection.u + n2 * intersection.v + n0 * (1.0f - intersection.u - intersection.v);
+		return n1 * intersection.a + n2 * intersection.b + n0 * (1.0f - intersection.a - intersection.b);
 	}
 
 	virtual bool boundingBox(BoundingBox& outputBox) override
@@ -94,9 +104,14 @@ public:
 	tuple n0;
 	tuple n1;
 	tuple n2;
+	tuple t0;
+	tuple t1;
+	tuple t2;
 	tuple e0;
 	tuple e1;
 	tuple normal;
+	float a = 0.0f;
+	float b = 0.0f;
 };
 
 inline static bool operator==(const std::shared_ptr<Triangle>& a, const std::shared_ptr<Triangle>& b)
@@ -112,7 +127,7 @@ inline static std::shared_ptr<Shape> createTriangle(const tuple& p0, const tuple
 }
 
 inline static std::shared_ptr<Shape> createSmoothTriangle(const tuple& p0, const tuple& p1, const tuple& p2,
-									   const tuple& n0, const tuple& n1, const tuple& n2)
+									   const tuple& n0, const tuple& n1, const tuple& n2, const tuple& t0, const tuple& t1, const tuple& t2)
 {
-	return std::make_shared<Triangle>(p0, p1, p2, n0, n1, n2);
+	return std::make_shared<Triangle>(p0, p1, p2, n0, n1, n2, t0, t1, t2);
 }

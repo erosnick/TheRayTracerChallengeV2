@@ -70,6 +70,7 @@ Scene createDefaultScene(int32_t imageWidth = 320, int32_t imageHeight = 180)
 	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -10.0f),
 											  point(0.0f, 0.0f, 0.0f),
 											  vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
 
 	return scene;
 }
@@ -94,6 +95,7 @@ Scene createDefaultSceneNoLight(int32_t imageWidth = 320, int32_t imageHeight = 
 	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -10.0f),
 											  point(0.0f, 0.0f, 0.0f),
 											  vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
 
 	return scene;
 }
@@ -137,6 +139,8 @@ Scene emptyCornelBox(int32_t imageWidth = 320, int32_t imageHeight = 180)
 	scene.camera.transform = viewTransform(point(0.0f, 0.0f, -1.25f),
 											  point(0.0f, 0.0f, 0.0f),
 											  vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
+
 	return scene;
 }
 
@@ -356,6 +360,7 @@ Scene planeTest()
 
 	scene.camera = Camera(1280, 720, r(60.0f));
 	scene.camera.transform = viewTransform(point(0.0f, 2.0f, -10.0f), point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
 
 	return scene;
 }
@@ -439,6 +444,7 @@ Scene reflectionTest()
 
 	scene.camera = Camera(1280, 720, r(60.0f));
 	scene.camera.transform = viewTransform(point(0.0f, 2.0f, -10.0f), point(0.0f, 0.0f, 0.0f), vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
 
 	return scene;
 }
@@ -582,6 +588,7 @@ Scene cylinderTest()
 	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -10.0f), 
 										      point(0.0f, 0.0f, 0.0f), 
 											  vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
 
 	auto world = World();
 	world.setName("CylinderTest");
@@ -693,6 +700,7 @@ Scene groupTest()
 	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -10.0f),
 											  point(0.0f, 0.0f, 0.0f),
 											  vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
 
 	return scene;
 }
@@ -766,6 +774,8 @@ Scene csgTest()
 	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -20.0f),
 											  point(0.0f, 0.0f, 0.0f),
 											  vector(0.0f, 1.0f, 0.0f));
+
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
 
 	auto sphere1 = createSphere();
 	//sphere->setTransform(T(-1.0f, 0.0f, 0.0f));
@@ -842,6 +852,7 @@ Scene pbrTest()
 	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -20.0f),
 											  point(0.0f, 0.0f, 0.0f),
 											  vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
 
 	auto sphere1 = createSphere(T(-3.0f, 1.0f, -5.0f));
 	sphere1->material = Materials::Red;
@@ -918,6 +929,7 @@ Scene aabbTest()
 	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -20.0f),
 											  point(0.0f, 0.0f, 0.0f),
 											  vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
 
 	return scene;
 }
@@ -949,6 +961,8 @@ Scene torusTest()
 	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -20.0f),
 											  point(0.0f, 0.0f, 0.0f),
 											  vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
+
 	return scene;
 }
 
@@ -984,6 +998,8 @@ Scene normalPerturbTest()
 	scene.camera.transform = viewTransform(point(0.0f, 5.0f, -20.0f),
 											  point(0.0f, 0.0f, 0.0f),
 											  vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
+
 	return scene;
 }
 
@@ -1014,6 +1030,7 @@ Scene spotlightTest()
 	scene.camera.transform = viewTransform(eye,
 											  center,
 											  vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
 
 	return scene;
 }
@@ -1057,6 +1074,8 @@ Scene textureTest()
 	scene.camera.transform = viewTransform(eye,
 											  center,
 											  vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
+
 	return scene;
 }
 
@@ -1105,6 +1124,39 @@ Scene depthOfFieldTest()
 	return scene;
 }
 
+Scene defaultSceneTest()
+{
+	Scene scene = createDefaultScene();
+	scene.world.setName("DefaultSceneTest");
+
+	scene.camera.focusDistance = 1.0f;
+	scene.camera.aperture = 0.0f;
+	scene.camera.lensRadius = 0.0f;
+
+	auto parser = parseObjFile("Assets/Models/sphere.obj");
+
+	auto object = objToGroup(parser);
+	object->setTransform(T(0.0f, 1.0f, -15.0f) * S(1.0f));
+	object->material.color = Colors::Purple;
+	object->material.texture = createImageTexture("Assets/Textures/2k_earth_daymap.jpg");
+
+	//object->material.metallic = 0.5f;
+
+	scene.world.addObject(object);
+
+	auto eye = point(0.0f, 1.0f, -20.0f);
+	auto center = point(0.0f, 0.0f, 0.0f);
+
+	scene.camera = Camera(1280, 720, r(60.0f));
+	scene.camera.transform = viewTransform(eye,
+											  center,
+											  vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
+
+
+	return scene;
+}
+
 Scene blenderScene(const std::string& path)
 {
 	Scene scene = loadScene(path);
@@ -1145,7 +1197,8 @@ int main(int argc, char* argv[])
 	//auto scene = spotlightTest();
 	//auto scene = motionBlurTest();
 	//auto scene = textureTest();
-	auto scene = depthOfFieldTest();
+	//auto scene = depthOfFieldTest();
+	auto scene = defaultSceneTest();
 
 	//auto [world, camera] = cornelBox();
 
@@ -1157,7 +1210,7 @@ int main(int argc, char* argv[])
 
 	AriaCore::Timer timer("Rendering");
 
-	constexpr int32_t samplesPerPixel = 8;
+	constexpr int32_t samplesPerPixel = 1;
 	constexpr int32_t maxDepth = 5;
 
 	auto canvas = render(scene.camera, scene.world, maxDepth, samplesPerPixel);
@@ -1174,8 +1227,9 @@ int main(int argc, char* argv[])
 
 	filewatch::FileWatch<std::string> watch(
 		SceneBase,
-		[&](const std::string& path, const filewatch::Event change_type) {
-			switch (change_type)
+		[&](const std::string& path, const filewatch::Event changeType) 
+		{
+			switch (changeType)
 			{
 			case filewatch::Event::added:
 				std::cout << "The file was added to the directory." << '\n';

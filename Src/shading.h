@@ -16,7 +16,8 @@
 
 tuple lighting(const Material& material, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow = false);
 tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow);
-tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow, float u = 0.0f, float v = 0.0f);
+tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light, 
+				   const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow, float u = 0.0f, float v = 0.0f);
 
 tuple shadeHit(const World& world, const HitResult& hitResult, int32_t depth = 1);
 tuple colorAt(const World& world, const Ray& ray, int32_t depth = 1);
@@ -193,7 +194,8 @@ tuple lighting(const Material& material, const std::shared_ptr<Shape>& shape, co
 	return ambient + (diffuse + specular) * attenuation;
 }
 
-tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light, const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow, float u, float v)
+tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape, const Light& light,
+				   const tuple& position, const tuple& viewDirection, const tuple& normal, float inShadow, float u, float v)
 {
 	auto albedo = material.color;
 

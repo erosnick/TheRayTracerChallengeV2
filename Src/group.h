@@ -71,7 +71,7 @@ public:
 		cube->material.refractiveIndex = 1.0f;
 		cube->material.transparency = 1.0f;
 
-		shapes.emplace_back(cube);
+		//shapes.emplace_back(cube);
 	}
 
 	virtual std::vector<Intersection> localIntersect(const Ray& transformedRay) override 

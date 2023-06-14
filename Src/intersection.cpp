@@ -87,6 +87,8 @@ HitResult prepareComputations(const Intersection& intersection, const Ray& ray, 
 
 	hitResult.u = intersection.u;
 	hitResult.v = intersection.v;
+	hitResult.a = intersection.a;
+	hitResult.b = intersection.b;
 
 	// Precompute some useful values
 	hitResult.position = ray.at(hitResult.t);
@@ -158,11 +160,13 @@ HitResult prepareComputations(const Intersection& intersection, const Ray& ray, 
 	return hitResult;
 }
 
-Intersection intersectionWithUV(float t, const std::shared_ptr<Shape>& shape, float u, float v)
+Intersection intersectionWithUV(float t, const std::shared_ptr<Shape>& shape, float a, float b, float u, float v)
 {
 	Intersection intersection;
 	intersection.t = t;
 	intersection.shape = shape;
+	intersection.a = a;
+	intersection.b = b;
 	intersection.u = u;
 	intersection.v = v;
 	return intersection;
