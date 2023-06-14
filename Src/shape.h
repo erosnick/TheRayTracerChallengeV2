@@ -58,11 +58,14 @@ public:
 	virtual void setTransform(const matrix4& inTransform)
 	{
 		transform = inTransform;
+
+		// Optimization: Cache inversed matrix
+		inversedTransform = inverse(transform);
 	}
 
 	virtual std::vector<Intersection> intersect(const Ray& ray)
 	{
-		auto localRay = transformRay(ray, inverse(transform));
+		auto localRay = transformRay(ray, inversedTransform);
 		return localIntersect(localRay);
 	}
 
@@ -122,12 +125,15 @@ public:
 		{
 			localPosition = parent->worldToObject(localPosition);
 		}
-		return inverse(transform) * localPosition;
+
+		// Optimization: Using cached inversed transform
+		return inversedTransform * localPosition;
 	}
 
 	tuple normalToWorld(const tuple& localNormal)
 	{
-		auto worldNormal = transpose(inverse(transform)) * localNormal;
+		// Optimization: Using cached inversed transform
+		auto worldNormal = transpose(inversedTransform) * localNormal;
 		worldNormal.w = 0.0f;
 		worldNormal = normalize(worldNormal);
 
@@ -150,6 +156,7 @@ public:
 	}
 
 	matrix4 transform;
+	matrix4 inversedTransform;
 	tuple scale{ 1.0f, 1.0f, 1.0f, 1.0f };
 	tuple rotation{ 0.0f, 0.0f, 0.0f, 1.0f };
 	tuple translation{ 0.0f, 0.0f, 0.0f, 1.0f };

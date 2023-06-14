@@ -1038,7 +1038,6 @@ Scene textureTest()
 
 	auto sun = createSphere(T(-5.0f, 3.0f, -5.0f) * RY(r(90.0f)) * S(2.0f));
 	sun->material.texture = createImageTexture("Assets/Textures/2k_sun.jpg");
-	sun->material.emission = Colors::RGB(255, 255, 139);
 
 	scene.world.addObject(sun);
 
@@ -1058,6 +1057,36 @@ Scene textureTest()
 	scene.camera.transform = viewTransform(eye,
 											  center,
 											  vector(0.0f, 1.0f, 0.0f));
+	return scene;
+}
+
+Scene depthOfFieldTest()
+{
+	Scene scene = createDefaultScene(1280, 720);
+	scene.world.setName("DepthOfFieldTest");
+
+	auto sphere1 = createSphere(T(0.0f, 1.0f, -5.0f));
+	sphere1->material = Materials::Red;
+	sphere1->material.metallic = 0.1f;
+	sphere1->material.roughness = 0.25f;
+
+	scene.world.addObject(sphere1);
+
+	auto sphere2 = createSphere(T(0.0f, 1.0f, -11.0f));
+	sphere2->material = Materials::CornFlower;
+	sphere2->material.metallic = 0.1f;
+	sphere2->material.roughness = 0.25f;
+
+	scene.world.addObject(sphere2);
+
+	auto eye = point(0.0f, 5.0f, -20.0f);
+	auto center = point(0.0f, 0.0f, 0.0f);
+
+	scene.camera.transform = viewTransform(eye,
+											  center,
+											  vector(0.0f, 1.0f, 0.0f));
+	scene.camera.inversedTransform = inverse(scene.camera.transform);
+
 	return scene;
 }
 
@@ -1100,7 +1129,8 @@ int main(int argc, char* argv[])
 	//auto scene = normalPerturbTest();
 	//auto scene = spotlightTest();
 	//auto scene = motionBlurTest();
-	auto scene = textureTest();
+	//auto scene = textureTest();
+	auto scene = depthOfFieldTest();
 
 	//auto [world, camera] = cornelBox();
 
@@ -1112,7 +1142,7 @@ int main(int argc, char* argv[])
 
 	AriaCore::Timer timer("Rendering");
 
-	constexpr int32_t samplesPerPixel = 1;
+	constexpr int32_t samplesPerPixel = 8;
 	constexpr int32_t maxDepth = 5;
 
 	auto canvas = render(scene.camera, scene.world, maxDepth, samplesPerPixel);

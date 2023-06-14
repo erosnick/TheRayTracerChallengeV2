@@ -29,7 +29,7 @@ public:
 	  time1(inTime1)
 	{
 		auto halfView = std::tan(fieldOfView / 2.0f);
-		auto aspect = static_cast<float>(imageWidth) / imageHeight;
+		aspect = static_cast<float>(imageWidth) / imageHeight;
 
 		if (aspect >= 1.0f)
 		{
@@ -61,8 +61,13 @@ public:
 		// (remember that the canvas is at z = -1)
 		// transform: World space to camera space
 		// inverse(transform): Camera space to world space
-		auto pixel = inverse(transform) * point(worldX, worldY, -1.0f);
-		auto origin = inverse(transform) * point(0.0f, 0.0f, 0.0f);
+		// Optimization: Using cached inversed view transform
+		// TODO Update inversed view transform when view transform changed
+		auto pixel = inversedTransform * point(worldX, worldY, -focusDistance);
+
+		tuple rd = randomInUnitDisk() * lensRadius;
+
+		auto origin = inversedTransform * point(rd.x, rd.y, 0.0f);
 
 		auto direction = normalize(pixel - origin);
 
@@ -75,7 +80,12 @@ public:
 	float halfHeight = 0.0f;
 	float fieldOfView = 0.0f;
 	matrix4 transform = matrix4(1.0f);
+	matrix4 inversedTransform = matrix4(1.0f);
 	float pixelSize = 0.0f;
 	float time0 = 0.0f;
 	float time1 = 0.5f;
+	float aperture = 0.005f;
+	float focusDistance = 1.0f;
+	float lensRadius = aperture * 0.5f;
+	float aspect = 0.0f;
 };

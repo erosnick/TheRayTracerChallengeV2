@@ -199,7 +199,7 @@ tuple lightingPBR(const Material& material, const std::shared_ptr<Shape>& shape,
 
 	if (material.pattern)
 	{
-		albedo = material.pattern->colorAt(position, shape->transform);
+		albedo = material.pattern->colorAt(position, shape->inversedTransform);
 	}
 
 	if (material.texture)

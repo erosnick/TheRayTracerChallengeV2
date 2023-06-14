@@ -34,6 +34,9 @@ public:
 	void setTransform(const matrix4& inTransform)
 	{
 		transform = inTransform;
+
+		// Optimization: Cache inversed matrix
+		inversedTransform = inverse(transform);
 	}
 
 	virtual tuple colorAt(const tuple& worldPosition)
@@ -41,10 +44,12 @@ public:
 		return Colors::White;
 	}
 
-	tuple colorAt(const tuple& worldPosition, const matrix4& objectTransform)
+	tuple colorAt(const tuple& worldPosition, const matrix4& inversedObjectTransform)
 	{
-		auto objectPosition = inverse(objectTransform) * worldPosition;
-		auto patternPosition = inverse(transform) * objectPosition;
+		//auto objectPosition = inverse(objectTransform) * worldPosition;
+		// Optimization: Using cached inversed object transform
+		auto objectPosition = inversedObjectTransform * worldPosition;
+		auto patternPosition = inversedTransform * objectPosition;
 
 		return colorAt(patternPosition);
 	}
@@ -56,6 +61,7 @@ public:
 	std::shared_ptr<Pattern> pattern2;
 
 	matrix4 transform;
+	matrix4 inversedTransform;
 };
 
 // Chapter 11 Reflection and Refraction
@@ -216,8 +222,11 @@ public:
 			y = worldPosition.y;
 		}
 
-		auto patternPosition1 = inverse(pattern1->transform) * worldPosition;
-		auto patternPosition2 = inverse(pattern2->transform) * worldPosition;
+		// Optimization: Using cached inversed pattern transform
+		//auto patternPosition1 = inverse(pattern1->transform) * worldPosition;
+		//auto patternPosition2 = inverse(pattern2->transform) * worldPosition;
+		auto patternPosition1 = pattern1->inversedTransform * worldPosition;
+		auto patternPosition2 = pattern2->inversedTransform * worldPosition;
 
 		auto sum = std::floorf(worldPosition.x) + std::floorf(y) + std::floorf(worldPosition.z);
 
@@ -246,8 +255,11 @@ public:
 	{
 		if (pattern1 != nullptr && pattern2 != nullptr)
 		{
-			auto patternPosition1 = inverse(pattern1->transform) * worldPosition;
-			auto patternPosition2 = inverse(pattern2->transform) * worldPosition;
+			// Optimization: Using cached inversed pattern transform
+			//auto patternPosition1 = inverse(pattern1->transform) * worldPosition;
+			//auto patternPosition2 = inverse(pattern2->transform) * worldPosition;
+			auto patternPosition1 = pattern1->inversedTransform * worldPosition;
+			auto patternPosition2 = pattern2->inversedTransform * worldPosition;
 
 			return pattern1->colorAt(patternPosition1) * 0.5f + pattern2->colorAt(patternPosition2) * 0.5f;
 		}

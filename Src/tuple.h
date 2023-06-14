@@ -180,6 +180,11 @@ inline static float length(const tuple& v)
 	return std::sqrtf(dot(v, v));
 }
 
+inline static float lengthSquared(const tuple& v)
+{
+	return dot(v, v);
+}
+
 inline static tuple normalize(const tuple& v)
 {
 	return v / length(v);
@@ -248,8 +253,8 @@ inline tuple randomInUnitDisk()
 {
 	while (true)
 	{
-		auto p = point(Math::randomFloat(-1.0f, 1.0f), Math::randomFloat(-1.0f, 1.0f), 0.0f);
-		if (length(p) * length(p) >= 1.0f) continue;
+		auto p = vector(Math::randomFloat(-1.0f, 1.0f), Math::randomFloat(-1.0f, 1.0f), 0.0f);
+		if (lengthSquared(p) >= 1.0f) continue;
 		return p;
 	}
 }
