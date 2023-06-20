@@ -1,0 +1,11 @@
+Model Information:
+* title:	Ring with dolphin
+* source:	https://sketchfab.com/3d-models/ring-with-dolphin-8f9d514c2b7a43a7aa7c7142c9ce6bac
+* author:	alex.yefremov (https://sketchfab.com/alex.yefremov)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Ring with dolphin" (https://sketchfab.com/3d-models/ring-with-dolphin-8f9d514c2b7a43a7aa7c7142c9ce6bac) by alex.yefremov (https://sketchfab.com/alex.yefremov) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1133,21 +1133,22 @@ Scene defaultSceneTest()
 	scene.camera.aperture = 0.0f;
 	scene.camera.lensRadius = 0.0f;
 
-	auto parser = parseObjFile("Assets/Models/sphere.obj");
+	auto parser = parseObjFile("Assets/Models/ring_with_dolphin/ring.obj");
 
 	auto object = objToGroup(parser);
-	object->setTransform(T(0.0f, 1.0f, -15.0f) * S(1.0f));
-	object->material.color = Colors::Purple;
-	object->material.texture = createImageTexture("Assets/Textures/2k_earth_daymap.jpg");
+	object->setTransform(T(0.0f, 1.0f, -5.0f) * S(1.0f));
+	//object->material.color = Colors::Purple;
+	//object->material.texture = createImageTexture("Assets/Textures/2k_earth_daymap.jpg");
+	object->material.texture = createImageTexture("Assets/Models/ring_with_dolphin/textures/lambert2_baseColor.jpeg");
 
-	//object->material.metallic = 0.5f;
+	object->material.metallic = 0.5f;
 
 	scene.world.addObject(object);
 
-	auto eye = point(0.0f, 1.0f, -20.0f);
-	auto center = point(0.0f, 0.0f, 0.0f);
+	auto eye = point(0.0f, 2.0f, -10.0f);
+	auto center = point(0.0f, 1.0f, -5.0f);
 
-	scene.camera = Camera(1280, 720, r(60.0f));
+	scene.camera = Camera(640, 360, r(60.0f));
 	scene.camera.transform = viewTransform(eye,
 											  center,
 											  vector(0.0f, 1.0f, 0.0f));
